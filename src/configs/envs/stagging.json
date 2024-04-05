@@ -1,0 +1,7 @@
+{
+  "admin_email": "admin_email",
+  "admin_password": "admin_password",
+  "manager_email": "manager_email",
+  "manager_password": "manager_password",
+  "base_url": "https://staging.app.aironworks.com/"
+}
