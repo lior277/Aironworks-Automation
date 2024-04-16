@@ -14,7 +14,7 @@ build-tests-image:
     - if: ( $CI_PIPELINE_SOURCE == "pipeline" || $CI_PIPELINE_SOURCE == "push" ) && $CI_COMMIT_BRANCH == "main"
   image: docker:latest
   tags:
-    - docker-large
+    - saas-linux-small-amd64
   services:
     - docker:dind
   script:
