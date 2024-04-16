@@ -3,5 +3,9 @@
   "admin_password": "admin_password",
   "manager_email": "manager_email",
   "manager_password": "manager_password",
-  "base_url": "https://staging.app.aironworks.com/"
+  "base_url": "https://staging.app.aironworks.com/",
+  "addin_base_url": "https://staging.outlookaddin.aironworks.com",
+  "mailtrap_assessment_inbox_id": "2802760",
+  "mailtrap_assessment_inbox_mail": "68fa80bce3-28fbb0@inbox.mailtrap.io",
+  "mailtrap_account_id": "1311290"
 }
