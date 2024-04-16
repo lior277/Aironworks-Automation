@@ -14,7 +14,7 @@ build-tests-image:
         changes:
           - Dockerfile
     # run on main branch
-    - if: ( $CI_PIPELINE_SOURCE == "pipeline" || $CI_PIPELINE_SOURCE == "push" ) && $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
   image: docker:latest
   tags:
     - saas-linux-small-amd64
