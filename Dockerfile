@@ -6,4 +6,5 @@ COPY / ${MAIN_FOLDER}
 WORKDIR ${MAIN_FOLDER}
 RUN pip install pipenv
 RUN pipenv install && pipenv sync
-
+RUN pip install playwright==1.42.0
+RUN playwright install --with-deps
