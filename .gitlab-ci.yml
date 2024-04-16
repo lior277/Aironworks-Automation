@@ -10,9 +10,8 @@ build-tests-image:
   rules:
     # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      only:
-        changes:
-          - Dockerfile
+      changes:
+        - Dockerfile
     # run on main branch
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
   image: docker:latest
