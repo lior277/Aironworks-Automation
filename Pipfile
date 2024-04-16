@@ -3,7 +3,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
 pytest = "8.1.1"
 faker = "24.4.0"
@@ -12,6 +11,13 @@ pytest-playwright = "0.4.4"
 python-dotenv = "1.0.0"
 pytest-xdist = "3.5.0"
 allure-pytest = "2.13.5"
+# remove once finished with the importing test cases to the TestRail
+pandas ="2.2.1"
+pytz ="2024.1"
+openpyxl ="3.1.2"
+pygsheets="2.0.6"
+
 [dev-packages]
+
 [requires]
 python_version = "3.12"
