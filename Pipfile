@@ -11,6 +11,8 @@ pytest-playwright = "0.4.4"
 python-dotenv = "1.0.0"
 pytest-xdist = "3.5.0"
 allure-pytest = "2.13.5"
+google-auth = "==2.19.1"
+
 # remove once finished with the importing test cases to the TestRail
 pandas ="2.2.1"
 pytz ="2024.1"
