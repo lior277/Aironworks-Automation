@@ -3,9 +3,9 @@ from typing import Generator
 from src.utils.service_account_utils import generate_jwt
 from src.configs.config_loader import AppConfigs
 from src.apis.assessment import AssessmentService
+from src.utils.waiter import wait_for_lro
 from base64 import b64encode
 from src.utils.mailtrap import find_attachment
-from datetime import datetime
 
 import pytest
 from playwright.sync_api import Playwright, APIRequestContext, expect
@@ -54,16 +54,9 @@ def test_assessment_api(api_request_context, example_mail, mailtrap):
     assert "id" in response.json()
 
     id = response.json()["id"]
-    timelimit = 10
-    now = datetime.now()
-
-    while (
-        response.json()["status"] not in ("DONE", "ERROR")
-        or (datetime.now() - now).seconds < timelimit
-    ):
-        response = AssessmentService.assessment_by_id(api_request_context, id)
-        expect(response).to_be_ok()
-
+    response = wait_for_lro(
+        lambda: AssessmentService.assessment_by_id(api_request_context, id), 10
+    )
     assert response.json()["status"] == "DONE"
 
     assert "assessment_result" in response.json()
@@ -98,3 +91,30 @@ def test_incident_report(api_request_context, example_mail, mailtrap):
         )
         is not None
     )
+
+
+@pytest.mark.addin_api
+def test_assessment_report(api_request_context, mailtrap):
+    message = "Test Mail E2E Test " + str(random.randint(100000000, 999999999))
+    response = AssessmentService.assessment_report(
+        api_request_context,
+        message,
+        "random@mail.com",
+    )
+    expect(response).to_be_ok()
+
+    assert "id" in response.json()
+
+    id = response.json()["id"]
+
+    last_status = wait_for_lro(
+        lambda: AssessmentService.assessment_report_by_id(api_request_context, id), 10
+    )
+
+    expect(last_status).to_be_ok()
+
+    assert last_status.json()["status"] == "DONE"
+
+    assert "assessment_result" in last_status.json()
+    assessment_result = last_status.json()["assessment_result"]
+    assert assessment_result["error"] is None

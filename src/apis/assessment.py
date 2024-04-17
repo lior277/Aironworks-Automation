@@ -8,6 +8,7 @@ class AddinApi(Enum):
     INFO = "/assessment/info"
     ASSESSMENT = "/assessment/assessment"
     INCIDENT = "/assessment/incident"
+    ASSESSMENT_REPORT = "/assessment/assessment_report"
 
 
 class AssessmentService:
@@ -34,4 +35,39 @@ class AssessmentService:
         return request_context.post(
             AddinApi.API_VERSION.value + AddinApi.INCIDENT.value,
             data={"mime_content": mime_content},
+        )
+
+    @classmethod
+    def assessment_report(
+        cls,
+        request_context: APIRequestContext,
+        message_text: str,
+        sender_address: str,
+    ):
+        return request_context.post(
+            AddinApi.API_VERSION.value + AddinApi.ASSESSMENT_REPORT.value,
+            data={
+                "message_text": message_text,
+                "sender_address": sender_address,
+            },
+        )
+
+    @classmethod
+    def assessment_report_aironworks_id(
+        cls,
+        request_context: APIRequestContext,
+        aironworks_id: str,
+    ):
+        return request_context.post(
+            AddinApi.API_VERSION.value + AddinApi.ASSESSMENT_REPORT.value,
+            data={
+                "aironworks_id": aironworks_id,
+            },
+        )
+
+    @classmethod
+    def assessment_report_by_id(cls, request_context: APIRequestContext, id: str):
+        return request_context.post(
+            AddinApi.API_VERSION.value + AddinApi.ASSESSMENT_REPORT.value,
+            data={"id": id},
         )
