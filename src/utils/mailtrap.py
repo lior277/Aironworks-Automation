@@ -7,7 +7,7 @@ from base64 import b64decode
 
 
 def find_attachment(attachment_content):
-    def predicate(mailtrap, mail):
+    def predicate(mailtrap: MailTrap, mail):
         mail_id = mail["id"]
         mail_raw = mailtrap.raw_message(
             AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID, mail_id
@@ -55,7 +55,7 @@ class MailTrap:
         expect(response).to_be_ok()
         return response
 
-    def wait_for_mail(self, inbox_id, predicate, timeout=10):
+    def wait_for_mail(self, inbox_id, predicate, timeout=120):
         start_time = datetime.now()
         while True:
             get_mails = self.messages(inbox_id)
