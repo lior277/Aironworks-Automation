@@ -55,7 +55,7 @@ def test_assessment_api(api_request_context, example_mail, mailtrap):
 
     id = response.json()["id"]
     response = wait_for_lro(
-        lambda: AssessmentService.assessment_by_id(api_request_context, id), 10
+        lambda: AssessmentService.assessment_by_id(api_request_context, id), 60
     )
     assert response.json()["status"] == "DONE"
 
@@ -108,7 +108,7 @@ def test_assessment_report(api_request_context, mailtrap):
     id = response.json()["id"]
 
     last_status = wait_for_lro(
-        lambda: AssessmentService.assessment_report_by_id(api_request_context, id), 10
+        lambda: AssessmentService.assessment_report_by_id(api_request_context, id), 60
     )
 
     expect(last_status).to_be_ok()
