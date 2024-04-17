@@ -7,6 +7,7 @@ class AddinApi(Enum):
 
     INFO = "/assessment/info"
     ASSESSMENT = "/assessment/assessment"
+    INCIDENT = "/assessment/incident"
 
 
 class AssessmentService:
@@ -26,4 +27,11 @@ class AssessmentService:
         return request_context.post(
             AddinApi.API_VERSION.value + AddinApi.ASSESSMENT.value,
             data={"id": id},
+        )
+
+    @classmethod
+    def incident(cls, request_context: APIRequestContext, mime_content: str = None):
+        return request_context.post(
+            AddinApi.API_VERSION.value + AddinApi.INCIDENT.value,
+            data={"mime_content": mime_content},
         )

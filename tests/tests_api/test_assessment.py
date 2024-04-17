@@ -77,7 +77,24 @@ def test_assessment_api(api_request_context, example_mail, mailtrap):
         mailtrap.wait_for_mail(
             AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
             find_attachment(example_mail),
-            timelimit,
+        )
+        is not None
+    )
+
+
+@pytest.mark.addin_api
+def test_incident_report(api_request_context, example_mail, mailtrap):
+    response = AssessmentService.incident(
+        api_request_context, b64encode(example_mail).decode("utf-8")
+    )
+    expect(response).to_be_ok()
+
+    assert response.json()["error"] is None
+
+    assert (
+        mailtrap.wait_for_mail(
+            AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+            find_attachment(example_mail),
         )
         is not None
     )
