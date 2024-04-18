@@ -15,5 +15,13 @@ def api_request_context_customer_admin(
 
     request_context = playwright.request.new_context(base_url=base_url)
     expect(LoginService.login(request_context, UserModelFactory.my_user())).to_be_ok()
+    login_info_response = LoginService.info(request_context)
+    expect(login_info_response).to_be_ok()
+    login_info = login_info_response.json()
+    assert "user" in login_info
+    assert "roles" in login_info["user"]
+    assert len(login_info["user"]["roles"]) == 1
+    role_id = login_info["user"]["roles"][0]["id"]
+    expect(LoginService.pick_role(request_context, role_id)).to_be_ok()
     yield request_context
     request_context.dispose()

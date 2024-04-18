@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import List
-from playwright.sync_api import APIRequestContext
+from playwright.sync_api import APIRequestContext, expect
 from csv import DictWriter
 import io
 from base64 import b64encode
@@ -10,6 +10,7 @@ class CompanyApi(Enum):
     API_VERSION = "/api"
 
     UPLOAD_EMPLOYEE_INFO = "/company/upload_employee_info"
+    EMPLOYEE_LIST = "/company/employee_list"
 
 
 class CompanyService:
@@ -44,3 +45,33 @@ class CompanyService:
                 "overwrite": False,
             },
         )
+
+    @classmethod
+    def employee_by_mail(cls, request_context: APIRequestContext, email: str):
+        result = request_context.post(
+            CompanyApi.API_VERSION.value + CompanyApi.EMPLOYEE_LIST.value,
+            data={
+                "employee_role": True,
+                "filters": {
+                    "items": [
+                        {
+                            "columnField": "email",
+                            "operatorValue": "contains",
+                            "id": 0,
+                            "value": email,
+                        }
+                    ],
+                    "linkOperator": "and",
+                    "quickFilterValues": [],
+                    "quickFilterLogicOperator": "and",
+                },
+                "offset": 0,
+                "limit": 1,
+                "sorting": [],
+            },
+        )
+        expect(result).to_be_ok()
+        data = result.json()
+        assert "items" in data
+        assert len(data["items"]) == 1
+        return data["items"][0]
