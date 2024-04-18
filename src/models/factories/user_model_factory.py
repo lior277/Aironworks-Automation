@@ -6,11 +6,20 @@ fake = faker.Faker()
 
 
 class UserModelFactory:
-
     @staticmethod
     def user():
-        return UserModel(email=fake.email(), password=fake.password(), company=fake.company())
+        return UserModel(
+            email=fake.email(),
+            password=fake.password(),
+            company=fake.company(),
+            is_admin=False,
+        )
 
     @staticmethod
     def my_user():
-        return UserModel(email="test_user@gmail.com", password="Password123!@#", company="TestCompany")
+        return UserModel(
+            email="test_user@gmail.com",
+            password="Password123!@#",
+            company="TestCompany",
+            is_admin=False,
+        )
