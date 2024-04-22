@@ -18,6 +18,7 @@ class AdminService:
         attack_info_id: str,
         days_until_fail: int,
         employees: List[str],
+        company_id: int = None,  # not needed for customer admin
     ):
         return request_context.post(
             AdminApi.API_VERSION.value + AdminApi.CAMPAIGN.value,
@@ -26,5 +27,11 @@ class AdminService:
                 "attack_info_id": attack_info_id,
                 "days_until_fail": days_until_fail,
                 "employees": employees,
+                "attack_url": None,
+                "attack_date": None,
+                "custom_reminder": None,
+                "content_id": None,
+                "special": [],
+                "company_id": company_id,
             },
         )

@@ -27,10 +27,12 @@ class AppConfigs:
     BASE_URL = _env_config["base_url"]
     ADDIN_BASE_URL = _env_config["addin_base_url"]
 
-
     LOGIN_SA_ACCOUNT = os.getenv("LOGIN_SA_ACCOUNT")
     MAILTRAP_API_TOKEN = os.getenv("MAILTRAP_API_TOKEN")
 
     MAILTRAP_ASSESSMENT_INBOX_ID = _env_config["mailtrap_assessment_inbox_id"]
     MAILTRAP_ASSESSMENT_INBOX_MAIL = _env_config["mailtrap_assessment_inbox_mail"]
     MAILTRAP_ACCOUNT_ID = _env_config["mailtrap_account_id"]
+
+    EMPLOYEE_INBOX = "fae1336c2d-da5a02+%s@inbox.mailtrap.io"
+    EMPLOYEE_INBOX_ID = 2813733

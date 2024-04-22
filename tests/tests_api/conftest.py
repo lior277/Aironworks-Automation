@@ -3,7 +3,12 @@ from typing import Generator
 from playwright.sync_api import Playwright, APIRequestContext, expect
 from src.configs.config_loader import AppConfigs
 from src.models.factories.user_model_factory import UserModelFactory
+from src.models.employee_model import EmployeeModel
 from src.apis.login import LoginService
+from src.apis.company import CompanyService
+from faker import Faker
+
+fake = Faker()
 
 
 @pytest.fixture(scope="session")
@@ -25,3 +30,26 @@ def api_request_context_customer_admin(
     expect(LoginService.pick_role(request_context, role_id)).to_be_ok()
     yield request_context
     request_context.dispose()
+
+
+@pytest.fixture(scope="function")
+def employee(api_request_context_customer_admin):
+    email = AppConfigs.EMPLOYEE_INBOX % fake.pystr().lower()
+    print(email)
+    response = CompanyService.create_employee(
+        api_request_context_customer_admin,
+        email,
+        fake.first_name(),
+        fake.last_name(),
+    )
+    expect(response).to_be_ok()
+
+    employee = CompanyService.employee_by_mail(
+        api_request_context_customer_admin, email=email
+    )
+
+    assert employee["employee_role"]
+    assert not employee["admin_role"]
+    assert employee["email"] == email
+
+    return EmployeeModel(employee_id=employee["id"], email=employee["email"])

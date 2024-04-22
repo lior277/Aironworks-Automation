@@ -4,6 +4,7 @@ from email import message_from_bytes
 from email.message import Message
 from datetime import datetime
 from base64 import b64decode
+import time
 
 
 def find_attachment(attachment_content):
@@ -24,6 +25,15 @@ def find_attachment(attachment_content):
         if data == attachment_content:
             return True
         return False
+
+    return predicate
+
+
+def find_email(email):
+    def predicate(_, mail):
+        print(mail)
+        print(email)
+        return mail["to_email"] == email
 
     return predicate
 
@@ -63,6 +73,7 @@ class MailTrap:
             for mail in get_mails.json():
                 if predicate(self, mail):
                     return mail
+            time.sleep(1)
             if (datetime.now() - start_time).seconds > timeout:
                 return None
 
