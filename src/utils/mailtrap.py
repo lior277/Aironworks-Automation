@@ -63,6 +63,13 @@ class MailTrap:
         expect(response).to_be_ok()
         return response
 
+    def message_source(self, inbox_id, message_id):
+        response = self.request_context.get(
+            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.htmlsource"
+        )
+        expect(response).to_be_ok()
+        return response
+
     def wait_for_mail(self, inbox_id, predicate, timeout=120):
         start_time = datetime.now()
         while True:
