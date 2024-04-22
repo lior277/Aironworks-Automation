@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List
 from playwright.sync_api import APIRequestContext
 
 
