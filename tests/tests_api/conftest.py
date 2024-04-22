@@ -32,6 +32,20 @@ def api_request_context_customer_admin(
     request_context.dispose()
 
 
+@pytest.fixture(scope="session")
+def api_request_context(
+    playwright: Playwright,
+) -> Generator[APIRequestContext, None, None]:
+    base_url = AppConfigs.BASE_URL
+    # Get service account email and load the json data from the service account key file.
+
+    request_context = playwright.request.new_context(base_url=base_url)
+
+    yield request_context
+
+    request_context.dispose()
+
+
 @pytest.fixture(scope="function")
 def employee(api_request_context_customer_admin):
     email = AppConfigs.EMPLOYEE_INBOX % fake.pystr().lower()

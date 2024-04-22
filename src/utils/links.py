@@ -9,4 +9,8 @@ TEXT_CONTENT_TYPES = {"text/plain", "text/html"}
 
 
 def get_text_links(text: str) -> set[str]:
-    return set(RE_URL.findall(text))
+    return list(set(RE_URL.findall(text)))
+
+
+def attack_url_to_api_url_input(url: str) -> str:
+    return url.removeprefix("https://")

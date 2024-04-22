@@ -1,13 +1,16 @@
 from src.apis.admin import AdminService
+from src.apis.public import PublicService
 from playwright.sync_api import expect
 from src.configs.config_loader import AppConfigs
 from src.utils.mailtrap import find_email
-from src.utils.links import get_text_links
+from src.utils.links import get_text_links, attack_url_to_api_url_input
 
 EXAMPLE_SCENARIO = "e2ced54e064a4adea24adb5a913aea83"
 
 
-def test_attack_campaign(api_request_context_customer_admin, employee, mailtrap):
+def test_attack_campaign(
+    api_request_context_customer_admin, api_request_context, employee, mailtrap
+):
     result = AdminService.campaign(
         api_request_context_customer_admin,
         "Automation scenario",
@@ -26,3 +29,8 @@ def test_attack_campaign(api_request_context_customer_admin, employee, mailtrap)
     source = mailtrap.message_source(AppConfigs.EMPLOYEE_INBOX_ID, mail["id"]).body()
     links = get_text_links(source.decode())
     assert len(links) == 1
+
+    verify = PublicService.verify_url_click(
+        api_request_context, url=attack_url_to_api_url_input(links[0])
+    )
+    expect(verify).to_be_ok()
