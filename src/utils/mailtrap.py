@@ -31,8 +31,6 @@ def find_attachment(attachment_content):
 
 def find_email(email):
     def predicate(_, mail):
-        print(mail)
-        print(email)
         return mail["to_email"] == email
 
     return predicate
