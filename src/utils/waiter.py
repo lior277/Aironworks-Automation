@@ -1,4 +1,5 @@
 import datetime
+import time
 
 
 def wait_for(predicate, timeout):
@@ -8,6 +9,7 @@ def wait_for(predicate, timeout):
             return True
         if (datetime.datetime.now() - start_time).seconds > timeout:
             return False
+        time.sleep(1)
 
 
 def wait_for_lro(lro_request, timeout, end_status=("DONE", "ERROR")):
