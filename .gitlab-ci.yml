@@ -37,5 +37,6 @@ run-tests:
     - if: $CI_COMMIT_BRANCH == "main"
   tags:
     - saas-linux-small-amd64
-  script:
-    - pipenv run pytest -n auto --alluredir=allure-results
+  script: |
+    pipenv run env
+    pipenv run pytest -n auto --alluredir=allure-results
