@@ -1,5 +1,5 @@
 import pytest
-from src.apis.psapi import PSService
+from src.apis.admin import AdminService
 from playwright.sync_api import expect
 from src.configs.config_loader import AppConfigs
 from src.utils.mailtrap import find_email
@@ -15,7 +15,7 @@ EXAMPLE_SCENARIO = "e2ced54e064a4adea24adb5a913aea83"
 def test_attack_campaign(
     api_request_context_customer_admin, api_request_context, employee, mailtrap
 ):
-    result = PSService.campaign(
+    result = AdminService.campaign(
         api_request_context_customer_admin,
         campaign=CampaignModel(
             name="Automation scenario",
@@ -37,13 +37,13 @@ def test_attack_campaign(
     links = get_text_links(source.decode())
     assert len(links) == 1
 
-    verify = PSService.verify_url_click(
+    verify = AdminService.verify_url_click(
         api_request_context, url=attack_url_to_api_url_input(links[0])
     )
     expect(verify).to_be_ok()
 
     def validate_campaign_status():
-        campaign_status = PSService.get_attack_execution(
+        campaign_status = AdminService.get_attack_execution(
             api_request_context_customer_admin, campaign_id
         )
         expect(campaign_status).to_be_ok()
