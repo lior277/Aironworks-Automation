@@ -9,6 +9,7 @@ from src.utils.mailtrap import find_attachment
 
 import pytest
 from playwright.sync_api import Playwright, APIRequestContext, expect
+from src.utils.log import Log
 
 
 @pytest.fixture(scope="session")
@@ -54,7 +55,7 @@ def test_assessment_api(api_request_context, example_mail, mailtrap):
     assert "id" in response.json()
 
     id = response.json()["id"]
-    print("got id", id)
+    Log.info(f"assessment lro id: {id}")
     response = wait_for_lro(
         lambda: AssessmentService.assessment_by_id(api_request_context, id), 60
     )
@@ -107,7 +108,7 @@ def test_assessment_report(api_request_context, mailtrap):
     assert "id" in response.json()
 
     id = response.json()["id"]
-
+    Log.info(f"assessment lro id: {id}")
     last_status = wait_for_lro(
         lambda: AssessmentService.assessment_report_by_id(api_request_context, id), 60
     )
