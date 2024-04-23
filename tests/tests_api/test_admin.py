@@ -42,6 +42,9 @@ def test_attack_campaign(
         )
         expect(campaign_status).to_be_ok()
 
-        return campaign_status.json()["execution"]["completed"]
+        return (
+            campaign_status.json()["execution"]["completed"]
+            and campaign_status.json()["execution"]["finished"]
+        )
 
     assert wait_for(validate_campaign_status, 60)
