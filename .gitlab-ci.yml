@@ -38,4 +38,4 @@ run-tests:
   tags:
     - saas-linux-small-amd64
   script:
-    - pipenv run pytest -n auto --alluredir=allure-results
+    - pipenv run python -m pytest -n auto --alluredir=allure-results
