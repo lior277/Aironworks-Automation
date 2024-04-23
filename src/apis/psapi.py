@@ -20,6 +20,7 @@ class PSApi(Enum):
     VERIFY_URL_CLICK = "/public/verify_url_click"
 
     CAMPAIGN = "/admin/campaign"
+    GET_ATTACK_EXECUTION = "/admin/get_attack_execution"
 
 
 class PSService:
@@ -144,4 +145,11 @@ class PSService:
                 "special": [],
                 "company_id": company_id,
             },
+        )
+
+    @classmethod
+    def get_attack_execution(cls, request_context: APIRequestContext, id):
+        return request_context.get(
+            PSApi.API_VERSION.value + PSApi.GET_ATTACK_EXECUTION.value,
+            params={"id": id},
         )
