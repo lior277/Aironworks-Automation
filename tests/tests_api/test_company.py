@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import expect
 from src.apis.psapi import PSApi
 from faker import Faker
@@ -5,6 +6,8 @@ from faker import Faker
 fake = Faker()
 
 
+@pytest.mark.api
+@pytest.mark.smoke
 def test_upload_employees(api_request_context_customer_admin):
     email = fake.email()
     response = PSApi.create_employee(

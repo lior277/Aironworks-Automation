@@ -1,3 +1,4 @@
+import pytest
 from src.apis.psapi import PSService
 from playwright.sync_api import expect
 from src.configs.config_loader import AppConfigs
@@ -9,6 +10,8 @@ from src.models.campaign_model import CampaignModel
 EXAMPLE_SCENARIO = "e2ced54e064a4adea24adb5a913aea83"
 
 
+@pytest.mark.api
+@pytest.mark.smoke
 def test_attack_campaign(
     api_request_context_customer_admin, api_request_context, employee, mailtrap
 ):
