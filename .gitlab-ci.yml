@@ -39,4 +39,5 @@ run-tests:
     - saas-linux-small-amd64
   script: |
     pipenv run env
+    ls -l /root/.local/share/virtualenvs/*/bin
     pipenv run pytest -n auto --alluredir=allure-results
