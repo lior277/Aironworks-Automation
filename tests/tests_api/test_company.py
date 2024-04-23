@@ -1,5 +1,5 @@
 from playwright.sync_api import expect
-from src.apis.company import CompanyService
+from src.apis.psapi import PSApi
 from faker import Faker
 
 fake = Faker()
@@ -7,7 +7,7 @@ fake = Faker()
 
 def test_upload_employees(api_request_context_customer_admin):
     email = fake.email()
-    response = CompanyService.create_employee(
+    response = PSApi.create_employee(
         api_request_context_customer_admin,
         email,
         fake.first_name(),
@@ -15,9 +15,7 @@ def test_upload_employees(api_request_context_customer_admin):
     )
     expect(response).to_be_ok()
 
-    employee = CompanyService.employee_by_mail(
-        api_request_context_customer_admin, email=email
-    )
+    employee = PSApi.employee_by_mail(api_request_context_customer_admin, email=email)
     assert employee["employee_role"]
     assert not employee["admin_role"]
     assert employee["email"] == email
