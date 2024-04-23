@@ -4,6 +4,7 @@ variables:
 
 stages:
   - build
+  - test
 
 build-tests-image:
   stage: build
@@ -30,3 +31,15 @@ build-tests-image:
     - docker buildx create --use
     - docker buildx build --build-arg --platform=linux/amd64,linux/arm64/v8 --push -t $SERVER_TAG .
 
+run-tests:
+  stage: test
+  image: $SERVER_TAG
+  rules:
+    # run on MR:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # run on main branch
+    - if: $CI_COMMIT_BRANCH == "main"
+  tags:
+    - saas-linux-small-amd64
+  script:
+    - pipenv run pytest -n auto --alluredir=allure-results
