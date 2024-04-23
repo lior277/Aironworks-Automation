@@ -6,6 +6,7 @@ import io
 from base64 import b64encode
 import allure
 from src.models.user_model import UserModel
+from src.models.campaign_model import CampaignModel
 
 
 class PSApi(Enum):
@@ -122,28 +123,20 @@ class PSService:
         )
 
     @classmethod
-    def campaign(
-        cls,
-        request_context: APIRequestContext,
-        campaign_name: str,
-        attack_info_id: str,
-        days_until_fail: int,
-        employees: List[str],
-        company_id: int = None,  # not needed for customer admin
-    ):
+    def campaign(cls, request_context: APIRequestContext, campaign: CampaignModel):
         return request_context.post(
             PSApi.API_VERSION.value + PSApi.CAMPAIGN.value,
             data={
-                "campaign_name": campaign_name,
-                "attack_info_id": attack_info_id,
-                "days_until_fail": days_until_fail,
-                "employees": employees,
-                "attack_url": None,
-                "attack_date": None,
-                "custom_reminder": None,
-                "content_id": None,
-                "special": [],
-                "company_id": company_id,
+                "campaign_name": campaign.name,
+                "attack_info_id": campaign.attack_info_id,
+                "days_until_fail": campaign.days_until_fail,
+                "employees": campaign.employees,
+                "attack_url": campaign.attack_url,
+                "attack_date": campaign.attack_date,
+                "custom_reminder": campaign.custom_reminder,
+                "content_id": campaign.content_id,
+                "special": campaign.special,
+                "company_id": campaign.company_id,
             },
         )
 

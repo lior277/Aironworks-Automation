@@ -4,6 +4,7 @@ from src.configs.config_loader import AppConfigs
 from src.utils.mailtrap import find_email
 from src.utils.links import get_text_links, attack_url_to_api_url_input
 from src.utils.waiter import wait_for
+from src.models.campaign_model import CampaignModel
 
 EXAMPLE_SCENARIO = "e2ced54e064a4adea24adb5a913aea83"
 
@@ -13,10 +14,12 @@ def test_attack_campaign(
 ):
     result = PSService.campaign(
         api_request_context_customer_admin,
-        "Automation scenario",
-        EXAMPLE_SCENARIO,
-        1,
-        [employee.employee_id],
+        campaign=CampaignModel(
+            name="Automation scenario",
+            attack_info_id=EXAMPLE_SCENARIO,
+            days_until_fail=1,
+            employees=[employee.employee_id],
+        ),
     )
     expect(result).to_be_ok()
     assert "id" in result.json()
