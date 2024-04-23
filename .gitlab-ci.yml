@@ -9,16 +9,12 @@ stages:
 build-tests-image:
   stage: build
   rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
     # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        - Pipfile.lock
-        - Dockerfile
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
-      changes:
-        - Pipfile.lock
-        - Dockerfile
   image: docker:latest
   tags:
     - saas-linux-small-amd64
