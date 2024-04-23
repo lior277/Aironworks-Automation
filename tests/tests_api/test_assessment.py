@@ -54,6 +54,7 @@ def test_assessment_api(api_request_context, example_mail, mailtrap):
     assert "id" in response.json()
 
     id = response.json()["id"]
+    print("got id", id)
     response = wait_for_lro(
         lambda: AssessmentService.assessment_by_id(api_request_context, id), 60
     )
