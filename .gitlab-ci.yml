@@ -36,7 +36,7 @@ run-tests:
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
   tags:
-    - saas-linux-small-amd64
+    - saas-linux-large-amd64
   script: |
     source /root/.local/share/virtualenvs/*/bin/activate
     pytest -n auto --alluredir=allure-results
