@@ -8,7 +8,8 @@ from src.page_objects.base_page import BasePage
 class SignInPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.button_sign_in_email = page.get_by_text('Sign in with Email')
+        page.set_default_timeout(120 * 1000)
+        self.button_sign_in_email = page.get_by_text("Sign in with Email")
         self.input_email = page.locator('[name="email"]')
         self.input_password = page.locator('[name="password"]')
         self.button_sign_in = page.locator('[id="mui-3"]')

@@ -10,7 +10,6 @@ from src.utils.log import Log
 def playwright_config(browser: Browser):
     Log.info(f"Browser version = {browser.version}")
     context = browser.new_context()
-    context.set_default_timeout(120 * 1000)
 
     yield browser, context
     context.close()
