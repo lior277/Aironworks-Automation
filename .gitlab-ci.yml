@@ -113,9 +113,9 @@ pages:
         ENV_NAME: main
   stage: deploy
   script:
-    - rm -rf public/$CURRENT_CONTENT_PATH || true
+    - if [ "$CURRENT_CONTENT_PATH" != "." ]; then rm -rf public/$CURRENT_CONTENT_PATH || true; fi
     - mkdir -p public/$CURRENT_CONTENT_PATH
-    - mv ./allure-report/* public/$CURRENT_CONTENT_PATH
+    - cp -TRv ./allure-report/* public/$CURRENT_CONTENT_PATH
   environment:
     name: pages/$ENV_NAME
     action: start
