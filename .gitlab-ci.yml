@@ -1,3 +1,4 @@
+# test
 variables:
   SERVER_DOCKER_FILE: ./Dockerfile
   SERVER_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
