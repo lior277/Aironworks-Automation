@@ -5,6 +5,7 @@ variables:
 stages:
   - build
   - test
+  - history_copy
   - reports
   - deploy
 
@@ -47,6 +48,29 @@ run-tests:
     when: always
     paths:
       - ./allure-results
+
+.history_job: &history_job
+  stage: history_copy
+  tags:
+    - saas-linux-small-amd64
+  image: storytel/alpine-bash-curl
+  script:
+    - apk add unzip # add unzipgit-g ma
+    - (unzip artifacts.zip ) || true
+    - (chmod -R 777 public) || true # give permissions
+    - (cp -r ./public/history ./allure-results) || true # copy to dir
+  allow_failure: true
+  artifacts:
+    paths:
+      - ./allure-results # save
+    expire_in: 30 days
+
+history_develop:
+  extends: .history_job
+  before_script:
+    - 'curl --location --output artifacts.zip "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME/download?job=pages&job_token=$CI_JOB_TOKEN"'
+  needs:
+    - job: run-tests
 
 allure_job: &allure_job
   stage: reports
