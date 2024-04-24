@@ -52,6 +52,7 @@ run-tests:
       - ./allure-results
 
 history_job:
+  resource_group: pages
   rules:
     # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -95,6 +96,7 @@ allure_job: &allure_job
     expire_in: 30 days
 
 pages:
+  resource_group: pages
   cache:
     key: gitlab-pages
     paths: [public]
@@ -126,6 +128,7 @@ pages:
       - public
 
 pages-clean-preview:
+  resource_group: pages
   stage: deploy
   image: alpine:3.18
   when: manual
