@@ -11,26 +11,26 @@ stages:
   - reports
   - deploy
 
-# build-tests-image:
-#   stage: build
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == "pipeline"
-#       when: never
-#     # run on MR:
-#     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-#     # run on main branch
-#     - if: $CI_COMMIT_BRANCH == "main"
-#   image: docker:latest
-#   tags:
-#     - saas-linux-small-amd64
-#   services:
-#     - docker:dind
-#   script:
-#     - >
-#       echo "Docker tag: $SERVER_TAG"
-#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#     - docker buildx create --use
-#     - docker buildx build --build-arg --platform=linux/amd64,linux/arm64/v8 --push -t $SERVER_TAG .
+build-tests-image:
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never
+    # run on MR:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # run on main branch
+    - if: $CI_COMMIT_BRANCH == "main"
+  image: docker:latest
+  tags:
+    - saas-linux-small-amd64
+  services:
+    - docker:dind
+  script:
+    - >
+      echo "Docker tag: $SERVER_TAG"
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker buildx create --use
+    - docker buildx build --build-arg --platform=linux/amd64,linux/arm64/v8 --push -t $SERVER_TAG .
 
 run-tests:
   stage: test
