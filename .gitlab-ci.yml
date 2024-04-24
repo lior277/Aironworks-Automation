@@ -105,17 +105,19 @@ pages:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
         CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
+        ENV_NAME: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
         CURRENT_CONTENT_PATH: $MAIN_BRANCH_PATH
+        ENV_NAME: main
   stage: deploy
   script:
     - rm -rf public/$CURRENT_CONTENT_PATH || true
     - mkdir -p public/$CURRENT_CONTENT_PATH
     - mv ./allure-report/* public/$CURRENT_CONTENT_PATH
   environment:
-    name: pages/$CURRENT_CONTENT_PATH
+    name: pages/$ENV_NAME
     action: start
     url: $CI_PAGES_URL/$CURRENT_CONTENT_PATH/index.html
     on_stop: pages-clean-preview
