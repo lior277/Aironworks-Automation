@@ -118,7 +118,7 @@ pages:
   environment:
     name: pages/$CURRENT_CONTENT_PATH
     action: start
-    url: $CI_PAGES_URL/$CURRENT_CONTENT_PATH
+    url: $CI_PAGES_URL/$CURRENT_CONTENT_PATH/index.html
   artifacts:
     paths:
       - public
