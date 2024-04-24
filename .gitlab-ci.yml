@@ -112,6 +112,7 @@ pages:
   stage: deploy
   script:
     - mkdir -p public/$CURRENT_CONTENT_PATH
+    - rm -rf public/$CURRENT_CONTENT_PATH || true
     - mv ./allure-report/* public/$CURRENT_CONTENT_PATH
   environment:
     name: pages/$CURRENT_CONTENT_PATH
@@ -123,7 +124,7 @@ pages:
       - public
 
 pages-clean-preview:
-  stage: build
+  stage: deploy
   image: alpine:3.18
   when: manual
   allow_failure: true
