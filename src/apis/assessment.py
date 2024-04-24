@@ -35,6 +35,7 @@ class AssessmentService:
         return request_context.post(
             AddinApi.API_VERSION.value + AddinApi.INCIDENT.value,
             data={"mime_content": mime_content},
+            timeout=60 * 1000,
         )
 
     @classmethod
