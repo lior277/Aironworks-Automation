@@ -5,6 +5,8 @@ variables:
 stages:
   - build
   - test
+  - reports
+  - deploy
 
 build-tests-image:
   stage: build
@@ -40,3 +42,36 @@ run-tests:
   script: |
     source /root/.local/share/virtualenvs/*/bin/activate
     pytest -n auto --alluredir=allure-results
+  artifacts:
+    when: always
+    paths:
+      - ./allure-results
+
+allure_job: &allure_job
+  stage: reports
+  rules:
+    # run on MR:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # run on main branch
+    - if: $CI_COMMIT_BRANCH == "main"
+  tags:
+    - web-ci
+  image: frankescobar/allure-docker-service:2.17.2
+  script:
+    - mkdir -p $(pwd)/allure-report
+    - allure generate -c allure-results -o allure-report # from allure-results to allure-report
+  artifacts:
+    paths:
+      - ./allure-results
+      - ./allure-report
+    expire_in: 30 days
+
+pages:
+  stage: deploy
+  script:
+    - mkdir public
+    - mv ./allure-report/* public
+  when: manual
+  artifacts:
+    paths:
+      - public

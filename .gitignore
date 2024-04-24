@@ -2,3 +2,4 @@
 /allure-results
 /tests/logs
 .venv
+__pycache__
