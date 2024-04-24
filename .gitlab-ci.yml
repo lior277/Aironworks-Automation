@@ -71,7 +71,7 @@ history_develop:
     # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   before_script: |
-    REF=$(echo g$CI_MERGE_REQUEST_REF_PATH | sed 's/\//%2F/g')
+    REF=$(echo $CI_MERGE_REQUEST_REF_PATH | sed 's/\//%2F/g')
     URL="https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/$REF/download?job=pages&job_token=$CI_JOB_TOKEN"
     echo "downloading from $URL"
     curl --location --output artifacts.zip $URL
