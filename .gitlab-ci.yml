@@ -51,34 +51,29 @@ run-tests:
     paths:
       - ./allure-results
 
-.history_job: &history_job
+history_job:
+  rules:
+    # run on MR:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
+    - if: $CI_COMMIT_BRANCH == "main"
+      variables:
+        CURRENT_CONTENT_PATH: $MAIN_BRANCH_PATH
+  cache:
+    key: gitlab-pages
+    paths: [public]
   stage: history_copy
   tags:
     - saas-linux-small-amd64
   image: storytel/alpine-bash-curl
   script:
-    - apk add unzip # add unzipgit-g ma
-    - (unzip artifacts.zip ) || true
-    - (chmod -R 777 public) || true # give permissions
-    - (cp -r ./public/history ./allure-results) || true # copy to dir
+    - (cp -r ./public/$CURRENT_CONTENT_PATH/history ./allure-results) || true # copy to dir
   allow_failure: true
   artifacts:
     paths:
       - ./allure-results # save
     expire_in: 30 days
-
-history_develop:
-  extends: .history_job
-  rules:
-    # run on MR:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-  before_script: |
-    REF=$(echo $CI_MERGE_REQUEST_REF_PATH | sed 's/\//%2F/g')
-    URL="https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/$REF/download?job=pages&job_token=$CI_JOB_TOKEN"
-    echo "downloading from $URL"
-    curl --location --output artifacts.zip $URL
-  needs:
-    - job: run-tests
 
 allure_job: &allure_job
   stage: reports
@@ -100,6 +95,9 @@ allure_job: &allure_job
     expire_in: 30 days
 
 pages:
+  cache:
+    key: gitlab-pages
+    paths: [public]
   tags:
     - saas-linux-small-amd64
   rules:
@@ -119,6 +117,26 @@ pages:
     name: pages/$CURRENT_CONTENT_PATH
     action: start
     url: $CI_PAGES_URL/$CURRENT_CONTENT_PATH/index.html
+    on_stop: pages-clean-preview
   artifacts:
     paths:
       - public
+
+pages-clean-preview:
+  stage: build
+  image: alpine:3.18
+  cache:
+    key: gitlab-pages
+    paths: [public]
+  variables:
+    GIT_STRATEGY: none # git files not available after branch deletion
+    FOLDER_TO_DELETE: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG # an indirection to allow arbitrary deletion when launching this job
+  script:
+    - rm -rf public/$FOLDER_TO_DELETE
+  environment:
+    name: pages/$CURRENT_CONTENT_PATH
+    action: stop
+  rules:
+    - if: $CI_COMMIT_BRANCH != "main"
+      when: manual
+      allow_failure: true
