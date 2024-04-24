@@ -125,6 +125,17 @@ pages:
 pages-clean-preview:
   stage: build
   image: alpine:3.18
+  when: manual
+  allow_failure: true
+  rules:
+    # run on MR:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
+    # run on main branch
+    - if: $CI_COMMIT_BRANCH == "main"
+      variables:
+        CURRENT_CONTENT_PATH: $MAIN_BRANCH_PATH
   cache:
     key: gitlab-pages
     paths: [public]
@@ -136,7 +147,3 @@ pages-clean-preview:
   environment:
     name: pages/$CURRENT_CONTENT_PATH
     action: stop
-  rules:
-    - if: $CI_COMMIT_BRANCH != "main"
-      when: manual
-      allow_failure: true
