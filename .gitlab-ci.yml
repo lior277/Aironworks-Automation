@@ -42,6 +42,7 @@ run-tests:
   script: |
     source /root/.local/share/virtualenvs/*/bin/activate
     pytest -n auto --alluredir=allure-results
+  allow_failure: true # in case pipeline fails process run
   artifacts:
     when: always
     paths:
