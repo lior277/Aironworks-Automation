@@ -135,10 +135,12 @@ pages-clean-preview:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
         CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
+        ENV_NAME: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
         CURRENT_CONTENT_PATH: $MAIN_BRANCH_PATH
+        ENV_NAME: main
   cache:
     key: gitlab-pages
     paths: [public]
@@ -148,5 +150,5 @@ pages-clean-preview:
   script:
     - rm -rf public/$FOLDER_TO_DELETE
   environment:
-    name: pages/$CURRENT_CONTENT_PATH
+    name: pages/$ENV_NAME
     action: stop
