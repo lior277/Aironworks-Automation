@@ -116,7 +116,7 @@ pages:
     - mkdir -p public/$CURRENT_CONTENT_PATH
     - mv ./allure-report/* public/$CURRENT_CONTENT_PATH
   environment:
-    name: pages/$CI_COMMIT_BRANCH
+    name: pages/$CURRENT_CONTENT_PATH
     action: start
     url: $CI_PAGES_URL/$CURRENT_CONTENT_PATH
   artifacts:
