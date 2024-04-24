@@ -119,7 +119,6 @@ pages:
     name: pages/$CI_COMMIT_BRANCH
     action: start
     url: $CI_PAGES_URL/$CURRENT_CONTENT_PATH
-    on_stop: pages-clean-preview
   artifacts:
     paths:
       - public
