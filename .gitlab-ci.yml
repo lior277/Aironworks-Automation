@@ -72,8 +72,10 @@ history_develop:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
-  before_script:
-    - 'curl --location --output artifacts.zip "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME/download?job=pages&job_token=$CI_JOB_TOKEN"'
+  before_script: |
+    URL="https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME/download?job=pages&job_token=$CI_JOB_TOKEN"
+    echo "downloading from $URL"
+    curl --location --output artifacts.zip $URL
   needs:
     - job: run-tests
 
