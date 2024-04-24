@@ -68,7 +68,7 @@ history_job:
     - saas-linux-small-amd64
   image: storytel/alpine-bash-curl
   script:
-    - (cp -r ./public/$CURRENT_CONTENT_PATH/history ./allure-results) || true # copy to dir
+    - (cp -v -r ./public/$CURRENT_CONTENT_PATH/history ./allure-results) || true # copy to dir
   allow_failure: true
   artifacts:
     paths:
