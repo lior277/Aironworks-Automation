@@ -56,7 +56,7 @@ allure_job: &allure_job
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
   tags:
-    - web-ci
+    - saas-linux-small-amd64
   image: frankescobar/allure-docker-service:2.17.2
   script:
     - mkdir -p $(pwd)/allure-report
@@ -68,6 +68,8 @@ allure_job: &allure_job
     expire_in: 30 days
 
 pages:
+  tags:
+    - saas-linux-small-amd64
   rules:
     # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
