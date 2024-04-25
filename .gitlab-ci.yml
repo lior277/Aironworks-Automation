@@ -71,7 +71,9 @@ upload_testrail_run:
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
   script: |
-    echo $CI_PIPELINE_IID
+    if [ ! -z "$TEST_RUN_ID" ]; then
+      TEST_RUN_ID="--run-id $TEST_RUN_ID"
+    fi
     source /root/.local/share/virtualenvs/*/bin/activate
     trcli -h https://aironworksqa.testrail.io \
       --project "AironWorks" \
@@ -79,6 +81,7 @@ upload_testrail_run:
       --key "$TESTRAIL_API_KEY" \
       parse_junit --case-matcher "property" \
       --title "CI on $ENV" \
+      $TEST_RUN_ID \
       -f "junit.xml"
 
 history_job:
