@@ -38,18 +38,39 @@ run-tests:
   rules:
     # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        ENV: staging
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
   tags:
     - saas-linux-large-amd64
   script: |
     source /root/.local/share/virtualenvs/*/bin/activate
-    pytest -n auto --alluredir=allure-results
+    pytest -n auto --alluredir=allure-results --junitxml=junit.xml
   allow_failure: true # in case pipeline fails process run
   artifacts:
     when: always
     paths:
       - ./allure-results
+      - ./junit.xml
+
+upload_testrail_run:
+  stage: deploy
+  needs: [run-tests]
+  image: $SERVER_TAG
+  tags:
+    - saas-linux-small-amd64
+  rules:
+    # run on main branch
+    - if: $CI_COMMIT_BRANCH == "main"
+  script: |
+    trcli -h https://aironworksqa.testrail.io \
+      --project "AironWorks" \
+      --username info@aironworks.com \
+      --key "$TESTRAIL_API_KEY" \
+      parse_junit --case-matcher "property" \
+      --run-id $(jq '.test_run_id' src/configs/envs/$ENV.json) \
+      -f "junit.xml"
 
 history_job:
   resource_group: pages
@@ -60,7 +81,7 @@ history_job:
         CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
-        CURRENT_CONTENT_PATH: $MAIN_BRANCH_PATH
+        CURRENT_CONTENT_PATH: $ENV
   cache:
     key: gitlab-pages
     paths: [public]
@@ -111,8 +132,8 @@ pages:
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
-        CURRENT_CONTENT_PATH: $MAIN_BRANCH_PATH
-        ENV_NAME: main
+        CURRENT_CONTENT_PATH: $ENV
+        ENV_NAME: $ENV
   stage: deploy
   script:
     - if [ "$CURRENT_CONTENT_PATH" != "." ]; then rm -rf public/$CURRENT_CONTENT_PATH || true; fi
@@ -142,8 +163,8 @@ pages-clean-preview:
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
-        CURRENT_CONTENT_PATH: $MAIN_BRANCH_PATH
-        ENV_NAME: main
+        CURRENT_CONTENT_PATH: $ENV
+        ENV_NAME: $ENV
   cache:
     key: gitlab-pages
     paths: [public]

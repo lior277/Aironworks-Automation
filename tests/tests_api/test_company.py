@@ -6,6 +6,7 @@ from faker import Faker
 fake = Faker()
 
 
+@pytest.mark.test_id("C30728")
 @pytest.mark.api
 @pytest.mark.smoke
 def test_upload_employees(api_request_context_customer_admin):
