@@ -17,9 +17,16 @@ build-tests-image:
     - if: $CI_PIPELINE_SOURCE == "pipeline"
       when: never
     # run on MR:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_BEFORE_SHA != "0000000000000000000000000000000000000000"
+      changes:
+        - Pipfile.lock
+        - Dockerfile
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - Pipfile.lock
+        - Dockerfile
   image: docker:latest
   tags:
     - saas-linux-small-amd64
@@ -71,7 +78,7 @@ upload_testrail_run:
       --username info@aironworks.com \
       --key "$TESTRAIL_API_KEY" \
       parse_junit --case-matcher "property" \
-      --title "CI on $ENV"
+      --title "CI on $ENV" \
       -f "junit.xml"
 
 history_job:
