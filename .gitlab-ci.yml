@@ -64,13 +64,14 @@ upload_testrail_run:
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
   script: |
+    echo $CI_PIPELINE_IID
     source /root/.local/share/virtualenvs/*/bin/activate
     trcli -h https://aironworksqa.testrail.io \
       --project "AironWorks" \
       --username info@aironworks.com \
       --key "$TESTRAIL_API_KEY" \
       parse_junit --case-matcher "property" \
-      --run-id $(jq '.test_run_id' src/configs/envs/$ENV.json) \
+      --title "CI on $ENV"
       -f "junit.xml"
 
 history_job:
