@@ -11,3 +11,4 @@ RUN pip install pipenv
 RUN pipenv install
 RUN pip install playwright==1.42.0
 RUN playwright install --with-deps
+RUN apt-get update && apt-get -y install jq

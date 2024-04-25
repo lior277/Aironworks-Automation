@@ -64,6 +64,7 @@ upload_testrail_run:
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
   script: |
+    source /root/.local/share/virtualenvs/*/bin/activate
     trcli -h https://aironworksqa.testrail.io \
       --project "AironWorks" \
       --username info@aironworks.com \
