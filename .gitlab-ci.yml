@@ -80,7 +80,7 @@ upload_testrail_run:
       --username info@aironworks.com \
       --key "$TESTRAIL_API_KEY" \
       parse_junit --case-matcher "property" \
-      --title "CI on $ENV" \
+      --title "CI on $ENV $(date)" \
       $TEST_RUN_ID \
       -f "junit.xml"
 
