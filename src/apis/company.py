@@ -3,10 +3,12 @@ from csv import DictWriter
 import io
 from base64 import b64encode
 from .psapi import PSApi
+import allure
 
 
 class CompanyService:
     @classmethod
+    @allure.step("CompanyService: create employee")
     def create_employee(
         cls,
         request_context: APIRequestContext,
@@ -39,6 +41,7 @@ class CompanyService:
         )
 
     @classmethod
+    @allure.step("CompanyService: get employee by mail")
     def employee_by_mail(cls, request_context: APIRequestContext, email: str):
         result = request_context.post(
             PSApi.API_VERSION.value + PSApi.EMPLOYEE_LIST.value,
