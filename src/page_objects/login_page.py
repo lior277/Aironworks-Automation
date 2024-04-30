@@ -22,7 +22,7 @@ class SignInPage(BasePage):
         result.request.response()
 
     @allure.step("SignInPage: submit sing in form with {user} credentials")
-    def submit_sing_in_form(self, user: UserModel):
+    def submit_sign_in_form(self, user: UserModel):
         self.button_sign_in_email.click()
         self.input_email.fill(user.email)
         self.input_password.fill(user.password)
