@@ -14,3 +14,5 @@ class PSApi(Enum):
 
     CAMPAIGN = "/admin/campaign"
     GET_ATTACK_EXECUTION = "/admin/get_attack_execution"
+
+    EDUCATION_CAMPAIGN = "/education/campaign"

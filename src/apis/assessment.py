@@ -1,5 +1,6 @@
 from enum import Enum
 from playwright.sync_api import APIRequestContext
+import allure
 
 
 class AddinApi(Enum):
@@ -13,10 +14,12 @@ class AddinApi(Enum):
 
 class AssessmentService:
     @classmethod
+    @allure.step("AssessmentService: get company assessment service info")
     def info(cls, request_context: APIRequestContext):
         return request_context.get(AddinApi.API_VERSION.value + AddinApi.INFO.value)
 
     @classmethod
+    @allure.step("AssessmentService: assess a mail")
     def assessment(cls, request_context: APIRequestContext, mime_content: str = None):
         return request_context.post(
             AddinApi.API_VERSION.value + AddinApi.ASSESSMENT.value,
@@ -24,6 +27,7 @@ class AssessmentService:
         )
 
     @classmethod
+    @allure.step("AssessmentService: get assessesment by id")
     def assessment_by_id(cls, request_context: APIRequestContext, id: str = None):
         return request_context.post(
             AddinApi.API_VERSION.value + AddinApi.ASSESSMENT.value,
@@ -31,6 +35,7 @@ class AssessmentService:
         )
 
     @classmethod
+    @allure.step("AssessmentService: report an incident")
     def incident(cls, request_context: APIRequestContext, mime_content: str = None):
         return request_context.post(
             AddinApi.API_VERSION.value + AddinApi.INCIDENT.value,
@@ -39,6 +44,7 @@ class AssessmentService:
         )
 
     @classmethod
+    @allure.step("AssessmentService: report an assessment with no mail")
     def assessment_report(
         cls,
         request_context: APIRequestContext,
@@ -54,6 +60,7 @@ class AssessmentService:
         )
 
     @classmethod
+    @allure.step("AssessmentService: report by aironworks id")
     def assessment_report_aironworks_id(
         cls,
         request_context: APIRequestContext,
@@ -67,6 +74,7 @@ class AssessmentService:
         )
 
     @classmethod
+    @allure.step("AssessmentService: get assessesment report by id")
     def assessment_report_by_id(cls, request_context: APIRequestContext, id: str):
         return request_context.post(
             AddinApi.API_VERSION.value + AddinApi.ASSESSMENT_REPORT.value,
