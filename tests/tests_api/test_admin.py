@@ -11,7 +11,7 @@ from src.models.campaign_model import CampaignModel
 EXAMPLE_SCENARIO = "e2ced54e064a4adea24adb5a913aea83"
 
 
-@pytest.mark.test_id("C31124")
+@pytest.mark.test_id("C31562")
 @pytest.mark.api
 @pytest.mark.smoke
 def test_attack_campaign(

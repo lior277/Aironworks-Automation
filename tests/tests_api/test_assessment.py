@@ -39,7 +39,7 @@ def api_request_context(
     request_context.dispose()
 
 
-@pytest.mark.test_id("C5881")
+@pytest.mark.test_id("C31557")
 @pytest.mark.addin_api
 def test_credentials_should_be_correct(api_request_context):
     response = AssessmentService.info(api_request_context)
@@ -47,7 +47,7 @@ def test_credentials_should_be_correct(api_request_context):
     assert response.json() == {"soc_email": AppConfigs.MAILTRAP_ASSESSMENT_INBOX_MAIL}
 
 
-@pytest.mark.test_id("C5819")
+@pytest.mark.test_id("C31558")
 @pytest.mark.addin_api
 def test_assessment_api(api_request_context, example_mail, mailtrap):
     response = AssessmentService.assessment(
@@ -79,7 +79,7 @@ def test_assessment_api(api_request_context, example_mail, mailtrap):
     )
 
 
-@pytest.mark.test_id("C5812")
+@pytest.mark.test_id("C31559")
 @pytest.mark.addin_api
 def test_incident_report(api_request_context, example_mail, mailtrap):
     response = AssessmentService.incident(
@@ -98,7 +98,7 @@ def test_incident_report(api_request_context, example_mail, mailtrap):
     )
 
 
-@pytest.mark.test_id("C5689")
+@pytest.mark.test_id("C31560")
 @pytest.mark.addin_api
 def test_assessment_report(api_request_context, mailtrap):
     message = "Test Mail E2E Test " + str(random.randint(100000000, 999999999))
