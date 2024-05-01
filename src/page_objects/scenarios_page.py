@@ -1,4 +1,6 @@
 import allure
+import time
+from typing import Literal
 from playwright.sync_api import Page
 from src.page_objects.base_page import BasePage
 from src.models.scenario_model import ScenarioModel
@@ -8,6 +10,9 @@ class ScenariosPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.create_scenario = page.get_by_role("button", name="Create Scenario")
+        self.visible_tab = page.get_by_role("tab", name="Visible")
+        self.hide_scenario = page.get_by_role("button", name="Hide")
+        self.search = self.page.get_by_placeholder("Search by Name")
 
         # scenario wizard
         self.scenario_name = self.page.get_by_role("textbox", name="Scenario Name")
@@ -22,6 +27,27 @@ class ScenariosPage(BasePage):
     @allure.step("ScenariosPage: navigate to create scenario")
     def navigate_create_scenario(self):
         self.create_scenario.click()
+        self.page.wait_for_load_state(timeout=5)
+
+    @allure.step("ScenariosPage: filter by name")
+    def filter_by_name(self, name):
+        self.search.fill(name)
+
+    @allure.step("ScenariosPage: filter by language")
+    def filter_by_language(self, language: Literal["All", "English", "Japanese"]):
+        self.page.get_by_label("Language", exact=True).click()
+        self.page.get_by_label(language).click()
+
+    @allure.step("ScenariosPage: wait for filters to sync")
+    def wait_sync_filters(self):
+        time.sleep(
+            1
+        )  # this page displays the old results for a brief moment before hiding it so unfortunatly we need to sleep a bit
+
+    @allure.step("ScenariosPage: finish draft")
+    def finish_draft(self):
+        self.page.get_by_role("button", name="Finish Draft").click()
+        self.page.get_by_role("button", name="OK").click()
         self.page.wait_for_load_state(timeout=5)
 
     @allure.step("ScenariosPage: submit create scenario form")

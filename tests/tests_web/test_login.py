@@ -31,7 +31,7 @@ def test_login_error_message(sign_in_page: SignInPage, user, error_message):
     "user",
     [
         pytest.param(
-            UserModelFactory.my_user(),
+            UserModelFactory.customer_admin(),
             id="login success",
             marks=pytest.mark.test_id("C17077"),
         )

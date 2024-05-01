@@ -17,8 +17,11 @@ class SignInPage(BasePage):
         )
 
     @allure.step("SignInPage: open page")
-    def navigate(self):
-        result = self.page.goto(self.baseUrl)
+    def navigate(self, admin=False):
+        if admin:
+            result = self.page.goto(self.adminBaseUrl)
+        else:
+            result = self.page.goto(self.baseUrl)
         result.request.response()
 
     @allure.step("SignInPage: submit sing in form with {user} credentials")
