@@ -51,7 +51,7 @@ class ScenariosPage(BasePage):
         self.page.wait_for_load_state(timeout=5)
 
     @allure.step("ScenariosPage: submit create scenario form")
-    def submit_create_scenario_form(self, scenario: ScenarioModel):
+    def submit_create_scenario_form(self, scenario: ScenarioModel, clone_mode=False):
         self.scenario_name.fill(scenario.name)
         self.sender_address.fill(scenario.sender_address)
 
@@ -69,6 +69,9 @@ class ScenariosPage(BasePage):
         self.url_suffix.fill(scenario.url_suffix)
 
         self.next.click()
+        if clone_mode:
+            self.page.get_by_role("button", name="New Body").click()
+            self.page.wait_for_load_state(timeout=5)
         self.html_content.fill(scenario.html_content)
         self.save.click()
         self.page.wait_for_load_state(timeout=5)
