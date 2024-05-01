@@ -1,6 +1,7 @@
 import faker
 
 from src.models.user_model import UserModel
+from src.configs.config_loader import AppConfigs
 
 fake = faker.Faker()
 
@@ -16,10 +17,18 @@ class UserModelFactory:
         )
 
     @staticmethod
-    def my_user():
+    def customer_admin():
         return UserModel(
-            email="test_user@gmail.com",
-            password="Password123!@#",
+            email=AppConfigs.CUSTOMER_ADMIN_USERNAME,
+            password=AppConfigs.CUSTOMER_ADMIN_PASSWORD,
             company="TestCompany",
             is_admin=False,
+        )
+
+    @staticmethod
+    def aw_admin():
+        return UserModel(
+            email=AppConfigs.AW_ADMIN_USERNAME,
+            password=AppConfigs.AW_ADMIN_PASSWORD,
+            is_admin=True,
         )

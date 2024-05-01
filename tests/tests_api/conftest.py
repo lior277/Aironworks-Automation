@@ -19,7 +19,9 @@ def api_request_context_customer_admin(
     # Get service account email and load the json data from the service account key file.
 
     request_context = playwright.request.new_context(base_url=base_url)
-    expect(LoginService.login(request_context, UserModelFactory.my_user())).to_be_ok()
+    expect(
+        LoginService.login(request_context, UserModelFactory.customer_admin())
+    ).to_be_ok()
     login_info_response = LoginService.info(request_context)
     expect(login_info_response).to_be_ok()
     login_info = login_info_response.json()
