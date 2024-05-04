@@ -7,3 +7,4 @@ class UserModel:
     password: str
     is_admin: str
     company: str = None
+    is_reseller: bool = False

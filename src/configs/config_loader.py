@@ -34,6 +34,8 @@ class AppConfigs:
     CUSTOMER_ADMIN_PASSWORD = os.getenv("CUSTOMER_ADMIN_PASSWORD")
     AW_ADMIN_USERNAME = os.getenv("AW_ADMIN_USERNAME")
     AW_ADMIN_PASSWORD = os.getenv("AW_ADMIN_PASSWORD")
+    RESELLER_ADMIN_USERNAME = os.getenv("RESELLER_ADMIN_USERNAME")
+    RESELLER_ADMIN_PASSWORD = os.getenv("RESELLER_ADMIN_PASSWORD")
 
     MAILTRAP_ASSESSMENT_INBOX_ID = _env_config["mailtrap_assessment_inbox_id"]
     MAILTRAP_ASSESSMENT_INBOX_MAIL = _env_config["mailtrap_assessment_inbox_mail"]
