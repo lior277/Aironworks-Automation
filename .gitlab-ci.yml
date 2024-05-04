@@ -1,7 +1,6 @@
 variables:
   SERVER_DOCKER_FILE: ./Dockerfile
   SERVER_TAG: $CI_REGISTRY_IMAGE:main
-  MAIN_BRANCH_PATH: "."
   EPHEMERAL_BRANCHES_PATH: preview # subpath to ephemeral branches content for preview
 
 workflow:
@@ -62,9 +61,11 @@ run-tests:
     - saas-linux-large-amd64
   script: |
     source /root/.local/share/virtualenvs/*/bin/activate
-    pytest -n auto --alluredir=allure-results --junitxml=junit.xml
+    pytest -n 4 --alluredir=allure-results --junitxml=junit.xml
   allow_failure: true # in case pipeline fails process run
   artifacts:
+    reports:
+      junit: junit.xml
     when: always
     paths:
       - ./allure-results
@@ -191,9 +192,8 @@ pages-clean-preview:
     paths: [public]
   variables:
     GIT_STRATEGY: none # git files not available after branch deletion
-    FOLDER_TO_DELETE: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG # an indirection to allow arbitrary deletion when launching this job
   script:
-    - rm -rf public/$FOLDER_TO_DELETE
+    - rm -rf public/$CURRENT_CONTENT_PATH
   environment:
     name: pages/$ENV_NAME
     action: stop

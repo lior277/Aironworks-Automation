@@ -2,7 +2,6 @@ import pytest
 from playwright.sync_api import expect
 from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.login_page import SignInPage
-from src.page_objects.scenarios_page import ScenariosPage
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
 from src.models.scenario_model import ScenarioModel
 from src.models.factories.user_model_factory import UserModelFactory
@@ -53,6 +52,7 @@ def step_find_scenario(scenarios_page, scenario: ScenarioModel):
         ),
     ],
 )
+@pytest.mark.smoke
 def test_create_scenario(
     user, scenario, sign_in_page: SignInPage, dashboard_page: DashboardPage
 ):
@@ -75,6 +75,7 @@ def test_create_scenario(
         )
     ],
 )
+@pytest.mark.smoke
 def test_hide_scenario(
     user, scenario, sign_in_page: SignInPage, dashboard_page: DashboardPage
 ):
@@ -115,6 +116,7 @@ def test_hide_scenario(
         ),
     ],
 )
+@pytest.mark.smoke
 def test_clone_scenario(user, scenario, sign_in_page, dashboard_page):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)

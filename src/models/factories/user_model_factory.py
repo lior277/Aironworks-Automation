@@ -32,3 +32,12 @@ class UserModelFactory:
             password=AppConfigs.AW_ADMIN_PASSWORD,
             is_admin=True,
         )
+
+    @staticmethod
+    def reseller_admin():
+        return UserModel(
+            email=AppConfigs.RESELLER_ADMIN_USERNAME,
+            password=AppConfigs.RESELLER_ADMIN_PASSWORD,
+            is_admin=True,
+            is_reseller=True,
+        )
