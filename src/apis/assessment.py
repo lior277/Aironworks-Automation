@@ -50,12 +50,14 @@ class AssessmentService:
         request_context: APIRequestContext,
         message_text: str,
         sender_address: str,
+        subject: str = None,
     ):
         return request_context.post(
             AddinApi.API_VERSION.value + AddinApi.ASSESSMENT_REPORT.value,
             data={
                 "message_text": message_text,
                 "sender_address": sender_address,
+                "subject": subject,
             },
         )
 
