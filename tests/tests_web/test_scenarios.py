@@ -3,36 +3,10 @@ from playwright.sync_api import expect
 from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.login_page import SignInPage
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
-from src.models.scenario_model import ScenarioModel
 from src.models.factories.user_model_factory import UserModelFactory
-import re
-import allure
 import faker
 
 fake = faker.Faker()
-
-
-@allure.step("Create scenario")
-def step_create_scenario(scenarios_page, scenario: ScenarioModel):
-    scenarios_page.navigate_create_scenario()
-
-    scenarios_page.submit_create_scenario_form(scenario)
-
-    expect(scenarios_page.page.get_by_text("Created new scenario")).to_be_visible()
-
-
-@allure.step("Find scenario")
-def step_find_scenario(scenarios_page, scenario: ScenarioModel):
-    scenarios_page.filter_by_name(scenario.name)
-    scenarios_page.filter_by_language("All")
-    scenarios_page.wait_sync_filters()
-    scenario = (
-        scenarios_page.page.get_by_role("button")
-        .filter(has_text=re.compile(scenario.name))
-        .first
-    )
-    expect(scenario).to_be_visible()
-    return scenario
 
 
 @pytest.mark.parametrize(
@@ -59,9 +33,41 @@ def test_create_scenario(
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
 
-    scenarios_page = dashboard_page.navigate_scenarios()
+    scenarios_page = dashboard_page.navigation_bar.navigate_scenarios()
 
-    step_create_scenario(scenarios_page, scenario)
+    scenarios_page.create_scenario(scenario)
+
+
+@pytest.mark.parametrize(
+    "user",
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            id="filter scenario aw admin",
+            marks=pytest.mark.test_id("C31494"),
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            id="filter scenario customer admin",
+            marks=pytest.mark.test_id("C31496"),
+        ),
+    ],
+)
+@pytest.mark.smoke
+def test_filter_scenario_by_name(user, sign_in_page, dashboard_page):
+    sign_in_page.navigate(user.is_admin)
+    sign_in_page.submit_sign_in_form(user)
+
+    scenarios_page = dashboard_page.navigation_bar.navigate_scenarios()
+
+    filter_text = "QA Test Scenario"
+
+    scenarios_page.find_scenario(filter_text)
+
+    results = scenarios_page.get_visible_results()
+
+    for res in results:
+        expect(res).to_contain_text(filter_text)
 
 
 @pytest.mark.parametrize(
@@ -82,10 +88,10 @@ def test_hide_scenario(
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
 
-    scenarios_page = dashboard_page.navigate_scenarios()
-    step_create_scenario(scenarios_page, scenario)
+    scenarios_page = dashboard_page.navigation_bar.navigate_scenarios()
+    scenarios_page.create_scenario(scenario)
 
-    scenario_element = step_find_scenario(scenarios_page, scenario)
+    scenario_element = scenarios_page.find_scenario(scenario.name)
 
     scenario_element.click()
     scenarios_page.finish_draft()
@@ -121,10 +127,10 @@ def test_clone_scenario(user, scenario, sign_in_page, dashboard_page):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
 
-    scenarios_page = dashboard_page.navigate_scenarios()
-    step_create_scenario(scenarios_page, scenario)
+    scenarios_page = dashboard_page.navigation_bar.navigate_scenarios()
+    scenarios_page.create_scenario(scenario)
 
-    scenario_element = step_find_scenario(scenarios_page, scenario)
+    scenario_element = scenarios_page.find_scenario(scenario.name)
     scenario_element.click()
     scenario_element.page.wait_for_load_state(timeout=5)
 

@@ -1,7 +1,8 @@
 import allure
 import time
+import re
 from typing import Literal
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 from src.page_objects.base_page import BasePage
 from src.models.scenario_model import ScenarioModel
 
@@ -9,10 +10,11 @@ from src.models.scenario_model import ScenarioModel
 class ScenariosPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.create_scenario = page.get_by_role("button", name="Create Scenario")
+        self.create_scenario_button = page.get_by_role("button", name="Create Scenario")
         self.visible_tab = page.get_by_role("tab", name="Visible")
         self.hide_scenario = page.get_by_role("button", name="Hide")
         self.search = self.page.get_by_placeholder("Search by Name")
+        self.scenarios_list = self.page.locator(".MuiGrid-root > .MuiBox-root")
 
         # scenario wizard
         self.scenario_name = self.page.get_by_role("textbox", name="Scenario Name")
@@ -26,7 +28,7 @@ class ScenariosPage(BasePage):
 
     @allure.step("ScenariosPage: navigate to create scenario")
     def navigate_create_scenario(self):
-        self.create_scenario.click()
+        self.create_scenario_button.click()
         self.page.wait_for_load_state(timeout=5)
 
     @allure.step("ScenariosPage: filter by name")
@@ -75,3 +77,27 @@ class ScenariosPage(BasePage):
         self.html_content.fill(scenario.html_content)
         self.save.click()
         self.page.wait_for_load_state(timeout=5)
+
+    def get_visible_results(self):
+        return self.scenarios_list.get_by_role("button").all()
+
+    @allure.step("ScenariosPage: Create scenario")
+    def create_scenario(self, scenario: ScenarioModel):
+        self.navigate_create_scenario()
+
+        self.submit_create_scenario_form(scenario)
+
+        expect(self.page.get_by_text("Created new scenario")).to_be_visible()
+
+    @allure.step("Find scenario")
+    def find_scenario(self, scenario_name: str):
+        self.filter_by_name(scenario_name)
+        self.filter_by_language("All")
+        self.wait_sync_filters()
+        scenario = (
+            self.page.get_by_role("button")
+            .filter(has_text=re.compile(scenario_name))
+            .first
+        )
+        expect(scenario).to_be_visible()
+        return scenario

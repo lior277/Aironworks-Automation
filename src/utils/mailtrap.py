@@ -29,9 +29,12 @@ def find_attachment(attachment_content):
     return predicate
 
 
-def find_email(email):
+def find_email(email, subject=None):
     def predicate(_, mail):
-        return mail["to_email"] == email
+        result = mail["to_email"] == email
+        if subject is not None:
+            result = result and mail["subject"] == subject
+        return result
 
     return predicate
 

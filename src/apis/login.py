@@ -1,5 +1,7 @@
+from dataclasses import asdict
 from playwright.sync_api import APIRequestContext
 from src.models.user_model import UserModel
+from src.models.signup_model import EmailSignupModel
 from .psapi import PSApi
 import allure
 
@@ -31,4 +33,11 @@ class LoginService:
         return request_context.post(
             PSApi.API_VERSION.value + PSApi.PICK_ROLE.value,
             data={"role_id": role_id},
+        )
+
+    @classmethod
+    @allure.step("LoginService: register a customer")
+    def register(cls, request_context: APIRequestContext, signup: EmailSignupModel):
+        return request_context.post(
+            PSApi.API_VERSION.value + PSApi.REGISTER.value, data=asdict(signup)
         )

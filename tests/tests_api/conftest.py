@@ -7,6 +7,7 @@ from src.models.employee_model import EmployeeModel
 from src.apis.login import LoginService
 from src.apis.company import CompanyService
 from faker import Faker
+from dataclasses import replace
 
 fake = Faker()
 
@@ -51,21 +52,18 @@ def api_request_context(
 @pytest.fixture(scope="function")
 def employee(api_request_context_customer_admin):
     email = AppConfigs.EMPLOYEE_INBOX % fake.pystr().lower()
-    print(email)
+    employee = EmployeeModel(None, email, fake.first_name(), fake.last_name())
     response = CompanyService.create_employee(
-        api_request_context_customer_admin,
-        email,
-        fake.first_name(),
-        fake.last_name(),
+        api_request_context_customer_admin, employee
     )
     expect(response).to_be_ok()
 
-    employee = CompanyService.employee_by_mail(
+    employee_data = CompanyService.employee_by_mail(
         api_request_context_customer_admin, email=email
     )
 
-    assert employee["employee_role"]
-    assert not employee["admin_role"]
-    assert employee["email"] == email
+    assert employee_data["employee_role"]
+    assert not employee_data["admin_role"]
+    assert employee_data["email"] == email
 
-    return EmployeeModel(employee_id=employee["id"], email=employee["email"])
+    return replace(employee, employee_id=employee_data["id"])
