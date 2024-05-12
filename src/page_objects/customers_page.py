@@ -10,6 +10,7 @@ from src.models.user_model import UserModel
 class CustomersPage(BasePage):
     def __init__(self, page: Page, user: UserModel):
         super().__init__(page)
+        self.user = user
         self.tabs = {
             "active": page.get_by_role("tab", name=re.compile("Active customers.*")),
             "new": page.get_by_role("tab", name=re.compile("New customers.*")),
@@ -21,6 +22,9 @@ class CustomersPage(BasePage):
             page.get_by_role("columnheader", name=re.compile("Employee limit.*")),
             page.get_by_role("columnheader", name=re.compile("Actions.*")),
         ]
+        self.copy_invitation_link_button = page.get_by_label(
+            "Copy a unique link to invite"
+        )
         if not user.is_reseller:
             self.active_customers_table_headers.append(
                 page.get_by_role("columnheader", name=re.compile("Reseller.*")),

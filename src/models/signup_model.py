@@ -2,8 +2,11 @@ from dataclasses import dataclass
 
 
 @dataclass
-class EmployeeModel:
-    employee_id: int
+class EmailSignupModel:
     email: str
+    password: str
+    language: str
     first_name: str
     last_name: str
+    company_name: str
+    referral: str

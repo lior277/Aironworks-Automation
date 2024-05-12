@@ -21,7 +21,7 @@ class UserModelFactory:
         return UserModel(
             email=AppConfigs.CUSTOMER_ADMIN_USERNAME,
             password=AppConfigs.CUSTOMER_ADMIN_PASSWORD,
-            company="TestCompany",
+            company="QA Accounts",
             is_admin=False,
         )
 

@@ -1,5 +1,5 @@
 import pytest
-from playwright.sync_api import Browser, Page, sync_playwright
+from playwright.sync_api import Browser, Page
 
 from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.login_page import SignInPage
@@ -9,25 +9,34 @@ import allure
 
 
 @pytest.fixture(scope="function")
-def playwright_config(launch_browser, browser_type):
+def playwright_config(request, launch_browser, browser_type):
     # with sync_playwright() as p:
     args = None
     if browser_type.name == "chromium":
         args = ["--single-process"]
     browser: Browser = launch_browser(args=args)
     Log.info(f"Browser version = {browser.version}")
-    context = browser.new_context(screen={"width": 640, "height": 480})
+    context = browser.new_context(
+        screen={"width": 640, "height": 480},
+        permissions=["clipboard-read", "clipboard-write"],
+    )
     context.set_default_timeout(timeout=120 * 1000)
 
     context.tracing.start(snapshots=True, screenshots=True, sources=True)
 
     yield browser, context
 
+    # If request.node is missing rep_call, then some error happened during execution
+    # that prevented teardown, but should still be counted as a failure
+    failed = request.node.rep_call.failed if hasattr(request.node, "rep_call") else True
+
     traceout = tempfile.mktemp(prefix="trace")
 
-    context.tracing.stop(path=traceout)
-
-    allure.attach.file(traceout, "trace.zip", "zip")
+    if failed:
+        context.tracing.stop(path=traceout)
+        allure.attach.file(traceout, "trace.zip", "zip")
+    else:
+        context.tracing.stop()
 
     context.close()
     browser.close()

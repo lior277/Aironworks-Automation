@@ -1,4 +1,5 @@
 from playwright.sync_api import APIRequestContext, expect
+from src.models.employee_model import EmployeeModel
 from csv import DictWriter
 import io
 from base64 import b64encode
@@ -10,11 +11,7 @@ class CompanyService:
     @classmethod
     @allure.step("CompanyService: create employee")
     def create_employee(
-        cls,
-        request_context: APIRequestContext,
-        employee_mail: str,
-        employee_first_name: str,
-        employee_last_name: str,
+        cls, request_context: APIRequestContext, employee: EmployeeModel
     ):
         buffer = io.StringIO()
         writer = DictWriter(buffer, fieldnames=["first_name", "last_name", "email"])
@@ -23,9 +20,9 @@ class CompanyService:
         )
         writer.writerow(
             {
-                "first_name": employee_first_name,
-                "last_name": employee_last_name,
-                "email": employee_mail,
+                "first_name": employee.first_name,
+                "last_name": employee.last_name,
+                "email": employee.email,
             }
         )
         buffer.flush()
@@ -38,6 +35,13 @@ class CompanyService:
                 "file_text": data,
                 "overwrite": False,
             },
+        )
+
+    @classmethod
+    @allure.step("CompanyService: get company config")
+    def localized_config(cls, request_context: APIRequestContext):
+        return request_context.get(
+            PSApi.API_VERSION.value + PSApi.COMPANY_LOCALIZED_CONFIG.value
         )
 
     @classmethod

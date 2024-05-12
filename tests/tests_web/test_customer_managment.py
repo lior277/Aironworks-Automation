@@ -1,11 +1,29 @@
 import pytest
+import re
 from playwright.sync_api import expect, TimeoutError
 from src.page_objects.customers_page import CustomersPage
 from src.models.factories.user_model_factory import UserModelFactory
+from src.apis.utils import get_request_context_for_page
+from src.apis.admin import AdminService
+from src.apis.login import LoginService
+from src.models.factories.signup_model_factory import SignupModelFactory
+from src.configs.config_loader import AppConfigs
+
+
+@pytest.fixture
+def customers_page(request, sign_in_page, dashboard_page):
+    user = request.param
+    sign_in_page.navigate(user.is_admin)
+    sign_in_page.submit_sign_in_form(user)
+
+    customers_page = CustomersPage(dashboard_page.page, user)
+    expect(customers_page.page.get_by_role("progressbar")).to_have_count(0)
+
+    return customers_page
 
 
 @pytest.mark.parametrize(
-    "user",
+    "customers_page",
     [
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -18,16 +36,13 @@ from src.models.factories.user_model_factory import UserModelFactory
             marks=pytest.mark.test_id("C31500"),
         ),
     ],
+    indirect=["customers_page"],
 )
 @pytest.mark.smoke
-def test_active_customers_visible(user, sign_in_page, dashboard_page):
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
+def test_active_customers_visible(customers_page, dashboard_page):
     # when logging active customers should be the visible page
     expect(dashboard_page.page.get_by_role("heading", name="Customers")).to_be_visible()
 
-    customers_page = CustomersPage(dashboard_page.page, user)
     customers_page.validate_elements_visible()
     customers_page.validate_in_tab("active")
     customers_page.validate_active_customers_headers_are_visible()
@@ -39,7 +54,7 @@ def test_active_customers_visible(user, sign_in_page, dashboard_page):
 
 
 @pytest.mark.parametrize(
-    "user",
+    "customers_page",
     [
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -52,14 +67,10 @@ def test_active_customers_visible(user, sign_in_page, dashboard_page):
             marks=pytest.mark.test_id("C31501"),
         ),
     ],
+    indirect=["customers_page"],
 )
 @pytest.mark.smoke
-def test_active_customer_spectate(user, sign_in_page, dashboard_page):
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    customers_page = CustomersPage(dashboard_page.page, user)
-    expect(customers_page.page.get_by_role("progressbar")).to_have_count(0)
+def test_active_customer_spectate(customers_page, dashboard_page):
     row = customers_page.get_customer_row()
 
     expect(row).to_be_visible()
@@ -82,3 +93,103 @@ def test_active_customer_spectate(user, sign_in_page, dashboard_page):
     expect(
         dashboard_page.page.get_by_label("scrollable content").get_by_role("paragraph")
     ).to_contain_text(f"Admin of {company_name}")
+
+
+@pytest.mark.parametrize(
+    "customers_page",
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            id="new customer count is correct for aw admin",
+            marks=pytest.mark.test_id("C31503"),
+        ),
+        pytest.param(
+            UserModelFactory.reseller_admin(),
+            id="new customer count is correct for reseller admin",
+            marks=pytest.mark.test_id("C31504"),
+        ),
+    ],
+    indirect=["customers_page"],
+)
+@pytest.mark.smoke
+def test_new_customers_count(customers_page, playwright):
+    request_context = get_request_context_for_page(
+        playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
+    )
+
+    company_counts = AdminService.company_count(request_context)
+    expect(company_counts).to_be_ok()
+
+    new_count = company_counts.json()["new"]
+
+    expect(customers_page.tabs["new"]).to_have_text(
+        re.compile(f"New Customers.*{new_count}", re.IGNORECASE)
+    )
+
+
+@pytest.mark.parametrize(
+    "customers_page",
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            id="aw admin can approve new customer",
+            marks=pytest.mark.test_id("C31505"),
+        ),
+        pytest.param(
+            UserModelFactory.reseller_admin(),
+            id="reseller admin can approve new customer",
+            marks=pytest.mark.test_id("C31506"),
+        ),
+    ],
+    indirect=["customers_page"],
+)
+@pytest.mark.smoke
+def test_approve_new_customer(customers_page, sign_in_page, dashboard_page, playwright):
+    referral = None
+    if customers_page.user.is_reseller:
+        signed_in_context = get_request_context_for_page(
+            playwright, sign_in_page.page, AppConfigs.ADMIN_BASE_URL
+        )
+        info = LoginService.info(signed_in_context)
+        expect(info).to_be_ok()
+        referral = info.json()["user"]["reseller_company_id"]
+
+    context = playwright.request.new_context(base_url=AppConfigs.BASE_URL)
+    new_customer = SignupModelFactory.random_customer(referral=referral)
+    expect(LoginService.register(context, new_customer)).to_be_ok()
+
+    customers_page.tabs["new"].click()
+    customer_row = customers_page.page.get_by_role("row").filter(
+        has_text=new_customer.company_name
+    )
+    customer_row.get_by_role("button", name="Approve").click()
+    customers_page.page.get_by_role("button", name="Confirm Approval").click()
+
+
+@pytest.mark.parametrize(
+    "customers_page",
+    [
+        pytest.param(
+            UserModelFactory.reseller_admin(),
+            id="reseller admin can approve new customer",
+            marks=pytest.mark.test_id("C31507"),
+        ),
+    ],
+    indirect=["customers_page"],
+)
+@pytest.mark.smoke
+def test_copy_invitation_link(customers_page, sign_in_page, playwright):
+    signed_in_context = get_request_context_for_page(
+        playwright, sign_in_page.page, AppConfigs.ADMIN_BASE_URL
+    )
+    info = LoginService.info(signed_in_context)
+    expect(info).to_be_ok()
+    referral = info.json()["user"]["reseller_company_id"]
+
+    customers_page.copy_invitation_link_button.click()
+    expect(
+        customers_page.page.get_by_text("Invite link copied to clipboard.")
+    ).to_be_visible()
+    clipboard_text = customers_page.page.evaluate("navigator.clipboard.readText()")
+
+    assert referral in clipboard_text

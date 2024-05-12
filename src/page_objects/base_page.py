@@ -8,3 +8,7 @@ class BasePage:
         self.page = page
         self.baseUrl = AppConfigs.BASE_URL
         self.adminBaseUrl = AppConfigs.ADMIN_BASE_URL
+
+        import src.page_objects.navigation_bar
+
+        self.navigation_bar = src.page_objects.navigation_bar.NavigationBar(page)

@@ -1,6 +1,8 @@
 from playwright.sync_api import APIRequestContext
 from src.models.campaign_model import CampaignModel
 from .psapi import PSApi
+from src.configs.config_loader import AppConfigs
+import os
 
 
 class AdminService:
@@ -28,3 +30,7 @@ class AdminService:
             PSApi.API_VERSION.value + PSApi.GET_ATTACK_EXECUTION.value,
             params={"id": id},
         )
+
+    @classmethod
+    def company_count(cls, request_context: APIRequestContext):
+        return request_context.get(PSApi.API_VERSION.value + PSApi.COMPANY_COUNT.value)

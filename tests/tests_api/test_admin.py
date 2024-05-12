@@ -1,4 +1,7 @@
 import pytest
+import re
+import allure
+from src.utils import markers
 from src.apis.admin import AdminService
 from src.apis.public import PublicService
 from playwright.sync_api import expect
@@ -7,15 +10,16 @@ from src.utils.mailtrap import find_email
 from src.utils.links import get_text_links, attack_url_to_api_url_input
 from src.utils.waiter import wait_for
 from src.models.campaign_model import CampaignModel
+from src.apis.company import CompanyService
+from email import message_from_bytes
+from email.message import Message
 
 EXAMPLE_SCENARIO = "e2ced54e064a4adea24adb5a913aea83"
 
 
-@pytest.mark.test_id("C31562")
-@pytest.mark.api
-@pytest.mark.smoke
-def test_attack_campaign(
-    api_request_context_customer_admin, api_request_context, employee, mailtrap
+@allure.step("run campaign on single employee")
+def run_campaign_on_employee(
+    api_request_context_customer_admin, api_request_context, mailtrap, employee
 ):
     result = AdminService.campaign(
         api_request_context_customer_admin,
@@ -39,9 +43,9 @@ def test_attack_campaign(
     links = get_text_links(source.decode())
     assert len(links) == 1
 
-    verify = PublicService.verify_url_click(
-        api_request_context, url=attack_url_to_api_url_input(links[0])
-    )
+    attack_id = attack_url_to_api_url_input(links[0])
+
+    verify = PublicService.verify_url_click(api_request_context, url=attack_id)
     expect(verify).to_be_ok()
 
     def validate_campaign_status():
@@ -56,3 +60,65 @@ def test_attack_campaign(
         )
 
     assert wait_for(validate_campaign_status, 60)
+
+
+@pytest.mark.test_id("C31562")
+@pytest.mark.api
+@pytest.mark.smoke
+def test_attack_campaign(
+    api_request_context_customer_admin, api_request_context, employee, mailtrap
+):
+    run_campaign_on_employee(
+        api_request_context_customer_admin, api_request_context, mailtrap, employee
+    )
+
+
+@pytest.mark.test_id("C31511")
+@markers.common_resource(name="settings")
+@pytest.mark.api
+@pytest.mark.smoke
+def test_email_notification_match_setting(
+    api_request_context_customer_admin, api_request_context, mailtrap, employee
+):
+    config_result = CompanyService.localized_config(api_request_context_customer_admin)
+    expect(config_result).to_be_ok()
+    company_config = config_result.json()
+
+    run_campaign_on_employee(
+        api_request_context_customer_admin, api_request_context, mailtrap, employee
+    )
+
+    mail = mailtrap.wait_for_mail(
+        AppConfigs.EMPLOYEE_INBOX_ID,
+        find_email(
+            employee.email,
+            company_config["data"][0]["custom_attack_notification_subject"],
+        ),
+    )
+
+    assert mail is not None
+
+    mail_id = mail["id"]
+    mail_raw = mailtrap.raw_message(AppConfigs.EMPLOYEE_INBOX_ID, mail_id)
+    message: Message = message_from_bytes(mail_raw.body())
+    payload = message.get_payload()
+
+    regex_string = (
+        company_config["data"][0]["custom_attack_notification"]
+        .replace("{{employee.name}}", "(?P<employee_name>[a-zA-Z]+)")
+        .replace(
+            "{{portal_url}}",
+            r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)",
+        )
+        + "<img.*/>\n"
+    )
+
+    regex = re.compile(
+        regex_string,
+        re.MULTILINE,
+    )
+
+    match = regex.match(payload.replace("=\n", ""))
+    assert match is not None
+
+    assert match.group("employee_name") == employee.first_name

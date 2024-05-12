@@ -1,6 +1,7 @@
 import pytest
 from playwright.sync_api import expect
 from src.apis.company import CompanyService
+from src.models.employee_model import EmployeeModel
 from faker import Faker
 
 fake = Faker()
@@ -11,11 +12,11 @@ fake = Faker()
 @pytest.mark.smoke
 def test_upload_employees(api_request_context_customer_admin):
     email = fake.email()
+    employee = EmployeeModel(
+        None, email=email, first_name=fake.first_name(), last_name=fake.last_name()
+    )
     response = CompanyService.create_employee(
-        api_request_context_customer_admin,
-        email,
-        fake.first_name(),
-        fake.last_name(),
+        api_request_context_customer_admin, employee
     )
     expect(response).to_be_ok()
 
