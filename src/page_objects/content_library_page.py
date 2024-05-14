@@ -11,7 +11,6 @@ class ContentLibraryPage(BasePage):
         self.visiblity_filter = self.page.get_by_label("Visibility")
         self.name_filter = self.page.get_by_placeholder("Search by Content Name")
         self.cards = self.page.get_by_label("content-card")
-        self.empty_state = self.page.get_by_test_id("empty-state")
 
     @allure.step("ContentLibraryPage: Set visibility filter")
     def set_visibility_filter(self, name):
