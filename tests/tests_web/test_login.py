@@ -19,6 +19,7 @@ from src.page_objects.login_page import SignInPage
     ],
 )
 @pytest.mark.web
+@pytest.mark.smoke
 def test_login_error_message(sign_in_page: SignInPage, user, error_message):
     sign_in_page.navigate()
     sign_in_page.submit_sign_in_form(user)
@@ -37,6 +38,7 @@ def test_login_error_message(sign_in_page: SignInPage, user, error_message):
         )
     ],
 )
+@pytest.mark.smoke
 def test_login_existing_user(
     sign_in_page: SignInPage, dashboard_page: DashboardPage, user
 ):
