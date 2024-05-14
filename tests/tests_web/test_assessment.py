@@ -9,6 +9,7 @@ from src.utils.log import Log
 
 
 @pytest.mark.parametrize("user", [UserModelFactory.customer_admin()])
+@pytest.mark.smoke
 def test_report_can_be_resolved(
     user, api_request_context_addin, sign_in_page, dashboard_page
 ):
