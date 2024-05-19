@@ -195,7 +195,7 @@ pages-clean-preview:
   variables:
     GIT_STRATEGY: none # git files not available after branch deletion
   script:
-    - rm -rf public/$CURRENT_CONTENT_PATH
+    - rm -rfv public/$CURRENT_CONTENT_PATH
   environment:
     name: pages/$ENV_NAME
     action: stop
