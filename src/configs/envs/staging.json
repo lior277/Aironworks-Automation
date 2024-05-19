@@ -1,8 +1,4 @@
 {
-  "admin_email": "admin_email",
-  "admin_password": "admin_password",
-  "manager_email": "manager_email",
-  "manager_password": "manager_password",
   "base_url": "https://staging.app.aironworks.com/",
   "admin_base_url": "https://staging.admin.aironworks.com/",
   "addin_base_url": "https://staging.outlookaddin.aironworks.com",
