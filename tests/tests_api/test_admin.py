@@ -14,8 +14,6 @@ from src.apis.company import CompanyService
 from email import message_from_bytes
 from email.message import Message
 
-EXAMPLE_SCENARIO = "e2ced54e064a4adea24adb5a913aea83"
-
 
 @allure.step("run campaign on single employee")
 def run_campaign_on_employee(
@@ -25,7 +23,7 @@ def run_campaign_on_employee(
         api_request_context_customer_admin,
         campaign=CampaignModel(
             name="Automation scenario",
-            attack_info_id=EXAMPLE_SCENARIO,
+            attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
             days_until_fail=1,
             employees=[employee.employee_id],
         ),
