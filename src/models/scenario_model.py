@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from src.configs.config_loader import AppConfigs
 
 
 @dataclass
@@ -10,4 +11,4 @@ class ScenarioModel:
     url_suffix: str
     html_content: str = "{{attack_url}}"
     sender_domain: str = "moondev.tokyo"
-    link_domain: str = "staging.sd.aironworks.com"
+    link_domain: str = AppConfigs.LINKS_DOMAIN
