@@ -63,6 +63,8 @@ run-tests:
     source /root/.local/share/virtualenvs/*/bin/activate
     pytest -n 4 --alluredir=allure-results --junitxml=junit.xml
   allow_failure: true # in case pipeline fails process run
+  environment:
+    name: $ENV
   artifacts:
     reports:
       junit: junit.xml
