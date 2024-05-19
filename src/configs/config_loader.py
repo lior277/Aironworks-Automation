@@ -27,6 +27,9 @@ class AppConfigs:
     BASE_URL = _env_config["base_url"]
     ADMIN_BASE_URL = _env_config["admin_base_url"]
     ADDIN_BASE_URL = _env_config["addin_base_url"]
+    EXAMPLE_SCENARIO = _env_config["example_scenario"]
+    EXAMPLE_EDUCATION_CONTENT = _env_config["example_education_content"]
+    LINKS_DOMAIN = _env_config["links_domain"]
 
     LOGIN_SA_ACCOUNT = os.getenv("LOGIN_SA_ACCOUNT")
     MAILTRAP_API_TOKEN = os.getenv("MAILTRAP_API_TOKEN")

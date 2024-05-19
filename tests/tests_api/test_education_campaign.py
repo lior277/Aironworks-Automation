@@ -13,8 +13,6 @@ from src.utils.links import get_text_links
 from email import message_from_bytes
 from email.message import Message
 
-EXAMPLE_CONTENT_ID = ""
-
 
 @allure.step("run education campaign on employee")
 def run_education_campaign_on_employee(
@@ -28,7 +26,7 @@ def run_education_campaign_on_employee(
             start_date=datetime.now().timestamp(),
             end_date=(datetime.now() + timedelta(days=1)).timestamp(),
             employee_ids=[employee.employee_id],
-            content_id="de69eb223d0741d49a6db2ebec93a123",
+            content_id=AppConfigs.EXAMPLE_EDUCATION_CONTENT,
         ),
     )
     expect(result).to_be_ok()

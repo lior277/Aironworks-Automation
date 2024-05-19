@@ -12,7 +12,7 @@ def test_filter_company_by_visiblity(user, sign_in_page):
     sign_in_page.submit_sign_in_form(user)
 
     content_library_page = sign_in_page.navigation_bar.navigate_content_library()
-    content_library_page.set_visibility_filter("Test Company 75000")
+    content_library_page.set_visibility_filter("QA Accounts")
 
     expect(content_library_page.cards).to_have_count(1)
 
@@ -38,10 +38,10 @@ def test_filter_company_by_name(user, sign_in_page):
     sign_in_page.submit_sign_in_form(user)
 
     content_library_page = sign_in_page.navigation_bar.navigate_content_library()
-    content_library_page.set_name_filter("Authentication 101")
+    content_library_page.set_name_filter("Test Content for QA")
 
     expect(content_library_page.cards).to_have_count(1)
-    expect(content_library_page.cards.first).to_contain_text("Authentication 101")
+    expect(content_library_page.cards.first).to_contain_text("Test Content for QA")
 
 
 @pytest.mark.parametrize(

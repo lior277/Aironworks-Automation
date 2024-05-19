@@ -1,9 +1,11 @@
 import allure
 import re
+import pytest
 from playwright.sync_api import Page
 
 from src.models.user_model import UserModel
 from src.page_objects.base_page import BasePage
+from src.configs.config_loader import AppConfigs
 
 
 class SignInPage(BasePage):
@@ -26,6 +28,8 @@ class SignInPage(BasePage):
 
     @allure.step("SignInPage: submit sing in form with {user} credentials")
     def submit_sign_in_form(self, user: UserModel):
+        if AppConfigs.ENV == "production" and not user.is_reseller and user.is_admin:
+            pytest.skip("Admin login is not available in production")
         self.button_sign_in_email.click()
         self.input_email.fill(user.email)
         self.input_password.fill(user.password)

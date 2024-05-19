@@ -1,8 +1,11 @@
 {
   "base_url": "https://app.aironworks.com/",
-  "admin_base_url": "https://admin.aironworks.com/",
+  "admin_base_url": "https://35e25956259136c9.aironworks.com/admin/dashboard/",
   "addin_base_url": "https://outlookaddin.aironworks.com",
   "mailtrap_assessment_inbox_id": "2802760",
   "mailtrap_assessment_inbox_mail": "68fa80bce3-28fbb0@inbox.mailtrap.io",
-  "mailtrap_account_id": "1311290"
+  "mailtrap_account_id": "1311290",
+  "example_scenario": "917b556c67934f61af87493be9701f38",
+  "example_education_content": "b4b62e6eec12477b8db758b9425d4689",
+  "links_domain": "www.moondev.tokyo"
 }
