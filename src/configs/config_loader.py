@@ -46,3 +46,5 @@ class AppConfigs:
 
     EMPLOYEE_INBOX = "fae1336c2d-da5a02+%s@inbox.mailtrap.io"
     EMPLOYEE_INBOX_ID = 2813733
+
+    QA_COMPANY_NAME = "QA Accounts"
