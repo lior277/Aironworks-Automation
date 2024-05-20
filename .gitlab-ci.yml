@@ -177,7 +177,9 @@ pages:
 
 post_test_results:
   stage: deploy
-  needs: [run-tests, pages]
+  dependencies:
+    - run-tests
+    - pages
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
