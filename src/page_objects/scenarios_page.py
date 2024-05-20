@@ -4,6 +4,7 @@ import re
 from typing import Literal
 from playwright.sync_api import Page, expect
 from src.page_objects.base_page import BasePage
+from src.page_objects.execute_campaign_page import ExecuteCampaignPage
 from src.models.scenario_model import ScenarioModel
 
 
@@ -13,6 +14,7 @@ class ScenariosPage(BasePage):
         self.create_scenario_button = page.get_by_role("button", name="Create Scenario")
         self.visible_tab = page.get_by_role("tab", name="Visible")
         self.hide_scenario = page.get_by_role("button", name="Hide")
+        self.execute = page.get_by_role("button", name="Execute")
         self.search = self.page.get_by_placeholder("Search by Name")
         self.scenarios_list = self.page.locator(".MuiGrid-root > .MuiBox-root")
 
@@ -101,3 +103,8 @@ class ScenariosPage(BasePage):
         )
         expect(scenario).to_be_visible()
         return scenario
+
+    @allure.step("ScenariosPage: Execute scenario")
+    def execute_scenario(self) -> ExecuteCampaignPage:
+        self.execute.click()
+        return ExecuteCampaignPage(self.page)
