@@ -210,6 +210,22 @@ post_test_results:
       \"text\": \"*Project:* $CI_PROJECT_NAME\n*Job:* $CI_JOB_NAME\n*Stage:* $CI_JOB_STAGE\n*User:* $GITLAB_USER_NAME\n*Deployment Date:* $DEPLOYMENT_DATE\n*Status:* $CI_JOB_STATUS_UPPER $EMOJI_STATUS\n*Details:* <$CI_PAGES_URL/$CURRENT_CONTENT_PATH/index.html|Test Report>\n$TAG\",
       \"mrkdwn\": true
     }" $SLACK_WEBHOOK;
+
+set_pipeline_status:
+  stage: deploy
+  dependencies:
+    - run-tests
+    - pages
+  image: $SERVER_TAG
+  tags:
+    - saas-linux-small-amd64
+  rules:
+    # run on MR:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
+  script: |
+    source .exit_code
     exit $EXIT_CODE
 
 pages-clean-preview:
