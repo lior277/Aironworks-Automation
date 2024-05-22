@@ -30,6 +30,7 @@ class AppConfigs:
     EXAMPLE_SCENARIO = _env_config["example_scenario"]
     EXAMPLE_EDUCATION_CONTENT = _env_config["example_education_content"]
     LINKS_DOMAIN = _env_config["links_domain"]
+    SAMPLE_CAMPAIGN = _env_config["sample_campaign"]
 
     LOGIN_SA_ACCOUNT = os.getenv("LOGIN_SA_ACCOUNT")
     MAILTRAP_API_TOKEN = os.getenv("MAILTRAP_API_TOKEN")

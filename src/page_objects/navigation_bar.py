@@ -4,6 +4,7 @@ from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.settings_page import SettingsPage
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.content_library_page import ContentLibraryPage
+from src.page_objects.campaigns_page import CampaignsPage
 
 
 class NavigationBar:
@@ -15,6 +16,7 @@ class NavigationBar:
             "link", name="Employees Reports"
         )
         self.content_library_button = page.get_by_role("link", name="Content Library")
+        self.campaigns_button = page.get_by_role("link", name="Campaigns", exact=True)
 
     @allure.step("NavigationBar: Navigate to scenarios")
     def navigate_scenarios(self):
@@ -43,3 +45,10 @@ class NavigationBar:
         self.page.wait_for_load_state(timeout=5)
 
         return ContentLibraryPage(self.page)
+
+    @allure.step("NavigationBar: Navigate to campaigns")
+    def navigate_campaigns(self):
+        self.campaigns_button.click()
+        self.page.wait_for_load_state(timeout=5)
+
+        return CampaignsPage(self.page)
