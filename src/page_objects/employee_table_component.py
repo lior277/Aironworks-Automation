@@ -22,8 +22,16 @@ class EmployeeTableComponent:
     @allure.step("EmployeeTableComponent: set filter column")
     def set_filter_column(self, column: str, value: str, nth: int = 0) -> None:
         self.filters_button.click()
-        self.filter_column.nth(nth).select_option(column)
-        self.filter_value.fill(value)
+        times = 0
+        while times < 10:
+            self.filter_column.nth(nth).select_option(column)
+            self.filter_value.fill(value)
+            try:
+                expect(self.filter_column).to_have_value(column)
+                break
+            except AssertionError:
+                times += 1
+                time.sleep(1)
         self.page.wait_for_load_state(timeout=5)
         expect(self.table.get_by_test_id("empty-state")).to_have_count(0)
         time.sleep(1)  # TODO: find another way to wait for the filters UI to disappear

@@ -1,7 +1,7 @@
 import allure
 import re
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 from src.models.user_model import UserModel
 from src.page_objects.base_page import BasePage

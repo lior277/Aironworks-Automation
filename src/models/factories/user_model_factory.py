@@ -1,5 +1,6 @@
 import faker
-
+import random
+import string
 from src.models.user_model import UserModel
 from src.configs.config_loader import AppConfigs
 
@@ -10,7 +11,9 @@ class UserModelFactory:
     @staticmethod
     def user():
         return UserModel(
-            email=fake.email(),
+            email="".join(random.choices(string.ascii_lowercase + string.digits, k=8))
+            + "@"
+            + fake.domain_name(),
             password=fake.password(),
             company=fake.company(),
             is_admin=False,
