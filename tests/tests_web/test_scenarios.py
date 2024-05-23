@@ -1,10 +1,13 @@
+import faker
 import pytest
 from playwright.sync_api import expect
+
+from src.models.auth.user_model import UserModel
+from src.models.factories.auth.user_model_factory import UserModelFactory
+from src.models.factories.scenario_model_factory import ScenarioModelFactory
+from src.models.scenario_model import ScenarioModel
 from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.login_page import SignInPage
-from src.models.factories.scenario_model_factory import ScenarioModelFactory
-from src.models.factories.user_model_factory import UserModelFactory
-import faker
 
 fake = faker.Faker()
 
@@ -27,9 +30,7 @@ fake = faker.Faker()
     ],
 )
 @pytest.mark.smoke
-def test_create_scenario(
-    user, scenario, sign_in_page: SignInPage, dashboard_page: DashboardPage
-):
+def test_create_scenario(user: UserModel, scenario, sign_in_page: SignInPage, dashboard_page: DashboardPage):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
 
@@ -54,7 +55,7 @@ def test_create_scenario(
     ],
 )
 @pytest.mark.smoke
-def test_filter_scenario_by_name(user, sign_in_page, dashboard_page):
+def test_filter_scenario_by_name(user: UserModel, sign_in_page, dashboard_page):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
 
@@ -82,9 +83,8 @@ def test_filter_scenario_by_name(user, sign_in_page, dashboard_page):
     ],
 )
 @pytest.mark.smoke
-def test_hide_scenario(
-    user, scenario, sign_in_page: SignInPage, dashboard_page: DashboardPage
-):
+def test_hide_scenario(user: UserModel, scenario: ScenarioModel, sign_in_page: SignInPage,
+                       dashboard_page: DashboardPage):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
 
@@ -123,7 +123,7 @@ def test_hide_scenario(
     ],
 )
 @pytest.mark.smoke
-def test_clone_scenario(user, scenario, sign_in_page, dashboard_page):
+def test_clone_scenario(user: UserModel, scenario, sign_in_page, dashboard_page):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
 

@@ -1,6 +1,6 @@
 import faker
 
-from src.models.signup_model import EmailSignupModel
+from src.models.auth.signup_model import EmailSignupModel
 
 fake = faker.Faker()
 
