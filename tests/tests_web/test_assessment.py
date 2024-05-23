@@ -4,7 +4,7 @@ import pytest
 from playwright.sync_api import expect
 from src.utils.waiter import wait_for_lro
 from src.apis.assessment import AssessmentService
-from src.models.factories.user_model_factory import UserModelFactory
+from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.utils.log import Log
 
 

@@ -2,11 +2,11 @@ import pytest
 import re
 from playwright.sync_api import expect, TimeoutError
 from src.page_objects.customers_page import CustomersPage
-from src.models.factories.user_model_factory import UserModelFactory
+from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.apis.utils import get_request_context_for_page
 from src.apis.admin import AdminService
 from src.apis.login import LoginService
-from src.models.factories.signup_model_factory import SignupModelFactory
+from src.models.factories.auth.signup_model_factory import SignupModelFactory
 from src.configs.config_loader import AppConfigs
 
 

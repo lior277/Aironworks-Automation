@@ -1,11 +1,12 @@
+import tempfile
+
+import allure
 import pytest
 from playwright.sync_api import Browser, Page
 
 from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.login_page import SignInPage
 from src.utils.log import Log
-import tempfile
-import allure
 
 
 @pytest.fixture(scope="function")
@@ -17,7 +18,7 @@ def playwright_config(request, launch_browser, browser_type):
     browser: Browser = launch_browser(args=args)
     Log.info(f"Browser version = {browser.version}")
     context = browser.new_context(
-        screen={"width": 640, "height": 480},
+        viewport={"width": 1440, "height": 900},
         permissions=["clipboard-read", "clipboard-write"],
     )
     context.set_default_timeout(timeout=120 * 1000)

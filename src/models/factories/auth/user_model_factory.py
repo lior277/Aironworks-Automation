@@ -1,26 +1,28 @@
-import faker
 import random
 import string
-from src.models.user_model import UserModel
+
+import faker
+
 from src.configs.config_loader import AppConfigs
+from src.models.auth.user_model import UserModel
 
 fake = faker.Faker()
 
 
 class UserModelFactory:
     @staticmethod
-    def user():
+    def user() -> UserModel:
         return UserModel(
             email="".join(random.choices(string.ascii_lowercase + string.digits, k=8))
-            + "@"
-            + fake.domain_name(),
+                  + "@"
+                  + fake.domain_name(),
             password=fake.password(),
             company=fake.company(),
             is_admin=False,
         )
 
     @staticmethod
-    def customer_admin():
+    def customer_admin() -> UserModel:
         return UserModel(
             email=AppConfigs.CUSTOMER_ADMIN_USERNAME,
             password=AppConfigs.CUSTOMER_ADMIN_PASSWORD,
@@ -29,7 +31,7 @@ class UserModelFactory:
         )
 
     @staticmethod
-    def aw_admin():
+    def aw_admin() -> UserModel:
         return UserModel(
             email=AppConfigs.AW_ADMIN_USERNAME,
             password=AppConfigs.AW_ADMIN_PASSWORD,
@@ -37,7 +39,7 @@ class UserModelFactory:
         )
 
     @staticmethod
-    def reseller_admin():
+    def reseller_admin() -> UserModel:
         return UserModel(
             email=AppConfigs.RESELLER_ADMIN_USERNAME,
             password=AppConfigs.RESELLER_ADMIN_PASSWORD,

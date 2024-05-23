@@ -1,18 +1,36 @@
-import pytest
 import random
-from src.utils.mailtrap import MailTrap
-from src.configs.config_loader import AppConfigs
-from playwright.sync_api import Playwright, APIRequestContext, expect
-from typing import Generator
-from src.utils.service_account_utils import generate_jwt
-from src.models.factories.user_model_factory import UserModelFactory
-from src.models.employee_model import EmployeeModel
-from src.apis.login import LoginService
-from src.apis.company import CompanyService
+import time
 from dataclasses import replace
+from functools import wraps
+from typing import Generator
+
+import pytest
 from faker import Faker
+from playwright.sync_api import Playwright, APIRequestContext, expect
+
+from src.apis.company import CompanyService
+from src.apis.login import LoginService
+from src.configs.config_loader import AppConfigs
+from src.models.company.employee_model import EmployeeModel
+from src.models.factories.auth.user_model_factory import UserModelFactory
+from src.utils.log import Log
+from src.utils.mailtrap import MailTrap
+from src.utils.service_account_utils import generate_jwt
 
 fake = Faker()
+
+
+def print_execution_time(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        execution_time = end_time - start_time
+        Log.info(f"Execution time of {func.__name__}: {execution_time:.4f} seconds")
+        return result
+
+    return wrapper
 
 
 @pytest.fixture(scope="session")
@@ -39,7 +57,7 @@ def pytest_collection_modifyitems(session, config, items):
 
 @pytest.fixture(scope="session")
 def api_request_context_addin(
-    playwright: Playwright,
+        playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.ADDIN_BASE_URL
     # Get service account email and load the json data from the service account key file.
@@ -57,16 +75,12 @@ def api_request_context_addin(
 
 
 @pytest.fixture(scope="session")
-def api_request_context_customer_admin(
-    playwright: Playwright,
-) -> Generator[APIRequestContext, None, None]:
+def api_request_context_customer_admin(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.BASE_URL
     # Get service account email and load the json data from the service account key file.
 
     request_context = playwright.request.new_context(base_url=base_url)
-    expect(
-        LoginService.login(request_context, UserModelFactory.customer_admin())
-    ).to_be_ok()
+    expect(LoginService.login(request_context, UserModelFactory.customer_admin())).to_be_ok()
     login_info_response = LoginService.info(request_context)
     expect(login_info_response).to_be_ok()
     login_info = login_info_response.json()
@@ -81,7 +95,7 @@ def api_request_context_customer_admin(
 
 @pytest.fixture(scope="session")
 def api_request_context(
-    playwright: Playwright,
+        playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.BASE_URL
     # Get service account email and load the json data from the service account key file.
@@ -96,10 +110,8 @@ def api_request_context(
 @pytest.fixture(scope="function")
 def employee(api_request_context_customer_admin):
     email = AppConfigs.EMPLOYEE_INBOX % fake.pystr().lower()
-    employee = EmployeeModel(None, email, fake.first_name(), fake.last_name())
-    response = CompanyService.create_employee(
-        api_request_context_customer_admin, employee
-    )
+    employee = EmployeeModel(email, fake.first_name(), fake.last_name(), employee_id=None)
+    response = CompanyService.create_employee(api_request_context_customer_admin, employee)
     expect(response).to_be_ok()
 
     employee_data = CompanyService.employee_by_mail(
@@ -111,3 +123,22 @@ def employee(api_request_context_customer_admin):
     assert employee_data["email"] == email
 
     return replace(employee, employee_id=employee_data["id"])
+
+
+@pytest.fixture(scope="session")
+def api_request_context_aw_admin(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+    request_context = playwright.request.new_context(base_url=AppConfigs.ADMIN_BASE_URL)
+    expect(LoginService.login(request_context, UserModelFactory.aw_admin())).to_be_ok()
+    login_info_response = LoginService.info(request_context)
+    expect(login_info_response).to_be_ok()
+    login_info = login_info_response.json()
+
+    assert "user" in login_info
+    assert "roles" in login_info["user"]
+    assert len(login_info["user"]["roles"]) == 1
+
+    role_id = login_info["user"]["roles"][0]["id"]
+    expect(LoginService.pick_role(request_context, role_id)).to_be_ok()
+
+    yield request_context
+    request_context.dispose()

@@ -3,7 +3,7 @@ import re
 import pytest
 from playwright.sync_api import Page, expect
 
-from src.models.user_model import UserModel
+from src.models.auth.user_model import UserModel
 from src.page_objects.base_page import BasePage
 from src.configs.config_loader import AppConfigs
 

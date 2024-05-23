@@ -1,9 +1,0 @@
-from dataclasses import dataclass
-
-
-@dataclass
-class EmployeeModel:
-    employee_id: int
-    email: str
-    first_name: str
-    last_name: str

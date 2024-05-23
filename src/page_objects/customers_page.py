@@ -4,7 +4,7 @@ from typing import Literal
 from playwright.sync_api import Page, expect
 from src.utils.assertions import is_selected
 from src.page_objects.base_page import BasePage
-from src.models.user_model import UserModel
+from src.models.auth.user_model import UserModel
 
 
 class CustomersPage(BasePage):

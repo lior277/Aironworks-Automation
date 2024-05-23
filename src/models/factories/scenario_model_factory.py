@@ -7,7 +7,7 @@ fake = faker.Faker()
 
 class ScenarioModelFactory:
     @staticmethod
-    def scenario():
+    def scenario() -> ScenarioModel:
         return ScenarioModel(
             name="QA Test Scenario " + fake.name(),
             sender_address=fake.pystr().lower(),

@@ -2,8 +2,10 @@ import pytest
 import re
 import csv
 from playwright.sync_api import expect
-from src.models.factories.user_model_factory import UserModelFactory
+
 from src.configs.config_loader import AppConfigs
+from src.models.auth.user_model import UserModel
+from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.utils.mailtrap import find_email
 from src.page_objects.campaign_detalis_page import CampaignDetailsPage
 
@@ -23,7 +25,7 @@ from src.page_objects.campaign_detalis_page import CampaignDetailsPage
         ),
     ],
 )
-def test_create_simulation_campaign(user, employee, sign_in_page, mailtrap):
+def test_create_simulation_campaign(user: UserModel, employee, sign_in_page, mailtrap):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
 
