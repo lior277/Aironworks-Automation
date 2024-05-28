@@ -2,10 +2,10 @@
 
 ## Performance Testing
 
-### locust commandline example:
+### locust commandline example for local execution:
 
 locust -f locustfile.py --headless -u 100 -r 10 -t 10m --host http://example.com --csv=results --logfile=locust.log
-locust -f tests/tests_perf/education_content_perf_test.py --headless -u 1000 -r 100 -t 1m --host https://staging.app.aironworks.com --csv=results/results --logfile=results/locust.log
+locust -f tests/tests_perf/education_content_perf.py --headless -u 1000 -r 100 -t 1m --host https://staging.app.aironworks.com --csv=results/results --logfile=results/locust.log
 
 #### Here's what each flag means:
 

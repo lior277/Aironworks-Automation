@@ -33,3 +33,12 @@ def test_education_campaign(api_request_context_customer_admin, api_request_cont
     file_path = os.path.join(AppFolders.RESOURCES_PATH, "perf_education_campaign.csv")
     fieldnames = education_assignments.assignments[0].get_fieldnames()
     CSVTool.create_file(education_assignments.assignments, fieldnames, file_path)
+
+
+@pytest.mark.parametrize("employees_count", [20000])
+def test_generate_employees(employees_count: int):
+    employees_list = EmployeeModelFactory.get_random_employees(employees_count)
+
+    file_path = os.path.join(AppFolders.RESOURCES_PATH, f"employees{employees_count}.csv")
+    column_names = ["First Name", "Last Name", "Email"]
+    CSVTool.create_file(employees_list, column_names, file_path)
