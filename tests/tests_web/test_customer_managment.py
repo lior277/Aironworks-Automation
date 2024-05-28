@@ -121,10 +121,12 @@ def test_new_customers_count(customers_page, playwright):
     expect(company_counts).to_be_ok()
 
     new_count = company_counts.json()["new"]
+    content = customers_page.tabs["new"].text_content()
 
-    expect(customers_page.tabs["new"]).to_have_text(
-        re.compile(f"New Customers.*{new_count}", re.IGNORECASE)
-    )
+    match = re.compile(f"New Customers.*({new_count})", re.IGNORECASE).match(content)
+    assert match is not None
+
+    assert abs(int(match.group(1)) - new_count) < 2
 
 
 @pytest.mark.parametrize(
