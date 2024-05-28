@@ -30,7 +30,7 @@ def test_create_simulation_campaign(user: UserModel, employee, sign_in_page, mai
     sign_in_page.submit_sign_in_form(user)
 
     scenarios_page = sign_in_page.navigation_bar.navigate_scenarios()
-    scenario_name = "General Scenario - English"
+    scenario_name = AppConfigs.EXAMPLE_SCENARIO_NAME
     scenarios_page.filter_by_name(scenario_name)
     generic_scenario = scenarios_page.find_scenario(scenario_name)
 
@@ -101,7 +101,10 @@ def campaign_details_page(request, sign_in_page) -> CampaignDetailsPage:
         + AppConfigs.SAMPLE_CAMPAIGN
     )
 
-    return CampaignDetailsPage(sign_in_page.page)
+    details_page = CampaignDetailsPage(sign_in_page.page)
+    expect(details_page.export_csv_button).to_be_visible()
+
+    return details_page
 
 
 @pytest.mark.parametrize(
@@ -123,7 +126,7 @@ def campaign_details_page(request, sign_in_page) -> CampaignDetailsPage:
 def test_campaign_summary_page(campaign_details_page, sign_in_page):
     expect(
         campaign_details_page.page.get_by_role(
-            "heading", name=re.compile("Scenario - Test AW Admin.*")
+            "heading", name=re.compile(AppConfigs.SAMPLE_CAMPAIGN_NAME + ".*")
         )
     ).to_have_count(1)  # test title
     expect(campaign_details_page.page.get_by_text("1 days")).to_have_count(
@@ -171,18 +174,19 @@ def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage):
     indirect=["campaign_details_page"],
 )
 def test_campaign_export(campaign_details_page: CampaignDetailsPage):
+    rows = campaign_details_page.page.get_by_role("row").all()
+    assert len(rows) == 2
+
+    values = [row.text_content() for row in rows[1].get_by_role("cell").all()[:-1]]
+
     file = campaign_details_page.export_csv()
     with open(file, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         rows = [row for row in reader]
     assert len(rows) == 1
-    del rows[0]["Failure Date"]
-    assert rows[0] == {
-        "Device": "Generic Feature Phone / Debian / Other",
-        "Email": "fae1336c2d-da5a02+cjnksfoqlnbhxacrwgfk@inbox.mailtrap.io",
-        "First Name": "Janice",
-        "IP Address": "34.73.195.161",
-        "Last Name": "Bailey",
-        "Report Date": "",
-        "Status": "SUCCESSFUL",
-    }
+    csv_values = tuple(rows[0].values())[:-1]
+    page = tuple(values)
+
+    assert csv_values[2:] == page[2:]
+    # TODO exported time is bugged
+    assert csv_values[0].lower() == page[0].lower()

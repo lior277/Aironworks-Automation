@@ -6,7 +6,10 @@
   "mailtrap_assessment_inbox_mail": "68fa80bce3-28fbb0@inbox.mailtrap.io",
   "mailtrap_account_id": "1311290",
   "example_scenario": "e2ced54e064a4adea24adb5a913aea83",
+  "example_scenario_name": "General Scenario - English",
   "example_education_content": "de69eb223d0741d49a6db2ebec93a123",
   "links_domain": "staging.sd.aironworks.com",
-  "sample_campaign": "44df5ffa4fc4456595563d9ba7869169"
+  "sender_domain": "moondev.tokyo",
+  "sample_campaign": "44df5ffa4fc4456595563d9ba7869169",
+  "sample_campaign_name": "Scenario - Test AW Admin"
 }

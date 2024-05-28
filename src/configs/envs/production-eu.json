@@ -1,0 +1,15 @@
+{
+  "base_url": "https://eu.app.aironworks.com/",
+  "admin_base_url": "https://342xfjegwf6o31q.eu.aironworks.com/",
+  "addin_base_url": "https://eu.outlookaddin.aironworks.com",
+  "mailtrap_assessment_inbox_id": "2802760",
+  "mailtrap_assessment_inbox_mail": "68fa80bce3-28fbb0@inbox.mailtrap.io",
+  "mailtrap_account_id": "1311290",
+  "example_scenario": "5d971f431138468a97b1c344b5e21c2c",
+  "example_scenario_name": "QA Test Scenario",
+  "example_education_content": "db6a0f20f85c44279ab21fb8817dbbf7",
+  "links_domain": "www.expresstoday.net",
+  "sender_domain": "expresstoday.net",
+  "sample_campaign": "4aaabe73a65647ee952c6f64eab54882",
+  "sample_campaign_name": "QA Test Scenario"
+}

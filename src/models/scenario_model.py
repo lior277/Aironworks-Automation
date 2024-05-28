@@ -10,5 +10,5 @@ class ScenarioModel:
     subject: str
     url_suffix: str
     html_content: str = "{{attack_url}}"
-    sender_domain: str = "moondev.tokyo"
+    sender_domain: str = AppConfigs.SENDER_DOMAIN
     link_domain: str = AppConfigs.LINKS_DOMAIN
