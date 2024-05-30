@@ -15,7 +15,7 @@ from src.utils.csv_tool import CSVTool
 
 @pytest.mark.parametrize("employees_count", [1000])
 def test_education_campaign(api_request_context_customer_admin, api_request_context_aw_admin, employees_count: int):
-    employees_list = EmployeeModelFactory.get_random_employees(employees_count)
+    employees_list = EmployeeModelFactory.get_random_employees(employees_count, domain="aironworks.com")
     response = CompanyService.create_employees(api_request_context_customer_admin, employees_list, overwrite=True)
     response_body = BasicModel.from_dict(response.json())
     assert response_body.data.success and response.ok, f"Failed to upload file with employee. Response => {response_body}"

@@ -11,7 +11,7 @@ class CSVTool:
             data_to_write = {}
             if not isinstance(data, dict):
                 if isinstance(data, list):
-                    if getattr(data[0], "to_csv_file") and callable(data[0].to_csv_file):
+                    if getattr(data[0], "to_csv_file", None) and callable(data[0].to_csv_file):
                         data_to_write = [row.to_csv_file() for row in data]
                     else:
                         data_to_write = [row.get_body() for row in data]
