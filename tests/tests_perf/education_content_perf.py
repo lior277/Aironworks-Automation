@@ -7,16 +7,18 @@ from locust.exception import StopUser
 
 logger = logging.getLogger("locust")
 
-all_users_spawned = Event()
+# all_users_spawned = Event()
 
 
 def load_csv(filename):
-    with open(filename, mode='r') as file:
+    with open(filename, mode="r") as file:
         reader = csv.DictReader(file)
         return list(reader)
 
 
-csv_data = load_csv("perf_education_campaign.csv")  # Change the file path for local execution
+csv_data = load_csv(
+    "perf_education_campaign.csv"
+)  # Change the file path for local execution
 
 
 @events.init.add_listener
@@ -24,7 +26,7 @@ def on_locust_init(environment, **kwargs):
     @environment.events.spawning_complete.add_listener
     def on_spawning_complete(**kwargs):
         logger.info(f"All users spawned. Releasing all users.")
-        all_users_spawned.set()  # Signal that all users have been spawned
+        # all_users_spawned.set()  # Signal that all users have been spawned
 
 
 class MySequentialTaskSet(SequentialTaskSet):
@@ -36,7 +38,7 @@ class MySequentialTaskSet(SequentialTaskSet):
     def get_education_assignment(self):
         user_index = self.user.index
         logger.info(f"{user_index=}")
-        data = csv_data[user_index]
+        data = csv_data[user_index % len(csv_data)]
         logger.info(f"{data=}")
         data_values = list(data.values())
         logger.info(f"{data_values=}")
@@ -45,10 +47,16 @@ class MySequentialTaskSet(SequentialTaskSet):
         url = f"/api/education/assignment/{assignment_id}"
         param = {"email": data_values[0], "token": data_values[4]}
         full_url = f"{self.client.base_url}{url}"
-        with self.client.get(url, params=param, catch_response=True,
-                             name="/api/education/assignment/{education_id}") as response:
+        with self.client.get(
+            url,
+            params=param,
+            catch_response=True,
+            name="/api/education/assignment/{education_id}",
+        ) as response:
             if response.status_code != 200:
-                response.failure(f"{param=},{url=},{full_url=},{response.text=},{response.status_code=}")
+                response.failure(
+                    f"{param=},{url=},{full_url=},{response.text=},{response.status_code=}"
+                )
         self.complete_task()
 
     def complete_task(self):
