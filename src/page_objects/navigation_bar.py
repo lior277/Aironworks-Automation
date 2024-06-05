@@ -11,7 +11,7 @@ class NavigationBar:
     def __init__(self, page: Page):
         self.page = page
         self.scenarios_button = page.get_by_role("link", name="Scenarios")
-        self.settings_button = page.get_by_role("link", name="Settings")
+        self.settings_button = page.get_by_role("link", name="Settings", exact=True)
         self.employee_reports_button = page.get_by_role(
             "link", name="PhishDetect AI Reports"
         )
