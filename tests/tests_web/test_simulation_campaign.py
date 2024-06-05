@@ -93,7 +93,7 @@ def campaign_details_page(request, sign_in_page) -> CampaignDetailsPage:
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
     expect(
-        sign_in_page.page.get_by_role("link", name="Settings")
+        sign_in_page.page.get_by_role("link", name="Settings", exact=True)
     ).to_be_visible()  # wait for login to finish before navigating
     sign_in_page.page.goto(
         (AppConfigs.ADMIN_BASE_URL if user.is_admin else AppConfigs.BASE_URL)
