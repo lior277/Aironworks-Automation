@@ -8,7 +8,9 @@ from playwright.sync_api import APIRequestContext, expect, APIResponse
 
 from src.models.company.employee_model import EmployeeModel
 from .psapi import PSApi
+from ..models.company.employee_delete_model import EmployeeDeleteModel
 from ..models.company.employee_list_ids_model import EmployeeListIdsModel
+from ..models.company.employee_update_model import EmployeeUpdateModel
 
 
 class CompanyService:
@@ -88,3 +90,13 @@ class CompanyService:
     @allure.step("CompanyService: get employee ids")
     def get_employee_ids(cls, request_context: APIRequestContext, employee_ids: EmployeeListIdsModel) -> APIResponse:
         return request_context.post(PSApi.EMPLOYEE_LIST_IDS.get_endpoint(), data=asdict(employee_ids))
+
+    @classmethod
+    @allure.step("CompanyService: delete employees")
+    def delete_employees(cls, request_context: APIRequestContext, employees: EmployeeDeleteModel) -> APIResponse:
+        return request_context.post(PSApi.EMPLOYEE_DELETE.get_endpoint(), data=asdict(employees))
+
+    @classmethod
+    @allure.step("CompanyService: update employees")
+    def update_employees(cls, request_context: APIRequestContext, employees: EmployeeUpdateModel) -> APIResponse:
+        return request_context.post(PSApi.EMPLOYEE_UPDATE.get_endpoint(), data=asdict(employees))

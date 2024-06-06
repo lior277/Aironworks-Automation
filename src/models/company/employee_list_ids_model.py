@@ -8,3 +8,4 @@ from src.models.base_dataclass import BaseDataClass
 class EmployeeListIdsModel(BaseDataClass):
     employee_role: bool
     filters: Optional[str]
+    admin_role: Optional[bool] = False

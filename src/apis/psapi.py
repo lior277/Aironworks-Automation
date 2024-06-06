@@ -7,6 +7,8 @@ class PSApi(Enum):
     UPLOAD_EMPLOYEE_INFO = "/company/upload_employee_info"
     EMPLOYEE_LIST = "/company/employee_list"
     EMPLOYEE_LIST_IDS = "/company/employee_list_ids"
+    EMPLOYEE_UPDATE = "/company/employee_update"
+    EMPLOYEE_DELETE = "/company/employee_delete"
     COMPANY_LOCALIZED_CONFIG = "/company/localized-configs"
 
     LOGIN = "/auth/login"
