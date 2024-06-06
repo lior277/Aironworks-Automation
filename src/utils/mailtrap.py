@@ -1,10 +1,14 @@
-from src.configs.config_loader import AppConfigs
-from playwright.sync_api import Playwright, APIRequestContext, expect
+import time
+from base64 import b64decode
+from datetime import datetime
 from email import message_from_bytes
 from email.message import Message
-from datetime import datetime
-from base64 import b64decode
-import time
+
+from playwright.sync_api import Playwright, APIRequestContext, expect
+
+from src.configs.config_loader import AppConfigs
+from src.models.mait_trap_model import MailTrapModel
+from src.utils.log import print_execution_time, Log
 
 
 def find_attachment(attachment_content):
@@ -41,10 +45,10 @@ def find_email(email, subject=None):
 
 class MailTrap:
     def __init__(
-        self,
-        playwright: Playwright,
-        base_url="https://mailtrap.io",
-        account_id=AppConfigs.MAILTRAP_ACCOUNT_ID,
+            self,
+            playwright: Playwright,
+            base_url="https://mailtrap.io",
+            account_id=AppConfigs.MAILTRAP_ACCOUNT_ID,
     ):
         headers = {"Api-Token": AppConfigs.MAILTRAP_API_TOKEN}
         self.request_context: APIRequestContext = playwright.request.new_context(
@@ -52,10 +56,12 @@ class MailTrap:
         )
         self._account_id = account_id
 
-    def messages(self, inbox_id):
-        response = self.request_context.get(
-            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages"
-        )
+    def messages(self, inbox_id, email_to: str = None):
+        params = {}
+        if email_to:
+            params.update({'search': f"{email_to}"})
+        response = self.request_context.get(f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages",
+                                            params=params)
         expect(response).to_be_ok()
         return response
 
@@ -73,6 +79,21 @@ class MailTrap:
         expect(response).to_be_ok()
         return response
 
+    def delete_message(self, message_id, inbox_id: str = AppConfigs.PERF_EMPLOYEE_INBOX_ID):
+        response = self.request_context.delete(
+            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}")
+        expect(response).to_be_ok()
+        return response
+
+    def clean_inbox(self, inbox_id):
+        response = self.request_context.patch(f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/clean")
+        expect(response).to_be_ok()
+
+    def clean_inboxes(self, list_mail_traps: list[MailTrapModel]):
+        for mail in list_mail_traps:
+            response = self.request_context.patch(f"/api/accounts/{self._account_id}/inboxes/{mail.id}/clean")
+            expect(response).to_be_ok()
+
     def wait_for_mail(self, inbox_id, predicate, timeout=120):
         start_time = datetime.now()
         while True:
@@ -84,6 +105,63 @@ class MailTrap:
             time.sleep(1)
             if (datetime.now() - start_time).seconds > timeout:
                 return None
+
+    @print_execution_time
+    def wait_for_mail_to(self, inbox_id, email_to: str, timeout: int = 120, delete_message: bool = False):
+        start_time = datetime.now()
+        while True:
+            get_mails = self.messages(inbox_id, email_to=email_to)
+            if get_mails.json():
+                if delete_message:
+                    self.delete_message(inbox_id, get_mails.json()[0]['id'])
+                return get_mails.json()[0]
+            time.sleep(1)
+            if (datetime.now() - start_time).seconds > timeout:
+                return None
+
+    @print_execution_time
+    def wait_for_mails(self, inbox_id: str = AppConfigs.PERF_EMPLOYEE_INBOX_ID, timeout: int = 120):
+        start_time = datetime.now()
+        while True:
+            get_mails = self.messages(inbox_id)
+            if get_mails.json():
+                return get_mails.json()
+            time.sleep(1)
+            if (datetime.now() - start_time).seconds > timeout:
+                return None
+
+    @print_execution_time
+    def wait_for_all_mail(self, employees_email_list: list[str], timeout: int = 7200):
+        start_time = datetime.now()
+        while len(employees_email_list) > 0:
+            emails = self.wait_for_mails(timeout=600)
+            for email in emails:
+                if email['to_email'] in employees_email_list:
+                    employees_email_list.remove(email['to_email'])
+                    self.delete_message(email['id'])
+            if len(employees_email_list) == 0 or (datetime.now() - start_time).seconds > timeout:
+                break
+        return employees_email_list
+
+    @print_execution_time
+    def wait_for_all_mail_in_diff_inboxes(self, employees_email_list: list[str], list_mail_traps: list[MailTrapModel],
+                                          remove_messages: bool = False, timeout: int = 7200):
+        start_time = datetime.now()
+        while len(employees_email_list) > 0:
+            for mail_trap in list_mail_traps:
+                emails = self.messages(inbox_id=mail_trap.id)
+                if emails.json():
+                    for email in emails.json():
+                        if email['to_email'] in employees_email_list:
+                            employees_email_list.remove(email['to_email'])
+                            if remove_messages:
+                                try:
+                                    self.delete_message(inbox_id=mail_trap.id, message_id=email['id'])
+                                except Exception:
+                                    Log.info(f"Unable to delete {email['id']=} in {mail_trap.id=}")
+            if len(employees_email_list) == 0 or (datetime.now() - start_time).seconds > timeout:
+                break
+        return employees_email_list
 
     def close(self):
         self.request_context.dispose()

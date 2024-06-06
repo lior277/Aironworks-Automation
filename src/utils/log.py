@@ -2,13 +2,27 @@ import logging
 import os
 import time
 from datetime import datetime
+from functools import wraps
 
 from src.configs.config_loader import AppFolders
 
 
+def print_execution_time(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        execution_time = end_time - start_time
+        Log.info(f"Execution time of {func.__name__}: {execution_time:.4f} seconds")
+        return result
+
+    return wrapper
+
+
 class Log:
     filename = None
-    logger = logging.getLogger(os.environ.get('PYTEST_XDIST_WORKER'))
+    logger = logging.getLogger(os.environ.get('PYTEST_XDIST_WORKER', __name__))
     print(f"worker = {logger}")
 
     @classmethod
