@@ -9,7 +9,7 @@ class AdminService:
     @classmethod
     def campaign(cls, request_context: APIRequestContext, campaign: CampaignModel):
         return request_context.post(
-            PSApi.API_VERSION.value + PSApi.CAMPAIGN.value,
+            PSApi.CAMPAIGN.get_endpoint(),
             data={
                 "campaign_name": campaign.name,
                 "attack_info_id": campaign.attack_info_id,
@@ -27,10 +27,10 @@ class AdminService:
     @classmethod
     def get_attack_execution(cls, request_context: APIRequestContext, id):
         return request_context.get(
-            PSApi.API_VERSION.value + PSApi.GET_ATTACK_EXECUTION.value,
+            PSApi.GET_ATTACK_EXECUTION.get_endpoint(),
             params={"id": id},
         )
 
     @classmethod
     def company_count(cls, request_context: APIRequestContext):
-        return request_context.get(PSApi.API_VERSION.value + PSApi.COMPANY_COUNT.value)
+        return request_context.get(PSApi.COMPANY_COUNT.get_endpoint())

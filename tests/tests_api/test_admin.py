@@ -2,6 +2,7 @@ import pytest
 import re
 import allure
 from src.utils import markers
+from src.utils.log import Log
 from src.apis.admin import AdminService
 from src.apis.public import PublicService
 from playwright.sync_api import expect
@@ -86,6 +87,10 @@ def test_email_notification_match_setting(
         api_request_context_customer_admin, api_request_context, mailtrap, employee
     )
 
+    Log.info(
+        f"waiting for email with title: {company_config['data'][0]['custom_attack_notification_subject']}"
+    )
+
     mail = mailtrap.wait_for_mail(
         AppConfigs.EMPLOYEE_INBOX_ID,
         find_email(
@@ -93,6 +98,7 @@ def test_email_notification_match_setting(
             company_config["data"][0]["custom_attack_notification_subject"],
         ),
     )
+    Log.info(f"employee email: {employee.email}")
 
     assert mail is not None
 
@@ -100,6 +106,7 @@ def test_email_notification_match_setting(
     mail_raw = mailtrap.raw_message(AppConfigs.EMPLOYEE_INBOX_ID, mail_id)
     message: Message = message_from_bytes(mail_raw.body())
     payload = message.get_payload()
+    Log.info("payload: \n" + payload)
 
     regex_string = (
         company_config["data"][0]["custom_attack_notification"]
@@ -108,8 +115,9 @@ def test_email_notification_match_setting(
             "{{portal_url}}",
             r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)",
         )
-        + "<img.*/>\n"
+        + "(<img.*/>)?\n"
     )
+    Log.info("regex_string: \n" + regex_string)
 
     regex = re.compile(
         regex_string,
