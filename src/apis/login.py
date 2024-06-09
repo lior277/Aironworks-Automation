@@ -13,7 +13,7 @@ class LoginService:
     @allure.step("LoginService: submit login")
     def login(cls, request_context: APIRequestContext, user: UserModel) -> APIResponse:
         return request_context.post(
-            PSApi.API_VERSION.value + PSApi.LOGIN.value,
+            PSApi.LOGIN.get_endpoint(),
             data={
                 "admin": user.is_admin,
                 "email": user.email,
@@ -30,9 +30,14 @@ class LoginService:
     @classmethod
     @allure.step("LoginService: pick role")
     def pick_role(cls, request_context: APIRequestContext, role_id: str) -> APIResponse:
-        return request_context.post(PSApi.PICK_ROLE.get_endpoint(), data={"role_id": role_id}, )
+        return request_context.post(
+            PSApi.PICK_ROLE.get_endpoint(),
+            data={"role_id": role_id},
+        )
 
     @classmethod
     @allure.step("LoginService: register a customer")
-    def register(cls, request_context: APIRequestContext, signup: EmailSignupModel) -> APIResponse:
+    def register(
+        cls, request_context: APIRequestContext, signup: EmailSignupModel
+    ) -> APIResponse:
         return request_context.post(PSApi.REGISTER.get_endpoint(), data=asdict(signup))

@@ -4,6 +4,8 @@ from enum import Enum
 class PSApi(Enum):
     API_VERSION = "/api"
 
+    UPLOAD_URL = "/upload/url"
+
     UPLOAD_EMPLOYEE_INFO = "/company/upload_employee_info"
     EMPLOYEE_LIST = "/company/employee_list"
     EMPLOYEE_LIST_IDS = "/company/employee_list_ids"
