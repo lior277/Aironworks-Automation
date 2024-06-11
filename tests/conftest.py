@@ -9,8 +9,12 @@ from playwright.sync_api import Playwright, APIRequestContext, expect
 from src.apis.company import CompanyService
 from src.apis.login import LoginService
 from src.configs.config_loader import AppConfigs
+from src.models.company.employee_delete_model import EmployeeDeleteModel
+from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.company.employee_model import EmployeeModel
+from src.models.company.employee_update_model import EmployeeUpdateModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
+from src.utils.list import divide_list_into_chunks
 from src.utils.mailtrap import MailTrap
 from src.utils.service_account_utils import generate_jwt
 
@@ -126,3 +130,21 @@ def api_request_context_aw_admin(playwright: Playwright) -> Generator[APIRequest
 
     yield request_context
     request_context.dispose()
+
+
+@pytest.fixture(scope="function")
+def clean_up_employees(api_request_context_customer_admin):
+    response = CompanyService.get_employee_ids(api_request_context_customer_admin,
+                                               EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None))
+    if response.json()['items']:
+        CompanyService.update_employees(api_request_context_customer_admin,
+                                        employees=EmployeeUpdateModel(employee_role=False,
+                                                                      ids=list(response.json()['items'])))
+    response = CompanyService.get_employee_ids(api_request_context_customer_admin,
+                                               EmployeeListIdsModel(employee_role=False, admin_role=False,
+                                                                    filters=None))
+    if response.json()["items"]:
+        divided_list = divide_list_into_chunks(response.json()["items"], 2000)
+        for chunk in divided_list:
+            CompanyService.delete_employees(api_request_context_customer_admin,
+                                            employees=EmployeeDeleteModel(ids=chunk))
