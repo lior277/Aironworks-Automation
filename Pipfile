@@ -6,14 +6,13 @@ name = "pypi"
 [packages]
 pytest = "8.1.1"
 faker = "24.4.0"
-playwright = "1.42"
+playwright = "*"
 pytest-playwright = "0.4.4"
 python-dotenv = "1.0.0"
 pytest-xdist = "3.5.0"
 allure-pytest = "2.13.5"
 google-auth = "==2.19.1"
 locust = "2.27.0"
-
 # remove once finished with the importing test cases to the TestRail
 pandas = "2.2.1"
 pytz = "2024.1"
