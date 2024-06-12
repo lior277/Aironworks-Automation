@@ -112,7 +112,8 @@ def test_active_customer_spectate(customers_page, dashboard_page):
     indirect=["customers_page"],
 )
 @pytest.mark.smoke
-def test_new_customers_count(customers_page, playwright):
+def test_new_customers_count(customers_page: CustomersPage, playwright):
+    expect(customers_page.page.get_by_test_id("empty-state")).not_to_be_visible()
     request_context = get_request_context_for_page(
         playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
     )
