@@ -28,11 +28,7 @@ class SignInPage(BasePage):
 
     @allure.step("SignInPage: submit sing in form with {user} credentials")
     def submit_sign_in_form(self, user: UserModel):
-        if (
-            AppConfigs.ENV.startswith("production")
-            and not user.is_reseller
-            and user.is_admin
-        ):
+        if AppConfigs.ENV.startswith("production") and user.is_admin:
             pytest.skip("Admin login is not available in production")
         self.button_sign_in_email.click()
         self.input_email.fill(user.email)
