@@ -1,4 +1,5 @@
-from playwright.sync_api import Page
+import allure
+from playwright.sync_api import Page, expect
 
 
 class EducationLandingPage:
@@ -14,6 +15,16 @@ class EducationLandingPage:
     def iframe(self):
         return self.page.main_frame.child_frames[0]
 
+    @allure.step("EducationLandingPage: open page")
     def open(self):
         self.page.goto(self.link_url)
         self.page.wait_for_load_state("load")
+
+    @allure.step("EducationLandingPage: submit email")
+    def submit_email(self, email: str):
+        expect(self.email_input).to_be_visible()
+        self.email_input.fill(email)
+
+        expect(self.submit_button).to_be_visible()
+        with self.page.expect_request_finished():
+            self.submit_button.click()

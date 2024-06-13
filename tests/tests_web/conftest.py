@@ -23,7 +23,9 @@ def playwright_config(request, launch_browser, browser_type):
     )
     context.set_default_timeout(timeout=120 * 1000)
 
-    context.tracing.start(snapshots=True, screenshots=True, sources=True)
+    context.tracing.start(
+        name=request.node.name, snapshots=True, screenshots=True, sources=True
+    )
 
     yield browser, context
 
