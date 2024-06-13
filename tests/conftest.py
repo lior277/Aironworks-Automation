@@ -21,7 +21,7 @@ from src.utils.service_account_utils import generate_jwt
 fake = Faker()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def mailtrap(playwright):
     mailtrap = MailTrap(playwright)
     yield mailtrap
@@ -38,6 +38,10 @@ def example_mail():
 
 def pytest_collection_modifyitems(session, config, items):
     for item in items:
+        if item.get_closest_marker("timeout") is None:
+            item.add_marker(pytest.mark.timeout(3 * 60))
+
+    for item in items:
         for marker in item.iter_markers(name="test_id"):
             test_id = marker.args[0]
             item.user_properties.append(("test_id", test_id))
@@ -45,7 +49,7 @@ def pytest_collection_modifyitems(session, config, items):
 
 @pytest.fixture(scope="session")
 def api_request_context_addin(
-        playwright: Playwright,
+    playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.ADDIN_BASE_URL
     # Get service account email and load the json data from the service account key file.
@@ -63,12 +67,16 @@ def api_request_context_addin(
 
 
 @pytest.fixture(scope="session")
-def api_request_context_customer_admin(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+def api_request_context_customer_admin(
+    playwright: Playwright,
+) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.BASE_URL
     # Get service account email and load the json data from the service account key file.
 
     request_context = playwright.request.new_context(base_url=base_url)
-    expect(LoginService.login(request_context, UserModelFactory.customer_admin())).to_be_ok()
+    expect(
+        LoginService.login(request_context, UserModelFactory.customer_admin())
+    ).to_be_ok()
     login_info_response = LoginService.info(request_context)
     expect(login_info_response).to_be_ok()
     login_info = login_info_response.json()
@@ -83,7 +91,7 @@ def api_request_context_customer_admin(playwright: Playwright) -> Generator[APIR
 
 @pytest.fixture(scope="session")
 def api_request_context(
-        playwright: Playwright,
+    playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.BASE_URL
     # Get service account email and load the json data from the service account key file.
@@ -98,8 +106,12 @@ def api_request_context(
 @pytest.fixture(scope="function")
 def employee(api_request_context_customer_admin):
     email = AppConfigs.EMPLOYEE_INBOX % fake.pystr().lower()
-    employee = EmployeeModel(email, fake.first_name(), fake.last_name(), employee_id=None)
-    response = CompanyService.create_employee(api_request_context_customer_admin, employee)
+    employee = EmployeeModel(
+        email, fake.first_name(), fake.last_name(), employee_id=None
+    )
+    response = CompanyService.create_employee(
+        api_request_context_customer_admin, employee
+    )
     expect(response).to_be_ok()
 
     employee_data = CompanyService.employee_by_mail(
@@ -114,7 +126,9 @@ def employee(api_request_context_customer_admin):
 
 
 @pytest.fixture(scope="session")
-def api_request_context_aw_admin(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+def api_request_context_aw_admin(
+    playwright: Playwright,
+) -> Generator[APIRequestContext, None, None]:
     request_context = playwright.request.new_context(base_url=AppConfigs.ADMIN_BASE_URL)
     expect(LoginService.login(request_context, UserModelFactory.aw_admin())).to_be_ok()
     login_info_response = LoginService.info(request_context)
@@ -134,17 +148,25 @@ def api_request_context_aw_admin(playwright: Playwright) -> Generator[APIRequest
 
 @pytest.fixture(scope="function")
 def clean_up_employees(api_request_context_customer_admin):
-    response = CompanyService.get_employee_ids(api_request_context_customer_admin,
-                                               EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None))
-    if response.json()['items']:
-        CompanyService.update_employees(api_request_context_customer_admin,
-                                        employees=EmployeeUpdateModel(employee_role=False,
-                                                                      ids=list(response.json()['items'])))
-    response = CompanyService.get_employee_ids(api_request_context_customer_admin,
-                                               EmployeeListIdsModel(employee_role=False, admin_role=False,
-                                                                    filters=None))
+    response = CompanyService.get_employee_ids(
+        api_request_context_customer_admin,
+        EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None),
+    )
+    if response.json()["items"]:
+        CompanyService.update_employees(
+            api_request_context_customer_admin,
+            employees=EmployeeUpdateModel(
+                employee_role=False, ids=list(response.json()["items"])
+            ),
+        )
+    response = CompanyService.get_employee_ids(
+        api_request_context_customer_admin,
+        EmployeeListIdsModel(employee_role=False, admin_role=False, filters=None),
+    )
     if response.json()["items"]:
         divided_list = divide_list_into_chunks(response.json()["items"], 2000)
         for chunk in divided_list:
-            CompanyService.delete_employees(api_request_context_customer_admin,
-                                            employees=EmployeeDeleteModel(ids=chunk))
+            CompanyService.delete_employees(
+                api_request_context_customer_admin,
+                employees=EmployeeDeleteModel(ids=chunk),
+            )

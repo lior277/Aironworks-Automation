@@ -19,6 +19,7 @@ pytz = "2024.1"
 openpyxl = "3.1.2"
 pygsheets = "2.0.6"
 trcli = "*"
+pytest-timeout = "*"
 
 [dev-packages]
 

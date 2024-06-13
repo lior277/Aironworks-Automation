@@ -62,7 +62,7 @@ run-tests:
   script: |
     source /root/.local/share/virtualenvs/*/bin/activate
     EXIT=0
-    pytest -n 4 -m "not delivered_emails" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
+    pytest -vv -n 4 -m "not delivered_emails" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
     echo "EXIT_CODE=$EXIT" > .exit_code
     exit $EXIT
   allow_failure: true # in case pipeline fails process run
@@ -79,7 +79,7 @@ run-tests:
 
 upload_testrail_run:
   stage: deploy
-  needs: [ run-tests ]
+  needs: [run-tests]
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
@@ -112,7 +112,7 @@ history_job:
         CURRENT_CONTENT_PATH: $ENV
   cache:
     key: gitlab-pages
-    paths: [ public ]
+    paths: [public]
   stage: history_copy
   tags:
     - saas-linux-small-amd64
@@ -148,7 +148,7 @@ pages:
   resource_group: pages
   cache:
     key: gitlab-pages
-    paths: [ public ]
+    paths: [public]
   tags:
     - saas-linux-small-amd64
   rules:
@@ -246,7 +246,7 @@ pages-clean-preview:
         ENV_NAME: $ENV
   cache:
     key: gitlab-pages
-    paths: [ public ]
+    paths: [public]
   variables:
     GIT_STRATEGY: none # git files not available after branch deletion
   script:
