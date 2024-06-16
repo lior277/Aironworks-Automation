@@ -6,6 +6,7 @@ class PSApi(Enum):
     UPLOAD_URL = "/upload/url"
 
     UPLOAD_EMPLOYEE_INFO = "/company/upload_employee_info"
+    UPLOAD_EMPLOYEE_INFO_STATUS = "/company/upload_employee_info/{op_id}"
     EMPLOYEE_LIST = "/company/employee_list"
     EMPLOYEE_LIST_IDS = "/company/employee_list_ids"
     EMPLOYEE_UPDATE = "/company/employee_update"

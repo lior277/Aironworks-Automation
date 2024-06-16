@@ -58,6 +58,15 @@ class CompanyService:
         )
 
     @classmethod
+    @allure.step("CompanyService: get create employees status")
+    def create_employees_status(
+        cls, request_context: APIRequestContext, op_id: str
+    ) -> APIResponse:
+        return request_context.get(
+            PSApi.UPLOAD_EMPLOYEE_INFO_STATUS.get_endpoint().format(op_id=op_id)
+        )
+
+    @classmethod
     @allure.step("CompanyService: get company config")
     def localized_config(cls, request_context: APIRequestContext) -> APIResponse:
         return request_context.get(PSApi.COMPANY_LOCALIZED_CONFIG.get_endpoint())
