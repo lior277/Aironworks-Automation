@@ -9,13 +9,17 @@ from src.models.factories.company.employee_model_factory import EmployeeModelFac
 from src.models.factories.education_campaign.education_campaign_model_factory import (
     EducationCampaignModelFactory,
 )
-from src.models.general_models import BasicModel, LongRunningOperation
+from src.models.general_models import LongRunningOperation
 from src.utils.waiter import wait_for_lro
 from src.models.mait_trap_model import MailTrapModelFactory
 from src.utils.list import divide_list_into_chunks
 from playwright.sync_api import expect
+from src.utils.log import Log
+
+PERF_TIMEOUT = 60 * 120
 
 
+# max employees_count = 1000
 @pytest.mark.parametrize("employees_count", [1])
 @pytest.mark.delivered_emails
 @pytest.mark.timeout(60 * 100)
@@ -33,25 +37,31 @@ def test_education_campaign_emails_delivered(
     mail_trap_inboxes = MailTrapModelFactory.get_perf_mail_trap_inboxes()
 
     # clear all inboxes before test
+    Log.info("Clearing all inboxes before test")
     mailtrap.clean_inboxes(mail_trap_inboxes)
 
     # remove all employees
+    Log.info("getting all employees before test")
     response = CompanyService.get_employee_ids(
         api_request_context_customer_admin,
         EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None),
     )
     if response.json()["items"]:
+        Log.info("Updating all employees before test")
         CompanyService.update_employees(
             api_request_context_customer_admin,
             employees=EmployeeUpdateModel(
                 employee_role=False, ids=list(response.json()["items"])
             ),
         )
+    Log.info("getting all employees before test")
     response = CompanyService.get_employee_ids(
         api_request_context_customer_admin,
         EmployeeListIdsModel(employee_role=False, admin_role=False, filters=None),
     )
+
     if response.json()["items"]:
+        Log.info("Dividing list into chunks")
         divided_list = divide_list_into_chunks(response.json()["items"], 2000)
         for chunk in divided_list:
             CompanyService.delete_employees(
@@ -59,10 +69,12 @@ def test_education_campaign_emails_delivered(
                 employees=EmployeeDeleteModel(ids=chunk),
             )
     # create {employees_count} employees for each inbox
+    Log.info("Creating employees for each inbox")
     for mail_trap_inbox in mail_trap_inboxes:
         employees = EmployeeModelFactory.get_random_employees(
             employees_count, mailtrap_inbox=mail_trap_inbox.email
         )
+        Log.info(f"Creating employees for inbox {mail_trap_inbox.id}")
         response = CompanyService.create_employees(
             api_request_context_customer_admin, employees, overwrite=False
         )
@@ -84,6 +96,7 @@ def test_education_campaign_emails_delivered(
         ), f"Failed to upload file with employee. Response => {response_body}"
         employees_list.extend(employees)
 
+    Log.info("Getting employee ids")
     response = CompanyService.get_employee_ids(
         api_request_context_customer_admin,
         EmployeeListIdsModel(employee_role=True, filters=None),
@@ -97,15 +110,21 @@ def test_education_campaign_emails_delivered(
     )
 
     # start education campaign
+    Log.info("Starting education campaign")
     response = EducationService.start_campaign(
         api_request_context_customer_admin, education_campaign
     )
     expect(response).to_be_ok()
-    employees_email_list = [employee.email for employee in employees_list]
+    employees_email_list = set(employee.email for employee in employees_list)
 
     # Wait for all emails
+    Log.info("Waiting for all emails")
     emails_left = mailtrap.wait_for_all_mail_in_diff_inboxes(
-        employees_email_list, list_mail_traps=mail_trap_inboxes, remove_messages=True
+        employees_email_list,
+        list_mail_traps=mail_trap_inboxes,
+        emails_per_inbox=employees_count,
+        remove_messages=False,
+        timeout=PERF_TIMEOUT,
     )
 
     assert not emails_left, f"{len(emails_left)=} {emails_left=}"

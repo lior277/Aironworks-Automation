@@ -56,12 +56,23 @@ class MailTrap:
         )
         self._account_id = account_id
 
-    def messages(self, inbox_id, email_to: str = None):
+    def messages(self, inbox_id, page: int = None, email_to: str = None):
         params = {}
         if email_to:
             params.update({"search": f"{email_to}"})
+        if page:
+            params.update({"page": page})
         response = self.request_context.get(
             f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages",
+            params=params,
+        )
+        expect(response).to_be_ok()
+        return response
+
+    def inbox_attributes(self, inbox_id):
+        params = {}
+        response = self.request_context.get(
+            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}",
             params=params,
         )
         expect(response).to_be_ok()
@@ -162,33 +173,53 @@ class MailTrap:
     @print_execution_time
     def wait_for_all_mail_in_diff_inboxes(
         self,
-        employees_email_list: list[str],
+        employees_email_list: set[str],
         list_mail_traps: list[MailTrapModel],
+        emails_per_inbox,
         remove_messages: bool = False,
         timeout: int = 7200,
     ):
         start_time = datetime.now()
+        list_mail_traps = set(list_mail_traps)
         while len(employees_email_list) > 0:
+            to_be_removed = set()
             for mail_trap in list_mail_traps:
-                emails = self.messages(inbox_id=mail_trap.id)
-                if emails.json():
-                    for email in emails.json():
-                        if email["to_email"] in employees_email_list:
-                            employees_email_list.remove(email["to_email"])
-                            if remove_messages:
-                                try:
-                                    self.delete_message(
-                                        inbox_id=mail_trap.id, message_id=email["id"]
-                                    )
-                                except Exception:
-                                    Log.info(
-                                        f"Unable to delete {email['id']=} in {mail_trap.id=}"
-                                    )
-            if (
-                len(employees_email_list) == 0
-                or (datetime.now() - start_time).seconds > timeout
-            ):
-                break
+                Log.info(f"Checking {mail_trap.id}")
+                attributes = self.inbox_attributes(mail_trap.id)
+                if attributes.json()["emails_count"] < emails_per_inbox:
+                    Log.info(f"not enough mails received {mail_trap.id}")
+                    continue
+                page = 0
+                while True:
+                    page += 1  # 1 is the first page
+                    emails = self.messages(inbox_id=mail_trap.id, page=page)
+                    Log.info(f"Checking page {page} in {mail_trap.id}")
+                    if emails.json():
+                        for email in emails.json():
+                            if email["to_email"] in employees_email_list:
+                                employees_email_list.remove(email["to_email"])
+                                if remove_messages:
+                                    try:
+                                        self.delete_message(
+                                            inbox_id=mail_trap.id,
+                                            message_id=email["id"],
+                                        )
+                                    except Exception:
+                                        Log.info(
+                                            f"Unable to delete {email['id']=} in {mail_trap.id=}"
+                                        )
+                    else:
+                        break
+                Log.info(f"{len(employees_email_list)} left to check")
+                if (
+                    len(employees_email_list) == 0
+                    or (datetime.now() - start_time).seconds > timeout
+                ):
+                    break
+                time.sleep(2)
+                to_be_removed.add(mail_trap)
+            for mail_trap in to_be_removed:
+                list_mail_traps.remove(mail_trap)
         return employees_email_list
 
     def close(self):
