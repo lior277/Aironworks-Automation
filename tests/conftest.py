@@ -21,7 +21,7 @@ from src.utils.service_account_utils import generate_jwt
 fake = Faker()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def mailtrap(playwright):
     mailtrap = MailTrap(playwright)
     yield mailtrap
