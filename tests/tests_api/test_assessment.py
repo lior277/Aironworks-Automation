@@ -32,7 +32,7 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     response = wait_for_lro(
         lambda: AssessmentService.assessment_by_id(api_request_context_addin, id), 60
     )
-    assert response.json()["status"] == "DONE"
+    assert response.json()["status"] == "DONE", response.json()["error"]
 
     assert "assessment_result" in response.json()
     assessment_result = response.json()["assessment_result"]
