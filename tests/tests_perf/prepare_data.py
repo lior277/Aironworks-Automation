@@ -15,6 +15,7 @@ from src.models.factories.education_campaign.education_campaign_model_factory im
 from src.models.factories.scenario.campaign_model_factory import CampaignModelFactory
 from src.models.factories.scenario.list_attack_infos_model_factory import ListAttackInfosModelFactory
 from src.models.general_models import BasicModel
+from src.models.mait_trap_model import MailTrapModelFactory
 from src.models.scenario.list_attack_infos_response_model import ListAttackInfosResponseModel
 from src.utils.csv_tool import CSVTool
 
@@ -43,7 +44,8 @@ def test_education_campaign(api_request_context_customer_admin, api_request_cont
 
 @pytest.mark.parametrize("employees_count", [1])
 def test_generate_employees(employees_count: int):
-    employees_list = EmployeeModelFactory.get_random_employees(employees_count)
+    employees_list = EmployeeModelFactory.get_random_employees(employees_count, mailtrap_inbox=
+    MailTrapModelFactory.get_perf_mail_trap_inbox().email)
 
     file_path = os.path.join(AppFolders.RESOURCES_PATH, f"employees{employees_count}.csv")
     column_names = ["First Name", "Last Name", "Email"]
@@ -51,8 +53,8 @@ def test_generate_employees(employees_count: int):
 
 
 @pytest.mark.parametrize("employees_count", [5])
-def test_simulation_campaign(api_request_context_customer_admin, clean_up_employees, api_request_context_aw_admin,
-                             employees_count: int):
+def test_simulation_campaign(api_request_context_customer_admin, clean_up_employees, set_up_ca_settings,
+                             api_request_context_aw_admin, employees_count: int):
     employees_list = EmployeeModelFactory.get_random_employees(employees_count, domain="aironworks.com")
 
     response = CompanyService.create_employees(api_request_context_customer_admin, employees_list, overwrite=True)

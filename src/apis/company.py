@@ -7,27 +7,28 @@ from playwright.sync_api import APIRequestContext, expect, APIResponse
 
 from src.models.company.employee_model import EmployeeModel
 from .psapi import PSApi
-from ..models.company.employee_delete_model import EmployeeDeleteModel
 from .upload import UploadService
+from ..models.company.employee_delete_model import EmployeeDeleteModel
 from ..models.company.employee_list_ids_model import EmployeeListIdsModel
 from ..models.company.employee_update_model import EmployeeUpdateModel
+from ..models.company.patch_localized_configs_model import PatchLocalizedConfigsModel
 
 
 class CompanyService:
     @classmethod
     @allure.step("CompanyService: create employee")
     def create_employee(
-        cls, request_context: APIRequestContext, employee: EmployeeModel
+            cls, request_context: APIRequestContext, employee: EmployeeModel
     ) -> APIResponse:
         return cls.create_employees(request_context, [employee], False)
 
     @classmethod
     @allure.step("CompanyService: create employees")
     def create_employees(
-        cls,
-        request_context: APIRequestContext,
-        employees: list[EmployeeModel],
-        overwrite: bool = False,
+            cls,
+            request_context: APIRequestContext,
+            employees: list[EmployeeModel],
+            overwrite: bool = False,
     ) -> APIResponse:
         buffer = io.StringIO()
         writer = DictWriter(buffer, fieldnames=["first_name", "last_name", "email"])
@@ -63,9 +64,16 @@ class CompanyService:
         return request_context.get(PSApi.COMPANY_LOCALIZED_CONFIG.get_endpoint())
 
     @classmethod
+    @allure.step("CompanyService: update company config")
+    def patch_localized_config(cls, request_context: APIRequestContext, language: str,
+                               localized_configs_model: PatchLocalizedConfigsModel) -> APIResponse:
+        return request_context.patch(PSApi.COMPANY_LOCALIZED_CONFIG_LANGUAGE.get_endpoint().format(language=language),
+                                     data=asdict(localized_configs_model))
+
+    @classmethod
     @allure.step("CompanyService: get employee by mail")
     def employee_by_mail(
-        cls, request_context: APIRequestContext, email: str
+            cls, request_context: APIRequestContext, email: str
     ) -> APIResponse:
         result = request_context.post(
             PSApi.EMPLOYEE_LIST.get_endpoint(),
@@ -98,7 +106,7 @@ class CompanyService:
     @classmethod
     @allure.step("CompanyService: get employee ids")
     def get_employee_ids(
-        cls, request_context: APIRequestContext, employee_ids: EmployeeListIdsModel
+            cls, request_context: APIRequestContext, employee_ids: EmployeeListIdsModel
     ) -> APIResponse:
         return request_context.post(
             PSApi.EMPLOYEE_LIST_IDS.get_endpoint(), data=asdict(employee_ids)
@@ -107,7 +115,7 @@ class CompanyService:
     @classmethod
     @allure.step("CompanyService: delete employees")
     def delete_employees(
-        cls, request_context: APIRequestContext, employees: EmployeeDeleteModel
+            cls, request_context: APIRequestContext, employees: EmployeeDeleteModel
     ) -> APIResponse:
         return request_context.post(
             PSApi.EMPLOYEE_DELETE.get_endpoint(), data=asdict(employees)
@@ -116,7 +124,7 @@ class CompanyService:
     @classmethod
     @allure.step("CompanyService: update employees")
     def update_employees(
-        cls, request_context: APIRequestContext, employees: EmployeeUpdateModel
+            cls, request_context: APIRequestContext, employees: EmployeeUpdateModel
     ) -> APIResponse:
         return request_context.post(
             PSApi.EMPLOYEE_UPDATE.get_endpoint(), data=asdict(employees)

@@ -38,6 +38,9 @@ def playwright_config(request, launch_browser, browser_type):
     if failed:
         context.tracing.stop(path=traceout)
         allure.attach.file(traceout, "trace.zip", "zip")
+        for page in context.pages:
+            allure.attach(page.screenshot(), name=f"{page.title()}.png",
+                          attachment_type=allure.attachment_type.PNG)
     else:
         context.tracing.stop()
 

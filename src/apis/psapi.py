@@ -11,6 +11,7 @@ class PSApi(Enum):
     EMPLOYEE_UPDATE = "/company/employee_update"
     EMPLOYEE_DELETE = "/company/employee_delete"
     COMPANY_LOCALIZED_CONFIG = "/company/localized-configs"
+    COMPANY_LOCALIZED_CONFIG_LANGUAGE = "/company/localized-configs/{language}"
 
     LOGIN = "/auth/login"
     INFO = "/auth/info"
@@ -28,6 +29,14 @@ class PSApi(Enum):
     EDUCATION_CAMPAIGN = "/education/campaign"
     EDUCATION_LIBRARY_DATA = "/education/library_data"
     EDUCATION_CONTENT = "/education/content"
+    # customer
+    CUSTOMER_ATTACK_PAGE_PREVIEW = "/customer/attack_page_preview"
+
+    # Surveys
+    LIST_SURVEYS = "/survey/list_surveys"
+    ADD_SURVEY = "/survey/add_survey"
+    DELETE_SURVEY = "/survey/delete_survey"
+    SET_DEFAULT_SURVEY = "/survey/set_default_survey"
     # For Performance testing only
     ADMIN_EDUCATION_ASSIGNMENTS = "/admin/education_assignments/{campaign_id}"
     ADMIN_CAMPAIGN_ATTACK_URLS = "/admin//campaign/{campaign_id}/attack_urls"
