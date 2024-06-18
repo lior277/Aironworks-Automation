@@ -1,3 +1,4 @@
+import re
 import allure
 from playwright.sync_api import Page, expect
 
@@ -13,7 +14,7 @@ class EducationLandingPage:
 
     @property
     def iframe(self):
-        return self.page.main_frame.child_frames[0]
+        return self.page.main_frame.child_frames[1]
 
     @allure.step("EducationLandingPage: open page")
     def open(self):
@@ -28,3 +29,6 @@ class EducationLandingPage:
         expect(self.submit_button).to_be_visible()
         with self.page.expect_request_finished():
             self.submit_button.click()
+
+        expect(self.embedded_content.owner).to_be_visible()
+        self.iframe.wait_for_url(re.compile("https://.*"))
