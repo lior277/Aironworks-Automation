@@ -18,6 +18,7 @@ def new_page(playwright_config):
 
 
 @pytest.mark.test_id("C31533")
+@pytest.mark.smoke
 def test_valid_email_entry(
     api_request_context_customer_admin, employee, mailtrap, new_page
 ):
@@ -40,6 +41,7 @@ def test_valid_email_entry(
 
 
 @pytest.mark.test_id("C31536")
+@pytest.mark.smoke
 def test_submit_quiz(api_request_context_customer_admin, mailtrap, employee, new_page):
     mail = run_education_campaign_on_employee(
         api_request_context_customer_admin, mailtrap, employee
@@ -74,6 +76,7 @@ def test_submit_quiz(api_request_context_customer_admin, mailtrap, employee, new
 
 
 @pytest.mark.test_id("C31535")
+@pytest.mark.smoke
 def test_iframe_is_correct(
     api_request_context_customer_admin, mailtrap, employee, new_page
 ):
