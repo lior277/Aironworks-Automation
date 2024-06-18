@@ -28,3 +28,14 @@ class SurveyService:
     @allure.step("SurveyService: delete {2} survey")
     def delete_survey(cls, request_context: APIRequestContext, survey_id: str) -> APIResponse:
         return request_context.post(PSApi.DELETE_SURVEY.get_endpoint(), data={"survey_id": f"{survey_id}"})
+
+    @classmethod
+    @allure.step("SurveyService: get {2} survey")
+    def get_survey(cls, request_context: APIRequestContext, survey_id: str) -> APIResponse:
+        return request_context.get(PSApi.GET_SURVEY.get_endpoint(), params={"id": f"{survey_id}"})
+
+    @classmethod
+    @allure.step("SurveyService: get specific survey answer stats")
+    def get_specific_survey_answer_stats(cls, request_context: APIRequestContext, survey_id: str) -> APIResponse:
+        return request_context.get(PSApi.GET_SPECIFIC_SURVEY_ANSWER_STATS.get_endpoint(),
+                                   params={"survey_id": f"{survey_id}"})

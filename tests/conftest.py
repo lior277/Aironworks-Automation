@@ -1,4 +1,5 @@
 import random
+import sys
 from dataclasses import replace
 from typing import Generator
 
@@ -18,12 +19,16 @@ from src.models.company.localized_configs_model import LocalizedConfigsModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.company.patch_localized_configs_model import PatchLocalizedConfigsModelFactory
 from src.models.factories.survey.add_survey_modal_factory import AddSurveyModelFactory
-from src.models.survey.surveys_model import SurveysModel
+from src.models.survey.surveys_model import SurveysModel, Survey
 from src.utils.list import divide_list_into_chunks
 from src.utils.mailtrap import MailTrap
 from src.utils.service_account_utils import generate_jwt
 
 fake = Faker()
+
+
+def is_debug():
+    return getattr(sys, 'gettrace', None)
 
 
 @pytest.fixture(scope="session")
@@ -42,9 +47,10 @@ def example_mail():
 
 
 def pytest_collection_modifyitems(session, config, items):
-    for item in items:
-        if item.get_closest_marker("timeout") is None:
-            item.add_marker(pytest.mark.timeout(3 * 60))
+    if not is_debug:
+        for item in items:
+            if item.get_closest_marker("timeout") is None:
+                item.add_marker(pytest.mark.timeout(3 * 60))
 
     for item in items:
         for marker in item.iter_markers(name="test_id"):
@@ -178,7 +184,7 @@ def clean_up_employees(api_request_context_customer_admin):
 
 
 @pytest.fixture(scope="function")
-def set_up_ca_settings(api_request_context_customer_admin):
+def set_up_perf_survey(api_request_context_customer_admin) -> Survey:
     perf_survey = AddSurveyModelFactory.get_performance_survey()
     localized_config_response = CompanyService.localized_config(api_request_context_customer_admin)
     assert localized_config_response.ok, f"{localized_config_response.json()=}"
@@ -202,3 +208,4 @@ def set_up_ca_settings(api_request_context_customer_admin):
         survey = surveys_model.has_survey(perf_survey.survey_name)
     if not survey.always_sent:
         SurveyService.set_default_survey(api_request_context_customer_admin, survey.id)
+    return survey
