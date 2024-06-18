@@ -25,6 +25,7 @@ from src.page_objects.campaign_detalis_page import CampaignDetailsPage
         ),
     ],
 )
+@pytest.mark.smoke
 def test_create_simulation_campaign(user: UserModel, employee, sign_in_page, mailtrap):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
@@ -74,6 +75,7 @@ def test_create_simulation_campaign(user: UserModel, employee, sign_in_page, mai
         ),
     ],
 )
+@pytest.mark.smoke
 def test_campaigns_page_has_data(user, sign_in_page):
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
@@ -123,6 +125,7 @@ def campaign_details_page(request, sign_in_page) -> CampaignDetailsPage:
     ],
     indirect=["campaign_details_page"],
 )
+@pytest.mark.smoke
 def test_campaign_summary_page(campaign_details_page, sign_in_page):
     expect(
         campaign_details_page.page.get_by_role(
@@ -153,6 +156,7 @@ def test_campaign_summary_page(campaign_details_page, sign_in_page):
     ],
     indirect=["campaign_details_page"],
 )
+@pytest.mark.smoke
 def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage):
     expect(campaign_details_page.page.get_by_role("row")).to_have_count(2)
 
@@ -173,6 +177,7 @@ def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage):
     ],
     indirect=["campaign_details_page"],
 )
+@pytest.mark.smoke
 def test_campaign_export(campaign_details_page: CampaignDetailsPage):
     rows = campaign_details_page.page.get_by_role("row").all()
     assert len(rows) == 2
