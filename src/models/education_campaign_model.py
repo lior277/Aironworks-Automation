@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from typing import List
 from enum import Enum
+from typing import List
 
 
 class EducationCampaignStatus(str, Enum):
@@ -13,8 +13,8 @@ class EducationCampaignStatus(str, Enum):
 @dataclass
 class EducationCampaignModel:
     title: str
-    start_date: int  # timestamp
-    end_date: int
+    start_date: float  # timestamp
+    end_date: float
     content_id: str
     score_required: int = 0
     company_id: int = None

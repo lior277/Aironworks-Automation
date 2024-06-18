@@ -7,33 +7,43 @@ from src.apis.company import CompanyService
 from src.apis.education import EducationService
 from src.apis.login import LoginService
 from src.apis.scenario import ScenarioService
+from src.apis.survey_service import SurveyService
 from src.configs.config_loader import AppFolders
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.education.education_assignments import EducationAssignmentsModel
+from src.models.education.education_content_model import EducationContentModel
 from src.models.factories.company.employee_model_factory import EmployeeModelFactory
 from src.models.factories.education_campaign.education_campaign_model_factory import EducationCampaignModelFactory
 from src.models.factories.scenario.campaign_model_factory import CampaignModelFactory
 from src.models.factories.scenario.list_attack_infos_model_factory import ListAttackInfosModelFactory
-from src.models.general_models import BasicModel
+from src.models.general_models import LongRunningOperation
 from src.models.mait_trap_model import MailTrapModelFactory
 from src.models.scenario.list_attack_infos_response_model import ListAttackInfosResponseModel
+from src.models.survey.get_survey import GetSurveyModel
+from src.models.survey.surveys_model import Survey
 from src.utils.csv_tool import CSVTool
 
 
-@pytest.mark.parametrize("employees_count", [1000])
+@pytest.mark.parametrize("employees_count", [2])
 def test_education_campaign(api_request_context_customer_admin, api_request_context_aw_admin, employees_count: int):
     employees_list = EmployeeModelFactory.get_random_employees(employees_count, domain="aironworks.com")
     response = CompanyService.create_employees(api_request_context_customer_admin, employees_list, overwrite=True)
-    response_body = BasicModel.from_dict(response.json())
-    assert response_body.data.success and response.ok, f"Failed to upload file with employee. Response => {response_body}"
+    response_body = LongRunningOperation.from_dict(response.json())
+    assert response.ok, f"Failed to upload file with employee. Response => {response_body}"
 
     response = CompanyService.get_employee_ids(api_request_context_customer_admin,
                                                EmployeeListIdsModel(employee_role=True, filters=None))
     employee_ids = response.json()
     assert len(employee_ids["items"]) == employees_count, \
         f"Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}"
-    education_campaign = EducationCampaignModelFactory.get_education_campaign(employee_ids["items"])
+
+    response = EducationService.get_content_pagination(api_request_context_customer_admin)
+    assert response.ok, f"Failed to fetch education content => {response_body}"
+    education_content = EducationContentModel.from_dict(response.json())
+    education_campaign = EducationCampaignModelFactory.get_education_campaign_from_education_content(
+        education_content.items[0], employee_ids["items"])
     response = EducationService.start_campaign(api_request_context_customer_admin, education_campaign)
+    assert response.ok, f"Failed to start education campaign => {response_body}"
     response = EducationService.aw_admin_education_assignments(api_request_context_aw_admin,
                                                                campaign_id=response.json()['id'])
     education_assignments = EducationAssignmentsModel.from_dict(response.json())
@@ -52,8 +62,8 @@ def test_generate_employees(employees_count: int):
     CSVTool.create_file(employees_list, column_names, file_path)
 
 
-@pytest.mark.parametrize("employees_count", [5])
-def test_simulation_campaign(api_request_context_customer_admin, clean_up_employees, set_up_ca_settings,
+@pytest.mark.parametrize("employees_count", [10])
+def test_simulation_campaign(api_request_context_customer_admin, clean_up_employees, set_up_perf_survey: Survey,
                              api_request_context_aw_admin, employees_count: int):
     employees_list = EmployeeModelFactory.get_random_employees(employees_count, domain="aironworks.com")
 
@@ -81,4 +91,11 @@ def test_simulation_campaign(api_request_context_customer_admin, clean_up_employ
                                                            campaign_id=response.json()['id'])
     file_path = os.path.join(AppFolders.RESOURCES_PATH, "perf_warning_page.csv")
     fieldnames = campaign_urls.attacks[0].get_fieldnames()
-    CSVTool.create_file(campaign_urls.attacks, fieldnames, file_path)
+    response = SurveyService.get_survey(api_request_context_customer_admin, set_up_perf_survey.id)
+    assert response.ok, f"{response.json()=}"
+    survey = GetSurveyModel.from_dict(response.json())
+    fieldnames.extend(['qid', 'option_id', "survey_id"])
+    data_to_update = {'qid': f'{survey.model.questions[0].id}',
+                      'option_id': f'{survey.model.questions[0].options[0].id}',
+                      'survey_id': f"{survey.model.id}"}
+    CSVTool.create_file(campaign_urls.attacks, fieldnames, file_path, data_to_update)

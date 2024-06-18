@@ -33,7 +33,7 @@ class MySequentialTaskSet(SequentialTaskSet):
         self.wait()
 
     @task
-    def survey_page_access(self):
+    def survey_page_submissions(self):
         user_index = self.user.index
         logger.info(f"{user_index=}")
         data = csv_data[user_index % len(csv_data)]
@@ -47,24 +47,37 @@ class MySequentialTaskSet(SequentialTaskSet):
             if response.status_code != 200:
                 response.failure(f"{attack_url=},{response.text=},{response.status_code=}")
         url = data_values[0]
+        qid = data_values[4]
+        option_id = data_values[5]
+        survey_id = data_values[6]
 
         json = {"url": f"{url}"}
-        logger.info(f"{json=}")
+
         with self.client.post(f"/api/public/verify_url_click", json=json, catch_response=True) as response:
             if response.status_code != 200:
                 response.failure(f"{json=},{response.text=},{response.status_code=}")
-            survey_id = response.json()['data']['id']
+            attack_id = response.json()['data']['id']
+            logger.info(f"{attack_id=}")
             survey_token = response.json()['data']['survey_token']
-        logger.info(f"{response=}")
 
         params = {"token": f"{survey_token}"}
-        url = f"/guest/survey/{survey_id}"
+        url = f"/guest/survey/{attack_id}"
+        logger.info(f"{url=}")
         self.client.base_url = "https://staging.app.aironworks.com"
 
         with self.client.get(f"/{url}", catch_response=True, params=params,
                              name=f"{self.client.base_url}/guest/survey/survey_id") as response:
             if response.status_code != 200:
                 response.failure(f"{attack_url=},{response.text=},{response.status_code=}")
+
+        url = "api/survey/fill_survey"
+        new_json = {"survey_id": f"{survey_id}", "attack_id": f"{attack_id}",
+                    "value": {"answers": [{"qid": f"{qid}", "items": [{"option_id": f"{option_id}"}]}]}}
+        logger.info(f"{new_json=}")
+        with self.client.post(f"/{url}", catch_response=True, json=new_json) as response:
+            if response.status_code != 200:
+                response.failure(f"{attack_url=},{new_json=},\n{response.text=},{response.status_code=}")
+
         self.complete_task()
 
     def complete_task(self):

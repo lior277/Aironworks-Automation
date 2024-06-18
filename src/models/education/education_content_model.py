@@ -19,7 +19,7 @@ class Parts:
 
 
 @dataclass
-class Items(BaseDataClass):
+class Item(BaseDataClass):
     id: str
     campaign_count: int
     date_created: float
@@ -34,7 +34,7 @@ class Items(BaseDataClass):
 
 @dataclass
 class EducationContentModel(BaseDataClass):
-    items: List[Items]
+    items: List[Item]
     limit: int
     offset: int
     total: int

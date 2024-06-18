@@ -38,6 +38,8 @@ class PSApi(Enum):
     ADD_SURVEY = "/survey/add_survey"
     DELETE_SURVEY = "/survey/delete_survey"
     SET_DEFAULT_SURVEY = "/survey/set_default_survey"
+    GET_SURVEY = "/survey/get_survey"
+    GET_SPECIFIC_SURVEY_ANSWER_STATS = "/survey/get_specific_survey_answer_stats"
     # For Performance testing only
     ADMIN_EDUCATION_ASSIGNMENTS = "/admin/education_assignments/{campaign_id}"
     ADMIN_CAMPAIGN_ATTACK_URLS = "/admin//campaign/{campaign_id}/attack_urls"
