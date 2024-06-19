@@ -28,7 +28,7 @@ fake = Faker()
 
 
 def is_debug():
-    return getattr(sys, 'gettrace', None)
+    return sys.monitoring.get_tool(sys.monitoring.DEBUGGER_ID) is not None
 
 
 @pytest.fixture(scope="session")
@@ -47,7 +47,7 @@ def example_mail():
 
 
 def pytest_collection_modifyitems(session, config, items):
-    if not is_debug:
+    if not is_debug():
         for item in items:
             if item.get_closest_marker("timeout") is None:
                 item.add_marker(pytest.mark.timeout(3 * 60))
