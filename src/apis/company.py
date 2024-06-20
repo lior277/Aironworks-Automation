@@ -6,6 +6,8 @@ import allure
 from playwright.sync_api import APIRequestContext, expect, APIResponse
 
 from src.models.company.employee_model import EmployeeModel
+from src.models.general_models import LongRunningOperation
+from src.utils.waiter import wait_for_lro
 from .psapi import PSApi
 from .upload import UploadService
 from ..models.company.employee_delete_model import EmployeeDeleteModel
@@ -18,17 +20,17 @@ class CompanyService:
     @classmethod
     @allure.step("CompanyService: create employee")
     def create_employee(
-            cls, request_context: APIRequestContext, employee: EmployeeModel
+        cls, request_context: APIRequestContext, employee: EmployeeModel
     ) -> APIResponse:
         return cls.create_employees(request_context, [employee], False)
 
     @classmethod
     @allure.step("CompanyService: create employees")
     def create_employees(
-            cls,
-            request_context: APIRequestContext,
-            employees: list[EmployeeModel],
-            overwrite: bool = False,
+        cls,
+        request_context: APIRequestContext,
+        employees: list[EmployeeModel],
+        overwrite: bool = False,
     ) -> APIResponse:
         buffer = io.StringIO()
         writer = DictWriter(buffer, fieldnames=["first_name", "last_name", "email"])
@@ -68,21 +70,54 @@ class CompanyService:
         )
 
     @classmethod
+    @allure.step("CompanyService: create employees to completion")
+    def create_employees_wait(
+        cls,
+        request_context: APIRequestContext,
+        employees: list[EmployeeModel],
+        overwrite: bool = False,
+    ) -> APIResponse:
+        response = cls.create_employees(request_context, employees, overwrite)
+        expect(response).to_be_ok()
+        response_body = LongRunningOperation.from_dict(response.json())
+        assert response_body.status == "CREATED"
+        id = response_body.id
+        result = wait_for_lro(
+            lambda: CompanyService.create_employees_status(request_context, id),
+            timeout=60 * 2,
+        )
+        expect(result).to_be_ok()
+        response_body = LongRunningOperation.from_dict(result.json())
+
+        assert (
+            response_body.status == "DONE"
+        ), f"Failed to upload file with employee. Response => {response_body}"
+        return result
+
+    @classmethod
     @allure.step("CompanyService: get company config")
     def localized_config(cls, request_context: APIRequestContext) -> APIResponse:
         return request_context.get(PSApi.COMPANY_LOCALIZED_CONFIG.get_endpoint())
 
     @classmethod
     @allure.step("CompanyService: update company config")
-    def patch_localized_config(cls, request_context: APIRequestContext, language: str,
-                               localized_configs_model: PatchLocalizedConfigsModel) -> APIResponse:
-        return request_context.patch(PSApi.COMPANY_LOCALIZED_CONFIG_LANGUAGE.get_endpoint().format(language=language),
-                                     data=asdict(localized_configs_model))
+    def patch_localized_config(
+        cls,
+        request_context: APIRequestContext,
+        language: str,
+        localized_configs_model: PatchLocalizedConfigsModel,
+    ) -> APIResponse:
+        return request_context.patch(
+            PSApi.COMPANY_LOCALIZED_CONFIG_LANGUAGE.get_endpoint().format(
+                language=language
+            ),
+            data=asdict(localized_configs_model),
+        )
 
     @classmethod
     @allure.step("CompanyService: get employee by mail")
     def employee_by_mail(
-            cls, request_context: APIRequestContext, email: str
+        cls, request_context: APIRequestContext, email: str
     ) -> APIResponse:
         result = request_context.post(
             PSApi.EMPLOYEE_LIST.get_endpoint(),
@@ -115,7 +150,7 @@ class CompanyService:
     @classmethod
     @allure.step("CompanyService: get employee ids")
     def get_employee_ids(
-            cls, request_context: APIRequestContext, employee_ids: EmployeeListIdsModel
+        cls, request_context: APIRequestContext, employee_ids: EmployeeListIdsModel
     ) -> APIResponse:
         return request_context.post(
             PSApi.EMPLOYEE_LIST_IDS.get_endpoint(), data=asdict(employee_ids)
@@ -124,7 +159,7 @@ class CompanyService:
     @classmethod
     @allure.step("CompanyService: delete employees")
     def delete_employees(
-            cls, request_context: APIRequestContext, employees: EmployeeDeleteModel
+        cls, request_context: APIRequestContext, employees: EmployeeDeleteModel
     ) -> APIResponse:
         return request_context.post(
             PSApi.EMPLOYEE_DELETE.get_endpoint(), data=asdict(employees)
@@ -133,7 +168,7 @@ class CompanyService:
     @classmethod
     @allure.step("CompanyService: update employees")
     def update_employees(
-            cls, request_context: APIRequestContext, employees: EmployeeUpdateModel
+        cls, request_context: APIRequestContext, employees: EmployeeUpdateModel
     ) -> APIResponse:
         return request_context.post(
             PSApi.EMPLOYEE_UPDATE.get_endpoint(), data=asdict(employees)
