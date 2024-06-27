@@ -26,6 +26,8 @@ class PSApi(Enum):
     GET_ATTACK_INFO = "admin/get_attack_info"
     GET_ATTACK_EXECUTION = "/admin/get_attack_execution"
     COMPANY_COUNT = "/admin/company_count"
+    DEACTIVATE_COMPANY = "/admin/company/{company_id}/deactivate"
+    COMPANIES_LIST = "/admin/company"
 
     EDUCATION_CAMPAIGN = "/education/campaign"
     EDUCATION_LIBRARY_DATA = "/education/library_data"
@@ -42,7 +44,7 @@ class PSApi(Enum):
     GET_SPECIFIC_SURVEY_ANSWER_STATS = "/survey/get_specific_survey_answer_stats"
     # For Performance testing only
     ADMIN_EDUCATION_ASSIGNMENTS = "/admin/education_assignments/{campaign_id}"
-    ADMIN_CAMPAIGN_ATTACK_URLS = "/admin//campaign/{campaign_id}/attack_urls"
+    ADMIN_CAMPAIGN_ATTACK_URLS = "/admin/campaign/{campaign_id}/attack_urls"
 
     def get_endpoint(self):
         return self.API_VERSION.value + self.value

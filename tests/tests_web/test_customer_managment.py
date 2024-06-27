@@ -4,7 +4,9 @@ import pytest
 from playwright.sync_api import expect, TimeoutError
 
 from src.apis.api_factory import api
+import time
 from src.apis.login import LoginService
+from src.apis.admin import AdminService
 from src.apis.utils import get_request_context_for_page
 from src.configs.config_loader import AppConfigs
 from src.models.factories.auth.signup_model_factory import SignupModelFactory
@@ -149,7 +151,13 @@ def test_new_customers_count(customers_page: CustomersPage, playwright):
     indirect=["customers_page"],
 )
 @pytest.mark.smoke
-def test_approve_new_customer(customers_page, sign_in_page, dashboard_page, playwright):
+def test_approve_new_customer(
+    customers_page,
+    sign_in_page,
+    dashboard_page,
+    playwright,
+    api_request_context_aw_admin,
+):
     referral = None
     if customers_page.user.is_reseller:
         signed_in_context = get_request_context_for_page(
@@ -169,6 +177,18 @@ def test_approve_new_customer(customers_page, sign_in_page, dashboard_page, play
     )
     customer_row.get_by_role("button", name="Approve").click()
     customers_page.page.get_by_role("button", name="Confirm Approval").click()
+
+    time.sleep(2)
+    admin_service = AdminService(api_request_context_aw_admin)
+    # while True:
+    companies = admin_service.get_companies_list(type="active")
+    expect(companies).to_be_ok()
+    companies = companies.json()
+    company = next(
+        (c for c in companies["items"] if c["name"] == new_customer.company_name),
+        None,
+    )
+    admin_service.deactivate_company(company["id"])
 
 
 @pytest.mark.parametrize(
