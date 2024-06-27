@@ -1,13 +1,15 @@
-import pytest
 import re
+
+import pytest
 from playwright.sync_api import expect, TimeoutError
-from src.page_objects.customers_page import CustomersPage
-from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.apis.utils import get_request_context_for_page
-from src.apis.admin import AdminService
+
+from src.apis.api_factory import api
 from src.apis.login import LoginService
-from src.models.factories.auth.signup_model_factory import SignupModelFactory
+from src.apis.utils import get_request_context_for_page
 from src.configs.config_loader import AppConfigs
+from src.models.factories.auth.signup_model_factory import SignupModelFactory
+from src.models.factories.auth.user_model_factory import UserModelFactory
+from src.page_objects.customers_page import CustomersPage
 
 
 @pytest.fixture
@@ -84,7 +86,7 @@ def test_active_customer_spectate(customers_page, dashboard_page):
     try:
         dashboard_page.page.get_by_role(
             "button", name=f"Login as admin of {company_name.lower()}"
-        ).click()
+        ).click(timeout=500)
         customers_page.page.wait_for_load_state(timeout=5)
     except TimeoutError:
         # this button only appears for some companies
@@ -117,15 +119,15 @@ def test_new_customers_count(customers_page: CustomersPage, playwright):
     request_context = get_request_context_for_page(
         playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
     )
-
-    company_counts = AdminService.company_count(request_context)
+    admin_service = api.admin(request_context)
+    company_counts = admin_service.company_count()
     expect(company_counts).to_be_ok()
 
     new_count = company_counts.json()["new"]
     content = customers_page.tabs["new"].text_content()
 
     match = re.compile(f"New Customers.*({new_count})", re.IGNORECASE).match(content)
-    assert match is not None
+    assert match is not None, f"{content=}"
 
     assert abs(int(match.group(1)) - new_count) < 2
 

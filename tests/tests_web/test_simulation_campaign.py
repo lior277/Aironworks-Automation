@@ -1,13 +1,14 @@
-import pytest
-import re
 import csv
+import re
+
+import pytest
 from playwright.sync_api import expect
 
 from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.utils.mailtrap import find_email
 from src.page_objects.campaign_detalis_page import CampaignDetailsPage
+from src.utils.mailtrap import find_email
 
 
 @pytest.mark.parametrize(
@@ -94,17 +95,9 @@ def campaign_details_page(request, sign_in_page) -> CampaignDetailsPage:
     user = request.param
     sign_in_page.navigate(user.is_admin)
     sign_in_page.submit_sign_in_form(user)
-    expect(
-        sign_in_page.page.get_by_role("link", name="Settings", exact=True)
-    ).to_be_visible()  # wait for login to finish before navigating
-    sign_in_page.page.goto(
-        (AppConfigs.ADMIN_BASE_URL if user.is_admin else AppConfigs.BASE_URL)
-        + "admin/dashboard/attacks/executions/"
-        + AppConfigs.SAMPLE_CAMPAIGN
-    )
-
     details_page = CampaignDetailsPage(sign_in_page.page)
-    expect(details_page.export_csv_button).to_be_visible()
+    details_page.open_campaign_detailed_page(campaign_id=AppConfigs.SAMPLE_CAMPAIGN)
+    expect(details_page.export_csv_button).to_be_visible(timeout=5000)
 
     return details_page
 
