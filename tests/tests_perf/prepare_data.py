@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from src.apis.admin import AdminService
+from src.apis.api_factory import api
 from src.apis.company import CompanyService
 from src.apis.education import EducationService
 from src.apis.login import LoginService
@@ -32,9 +32,9 @@ from src.utils.csv_tool import CSVTool
 
 @pytest.mark.parametrize("employees_count", [2])
 def test_education_campaign(
-    api_request_context_customer_admin,
-    api_request_context_aw_admin,
-    employees_count: int,
+        api_request_context_customer_admin,
+        api_request_context_aw_admin,
+        employees_count: int,
 ):
     employees_list = EmployeeModelFactory.get_random_employees(
         employees_count, domain="aironworks.com"
@@ -53,7 +53,7 @@ def test_education_campaign(
     )
     employee_ids = response.json()
     assert (
-        len(employee_ids["items"]) == employees_count
+            len(employee_ids["items"]) == employees_count
     ), f"Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}"
 
     response = EducationService.get_content_pagination(
@@ -96,11 +96,11 @@ def test_generate_employees(employees_count: int):
 @pytest.mark.parametrize("employees_count", [1000])
 @pytest.mark.timeout(60 * 60)
 def test_simulation_campaign(
-    api_request_context_customer_admin,
-    clean_up_employees,
-    set_up_perf_survey: Survey,
-    api_request_context_aw_admin,
-    employees_count: int,
+        api_request_context_customer_admin,
+        clean_up_employees,
+        set_up_perf_survey: Survey,
+        api_request_context_aw_admin,
+        employees_count: int,
 ):
     employees_list = EmployeeModelFactory.get_random_employees(
         employees_count, domain="aironworks.com"
@@ -117,7 +117,7 @@ def test_simulation_campaign(
     )
     employee_ids = response.json()
     assert (
-        len(employee_ids["items"]) == employees_count
+            len(employee_ids["items"]) == employees_count
     ), f"Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}"
 
     response = ScenarioService.post_list_attack_infos(
@@ -129,12 +129,13 @@ def test_simulation_campaign(
     infos = list_attack_infos.infos[0]
     response = LoginService.info(api_request_context_customer_admin)
     campaign_model = CampaignModelFactory.get_campaign(
-        name=infos.strategy_name,
+        campaign_name=infos.strategy_name,
         company_id=response.json()["user"]["company_id"],
         employees=employee_ids["items"],
         attack_info_id=infos.id,
     )
-    response = AdminService.campaign(api_request_context_customer_admin, campaign_model)
+    admin_service = api.admin(api_request_context_customer_admin)
+    response = admin_service.start_campaign(campaign_model)
 
     campaign_urls = ScenarioService.aw_admin_campaign_urls(
         api_request_context_aw_admin, campaign_id=response.json()["id"]

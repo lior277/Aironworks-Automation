@@ -1,34 +1,30 @@
-import pytest
 import re
-import allure
-from src.utils import markers
-from src.utils.log import Log
-from src.apis.admin import AdminService
-from src.apis.public import PublicService
-from playwright.sync_api import expect
-from src.configs.config_loader import AppConfigs
-from src.utils.mailtrap import find_email
-from src.utils.links import get_text_links, attack_url_to_api_url_input
-from src.utils.waiter import wait_for
-from src.models.campaign_model import CampaignModel
-from src.apis.company import CompanyService
 from email import message_from_bytes
 from email.message import Message
 
+import allure
+import pytest
+from playwright.sync_api import expect
+
+from src.apis.api_factory import api
+from src.apis.company import CompanyService
+from src.apis.public import PublicService
+from src.configs.config_loader import AppConfigs
+from src.models.campaign_model import CampaignModel
+from src.utils import markers
+from src.utils.links import get_text_links, attack_url_to_api_url_input
+from src.utils.log import Log
+from src.utils.mailtrap import find_email
+from src.utils.waiter import wait_for
+
 
 @allure.step("run campaign on single employee")
-def run_campaign_on_employee(
-    api_request_context_customer_admin, api_request_context, mailtrap, employee
-):
-    result = AdminService.campaign(
-        api_request_context_customer_admin,
-        campaign=CampaignModel(
-            name="Automation scenario",
-            attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
-            days_until_fail=1,
-            employees=[employee.employee_id],
-        ),
-    )
+def run_campaign_on_employee(api_request_context_customer_admin, api_request_context, mailtrap, employee):
+    admin_service = api.admin(api_request_context_customer_admin)
+    result = admin_service.start_campaign(campaign=CampaignModel(campaign_name="Automation scenario",
+                                                                 attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
+                                                                 days_until_fail=1,
+                                                                 employees=[employee.employee_id]))
     expect(result).to_be_ok()
     assert "id" in result.json()
     campaign_id = result.json()["id"]
@@ -48,14 +44,12 @@ def run_campaign_on_employee(
     expect(verify).to_be_ok()
 
     def validate_campaign_status():
-        campaign_status = AdminService.get_attack_execution(
-            api_request_context_customer_admin, campaign_id
-        )
+        campaign_status = admin_service.get_attack_execution(campaign_id=campaign_id)
         expect(campaign_status).to_be_ok()
 
         return (
-            campaign_status.json()["execution"]["completed"]
-            and campaign_status.json()["execution"]["finished"]
+                campaign_status.json()["execution"]["completed"]
+                and campaign_status.json()["execution"]["finished"]
         )
 
     assert wait_for(validate_campaign_status, 60)
@@ -65,7 +59,7 @@ def run_campaign_on_employee(
 @pytest.mark.api
 @pytest.mark.smoke
 def test_attack_campaign(
-    api_request_context_customer_admin, api_request_context, employee, mailtrap
+        api_request_context_customer_admin, api_request_context, employee, mailtrap
 ):
     run_campaign_on_employee(
         api_request_context_customer_admin, api_request_context, mailtrap, employee
@@ -77,7 +71,7 @@ def test_attack_campaign(
 @pytest.mark.api
 @pytest.mark.smoke
 def test_email_notification_match_setting(
-    api_request_context_customer_admin, api_request_context, mailtrap, employee
+        api_request_context_customer_admin, api_request_context, mailtrap, employee
 ):
     config_result = CompanyService.localized_config(api_request_context_customer_admin)
     expect(config_result).to_be_ok()
@@ -109,13 +103,13 @@ def test_email_notification_match_setting(
     Log.info("payload: \n" + payload)
 
     regex_string = (
-        company_config["data"][0]["custom_attack_notification"]
-        .replace("{{employee.name}}", "(?P<employee_name>[a-zA-Z]+)")
-        .replace(
-            "{{portal_url}}",
-            r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)",
-        )
-        + "(<img.*/>)?\n"
+            company_config["data"][0]["custom_attack_notification"]
+            .replace("{{employee.name}}", "(?P<employee_name>[a-zA-Z]+)")
+            .replace(
+                "{{portal_url}}",
+                r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)",
+            )
+            + "(<img.*/>)?\n"
     )
     Log.info("regex_string: \n" + regex_string)
 

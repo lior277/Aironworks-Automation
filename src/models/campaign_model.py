@@ -4,7 +4,7 @@ from typing import List, Optional
 
 @dataclass
 class CampaignModel:
-    name: str
+    campaign_name: str
     attack_info_id: str
     days_until_fail: int
     employees: List[int]

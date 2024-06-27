@@ -1,36 +1,25 @@
+from dataclasses import asdict
+
+import allure
 from playwright.sync_api import APIRequestContext
+
 from src.models.campaign_model import CampaignModel
+from .base_service import BaseService
 from .psapi import PSApi
-from src.configs.config_loader import AppConfigs
-import os
 
 
-class AdminService:
-    @classmethod
-    def campaign(cls, request_context: APIRequestContext, campaign: CampaignModel):
-        return request_context.post(
-            PSApi.CAMPAIGN.get_endpoint(),
-            data={
-                "campaign_name": campaign.name,
-                "attack_info_id": campaign.attack_info_id,
-                "days_until_fail": campaign.days_until_fail,
-                "employees": campaign.employees,
-                "attack_url": campaign.attack_url,
-                "attack_date": campaign.attack_date,
-                "custom_reminder": campaign.custom_reminder,
-                "content_id": campaign.content_id,
-                "special": campaign.special,
-                "company_id": campaign.company_id,
-            },
-        )
+class AdminService(BaseService):
+    def __init__(self, request_context: APIRequestContext):
+        super().__init__(request_context)
 
-    @classmethod
-    def get_attack_execution(cls, request_context: APIRequestContext, id):
-        return request_context.get(
-            PSApi.GET_ATTACK_EXECUTION.get_endpoint(),
-            params={"id": id},
-        )
+    @allure.step("create simulation campaign {campaign}")
+    def start_campaign(self, campaign: CampaignModel):
+        return self._post(PSApi.CAMPAIGN.get_endpoint(), data=asdict(campaign))
 
-    @classmethod
-    def company_count(cls, request_context: APIRequestContext):
-        return request_context.get(PSApi.COMPANY_COUNT.get_endpoint())
+    @allure.step("get attack execution {campaign_id}")
+    def get_attack_execution(self, campaign_id: str):
+        return self._get(PSApi.GET_ATTACK_EXECUTION.get_endpoint(), params={"id": campaign_id})
+
+    @allure.step("get company count")
+    def company_count(self):
+        return self._get(PSApi.COMPANY_COUNT.get_endpoint())
