@@ -22,7 +22,7 @@ class CompanyService:
     def create_employee(
         cls, request_context: APIRequestContext, employee: EmployeeModel
     ) -> APIResponse:
-        return cls.create_employees(request_context, [employee], False)
+        return cls.create_employees_wait(request_context, [employee], False)
 
     @classmethod
     @allure.step("CompanyService: create employees")
