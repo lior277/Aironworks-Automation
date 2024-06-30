@@ -5,6 +5,9 @@ from src.utils.waiter import wait_for_lro
 from base64 import b64encode
 from src.utils.mailtrap import find_attachment
 from playwright.sync_api import expect
+import tempfile
+import io
+import zipfile
 
 import pytest
 from src.utils.log import Log
@@ -44,7 +47,7 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     assert (
         mailtrap.wait_for_mail(
             AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
-            find_attachment(example_mail),
+            find_attachment(),
         )
         is not None
     )
@@ -63,7 +66,7 @@ def test_incident_report(api_request_context_addin, example_mail, mailtrap):
     assert (
         mailtrap.wait_for_mail(
             AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
-            find_attachment(example_mail),
+            find_attachment(),
         )
         is not None
     )
