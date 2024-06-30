@@ -11,7 +11,7 @@ from src.models.mait_trap_model import MailTrapModel
 from src.utils.log import print_execution_time, Log
 
 
-def find_attachment(attachment_content):
+def find_attachment(content_type: str = "application/x-zip"):
     def predicate(mailtrap: MailTrap, mail):
         mail_id = mail["id"]
         mail_raw = mailtrap.raw_message(
@@ -20,14 +20,10 @@ def find_attachment(attachment_content):
 
         message: Message = message_from_bytes(mail_raw.body())
         parts = message.get_payload()
-        data = None
         for attachment in parts:
             if attachment.get_filename() is not None:
-                for attach in attachment.get_payload():
-                    data = b64decode(attach.as_string())
-
-        if data == attachment_content:
-            return True
+                if attachment.get_content_type() == content_type:
+                    return True
         return False
 
     return predicate
