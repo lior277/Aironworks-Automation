@@ -40,12 +40,16 @@ class MySequentialTaskSet(SequentialTaskSet):
         logger.info(f"{data=}")
         data_values = list(data.values())
         logger.info(f"{data_values=}")
-        attack_url = data_values[0].split("/")[1]
+        url = data_values[0]
 
-        with self.client.get(f"/{attack_url}", catch_response=True,
-                             name=f"{self.client.base_url}/warning_page") as response:
+        json = {"url": f"{url}"}
+        logger.info(f"{json=}")
+        with self.client.post(
+            f"/api/public/verify_url_click", json=json, catch_response=True
+        ) as response:
             if response.status_code != 200:
-                response.failure(f"{attack_url=},{response.text=},{response.status_code=}")
+                response.failure(f"{json=}|{response.text=}|{response.status_code=}")
+        logger.info(f"{response=}")
         self.complete_task()
 
     def complete_task(self):

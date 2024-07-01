@@ -42,29 +42,33 @@ class MySequentialTaskSet(SequentialTaskSet):
         logger.info(f"{data_values=}")
         attack_url = data_values[0].split("/")[1]
 
-        with self.client.get(f"/{attack_url}", catch_response=True,
-                             name=f"{self.client.base_url}/warning_page") as response:
-            if response.status_code != 200:
-                response.failure(f"{attack_url=},{response.text=},{response.status_code=}")
         url = data_values[0]
 
         json = {"url": f"{url}"}
         logger.info(f"{json=}")
-        with self.client.post(f"/api/public/verify_url_click", json=json, catch_response=True) as response:
+        with self.client.post(
+            f"/api/public/verify_url_click", json=json, catch_response=True
+        ) as response:
             if response.status_code != 200:
-                response.failure(f"{json=},{response.text=},{response.status_code=}")
-            survey_id = response.json()['data']['id']
-            survey_token = response.json()['data']['survey_token']
+                response.failure(f"{json=}|{response.text=}|{response.status_code=}")
+            survey_id = response.json()["data"]["id"]
+            survey_token = response.json()["data"]["survey_token"]
         logger.info(f"{response=}")
 
         params = {"token": f"{survey_token}"}
         url = f"/guest/survey/{survey_id}"
         self.client.base_url = "https://staging.app.aironworks.com"
 
-        with self.client.get(f"/{url}", catch_response=True, params=params,
-                             name=f"{self.client.base_url}/guest/survey/survey_id") as response:
+        with self.client.get(
+            f"/{url}",
+            catch_response=True,
+            params=params,
+            name=f"{self.client.base_url}/guest/survey/survey_id",
+        ) as response:
             if response.status_code != 200:
-                response.failure(f"{attack_url=},{response.text=},{response.status_code=}")
+                response.failure(
+                    f"{attack_url=},{response.text=},{response.status_code=}"
+                )
         self.complete_task()
 
     def complete_task(self):
