@@ -1,0 +1,15 @@
+{
+  "base_url": "http://127.0.0.1:3000/",
+  "admin_base_url": "http://127.0.0.1:3000/",
+  "addin_base_url": "http://127.0.0.1:3000/",
+  "mailtrap_assessment_inbox_id": "2802760",
+  "mailtrap_assessment_inbox_mail": "68fa80bce3-28fbb0@inbox.mailtrap.io",
+  "mailtrap_account_id": "1311290",
+  "example_scenario": "e2ced54e064a4adea24adb5a913aea83",
+  "example_scenario_name": "General Scenario - English",
+  "example_education_content": "113876b9e7ee492aac8eff99ac4ca915",
+  "links_domain": "staging.sd.aironworks.com",
+  "sender_domain": "moondev.tokyo",
+  "sample_campaign": "44df5ffa4fc4456595563d9ba7869169",
+  "sample_campaign_name": "Scenario - Test AW Admin"
+}

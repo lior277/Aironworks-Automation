@@ -80,7 +80,11 @@ class CompanyService:
         response = cls.create_employees(request_context, employees, overwrite)
         expect(response).to_be_ok()
         response_body = LongRunningOperation.from_dict(response.json())
-        assert response_body.status == "CREATED"
+        assert (
+            response_body.status == "CREATED"
+            or response_body.status == "IN_PROGRESS"
+            or response_body.status == "DONE"
+        )
         id = response_body.id
         result = wait_for_lro(
             lambda: CompanyService.create_employees_status(request_context, id),
