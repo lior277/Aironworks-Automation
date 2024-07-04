@@ -55,15 +55,15 @@ class MySequentialTaskSet(SequentialTaskSet):
             survey_token = response.json()["data"]["survey_token"]
         logger.info(f"{response=}")
 
-        params = {"token": f"{survey_token}"}
-        url = f"/guest/survey/{survey_id}"
+        params = {"token": f"{survey_token}", "attack_id": f"{survey_id}"}
+        url = f"/api/survey/get_surveys_for_attack"
         self.client.base_url = "https://staging.app.aironworks.com"
 
         with self.client.get(
             f"/{url}",
             catch_response=True,
             params=params,
-            name=f"{self.client.base_url}/guest/survey/survey_id",
+            name=f"{self.client.base_url}/api/survey/get_survey",
         ) as response:
             if response.status_code != 200:
                 response.failure(
