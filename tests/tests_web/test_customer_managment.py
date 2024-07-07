@@ -178,17 +178,22 @@ def test_approve_new_customer(
     customer_row.get_by_role("button", name="Approve").click()
     customers_page.page.get_by_role("button", name="Confirm Approval").click()
 
-    time.sleep(2)
+    time.sleep(1)
+    tries = 0
     admin_service = AdminService(api_request_context_aw_admin)
-    # while True:
-    companies = admin_service.get_companies_list(type="active")
-    expect(companies).to_be_ok()
-    companies = companies.json()
-    company = next(
-        (c for c in companies["items"] if c["name"] == new_customer.company_name),
-        None,
-    )
-    admin_service.deactivate_company(company["id"])
+    while True and tries < 10:
+        companies = admin_service.get_companies_list(type="active")
+        expect(companies).to_be_ok()
+        companies = companies.json()
+        company = next(
+            (c for c in companies["items"] if c["name"] == new_customer.company_name),
+            None,
+        )
+        if company is None:
+            time.sleep(1)
+            tries += 1
+            continue
+        admin_service.deactivate_company(company["id"])
 
 
 @pytest.mark.parametrize(
