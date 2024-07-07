@@ -17,7 +17,9 @@ from src.models.company.employee_model import EmployeeModel
 from src.models.company.employee_update_model import EmployeeUpdateModel
 from src.models.company.localized_configs_model import LocalizedConfigsModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.models.factories.company.patch_localized_configs_model import PatchLocalizedConfigsModelFactory
+from src.models.factories.company.patch_localized_configs_model import (
+    PatchLocalizedConfigsModelFactory,
+)
 from src.models.factories.survey.add_survey_modal_factory import AddSurveyModelFactory
 from src.models.survey.surveys_model import SurveysModel, Survey
 from src.utils.list import divide_list_into_chunks
@@ -60,7 +62,7 @@ def pytest_collection_modifyitems(session, config, items):
 
 @pytest.fixture(scope="session")
 def api_request_context_addin(
-        playwright: Playwright,
+    playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.ADDIN_BASE_URL
     # Get service account email and load the json data from the service account key file.
@@ -79,7 +81,7 @@ def api_request_context_addin(
 
 @pytest.fixture(scope="session")
 def api_request_context_customer_admin(
-        playwright: Playwright,
+    playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.BASE_URL
     # Get service account email and load the json data from the service account key file.
@@ -102,7 +104,7 @@ def api_request_context_customer_admin(
 
 @pytest.fixture(scope="session")
 def api_request_context(
-        playwright: Playwright,
+    playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.BASE_URL
     # Get service account email and load the json data from the service account key file.
@@ -138,8 +140,10 @@ def employee(api_request_context_customer_admin):
 
 @pytest.fixture(scope="session")
 def api_request_context_aw_admin(
-        playwright: Playwright,
+    playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
+    if AppConfigs.ENV.startswith("production"):
+        pytest.skip("This test is not supported in production")
     request_context = playwright.request.new_context(base_url=AppConfigs.ADMIN_BASE_URL)
     expect(LoginService.login(request_context, UserModelFactory.aw_admin())).to_be_ok()
     login_info_response = LoginService.info(request_context)
@@ -186,21 +190,29 @@ def clean_up_employees(api_request_context_customer_admin):
 @pytest.fixture(scope="function")
 def set_up_perf_survey(api_request_context_customer_admin) -> Survey:
     perf_survey = AddSurveyModelFactory.get_performance_survey()
-    localized_config_response = CompanyService.localized_config(api_request_context_customer_admin)
+    localized_config_response = CompanyService.localized_config(
+        api_request_context_customer_admin
+    )
     assert localized_config_response.ok, f"{localized_config_response.json()=}"
     data = LocalizedConfigsModel.from_dict(localized_config_response.json()).data[0]
-    patch_localized_configs = PatchLocalizedConfigsModelFactory.get_patch_localized_configs(data)
+    patch_localized_configs = (
+        PatchLocalizedConfigsModelFactory.get_patch_localized_configs(data)
+    )
     patch_localized_configs.show_survey_button = True
-    response = CompanyService.patch_localized_config(api_request_context_customer_admin,
-                                                     language=data.language,
-                                                     localized_configs_model=patch_localized_configs)
+    response = CompanyService.patch_localized_config(
+        api_request_context_customer_admin,
+        language=data.language,
+        localized_configs_model=patch_localized_configs,
+    )
     assert response.ok, f"{response.json()=}"
     response = SurveyService.get_list_surveys(api_request_context_customer_admin)
     assert response.ok, f"{response.json()=}"
     surveys_model = SurveysModel.from_dict(response.json())
     survey = surveys_model.has_survey(perf_survey.survey_name)
     if not survey:
-        response = SurveyService.add_survey(api_request_context_customer_admin, perf_survey)
+        response = SurveyService.add_survey(
+            api_request_context_customer_admin, perf_survey
+        )
         assert response.ok, f"{response.json()=}"
         response = SurveyService.get_list_surveys(api_request_context_customer_admin)
         assert response.ok, f"{response.json()=}"

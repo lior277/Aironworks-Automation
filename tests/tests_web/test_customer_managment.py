@@ -158,8 +158,6 @@ def test_approve_new_customer(
     playwright,
     api_request_context_aw_admin,
 ):
-    if AppConfigs.ENV.startswith("production"):
-        pytest.skip("This test is not supported in production")
     referral = None
     if customers_page.user.is_reseller:
         signed_in_context = get_request_context_for_page(
