@@ -1,13 +1,14 @@
-from src.utils.common_steps import run_education_campaign_on_employee
-from src.utils.links import get_text_links
-from src.configs.config_loader import AppConfigs
-from src.page_objects.education_landing_page import EducationLandingPage
-from playwright.sync_api import expect
-from src.utils.log import Log
-import pytest
 import json
 import re
-import time
+
+import pytest
+from playwright.sync_api import expect
+
+from src.apis.steps.common_steps import run_education_campaign_on_employee
+from src.configs.config_loader import AppConfigs
+from src.page_objects.education_landing_page import EducationLandingPage
+from src.utils.links import get_text_links
+from src.utils.log import Log
 
 
 @pytest.fixture(scope="function")

@@ -30,8 +30,10 @@ class PSApi(Enum):
     COMPANIES_LIST = "/admin/company"
 
     EDUCATION_CAMPAIGN = "/education/campaign"
+    EDUCATION_CAMPAIGN_DETAILS = "/education/campaign/{campaign_id}"
     EDUCATION_LIBRARY_DATA = "/education/library_data"
     EDUCATION_CONTENT = "/education/content"
+    EDUCATION_CAMPAIGN_LIST = "/education/campaign_list"
     # customer
     CUSTOMER_ATTACK_PAGE_PREVIEW = "/customer/attack_page_preview"
 

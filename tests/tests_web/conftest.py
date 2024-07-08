@@ -4,7 +4,10 @@ import allure
 import pytest
 from playwright.sync_api import Browser, Page
 
+from src.models.auth.user_model import UserModel
+from src.models.education.education_campaign_model import EducationCampaignDetailsModel
 from src.page_objects.dashboard_page import DashboardPage
+from src.page_objects.education_campaign.education_campaign_page import EducationCampaignPage
 from src.page_objects.login_page import SignInPage
 from src.utils.log import Log
 
@@ -60,3 +63,16 @@ def sign_in_page(playwright_config) -> SignInPage:
 @pytest.fixture(scope="function")
 def dashboard_page(sign_in_page: SignInPage) -> DashboardPage:
     return DashboardPage(sign_in_page.page)
+
+
+@pytest.fixture(scope="function")
+def education_campaign_page(sign_in_page: SignInPage, user: UserModel) -> EducationCampaignPage:
+    sign_in_page.navigate(admin=user.is_admin)
+    sign_in_page.submit_sign_in_form(user)
+    return sign_in_page.navigation_bar.navigate_education_campaigns_page()
+
+
+@pytest.fixture(scope="function")
+def education_campaign_detail_page(education_campaign_page,
+                                   education_campaign: EducationCampaignDetailsModel) -> EducationCampaignPage:
+    return education_campaign_page.open_campaign_details(education_campaign.title)

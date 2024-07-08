@@ -1,16 +1,14 @@
 import random
-from src.configs.config_loader import AppConfigs
-from src.apis.assessment import AssessmentService
-from src.utils.waiter import wait_for_lro
 from base64 import b64encode
-from src.utils.mailtrap import find_attachment
-from playwright.sync_api import expect
-import tempfile
-import io
-import zipfile
 
 import pytest
+from playwright.sync_api import expect
+
+from src.apis.assessment import AssessmentService
+from src.configs.config_loader import AppConfigs
 from src.utils.log import Log
+from src.utils.mailtrap import find_attachment
+from src.utils.waiter import wait_for_lro
 
 
 @pytest.mark.test_id("C31557")
@@ -30,10 +28,10 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     expect(response).to_be_ok()
     assert "id" in response.json()
 
-    id = response.json()["id"]
-    Log.info(f"assessment lro id: {id}")
+    assessment_lro_id = response.json()["id"]
+    Log.info(f"assessment lro id: {assessment_lro_id}")
     response = wait_for_lro(
-        lambda: AssessmentService.assessment_by_id(api_request_context_addin, id), 60
+        lambda: AssessmentService.assessment_by_id(api_request_context_addin, assessment_lro_id), 60
     )
     assert response.json()["status"] == "DONE", response.json()["error"]
 
@@ -45,11 +43,11 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     assert assessment_result["assessment"]["error"] is None
 
     assert (
-        mailtrap.wait_for_mail(
-            AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
-            find_attachment(),
-        )
-        is not None
+            mailtrap.wait_for_mail(
+                AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+                find_attachment(),
+            )
+            is not None
     )
 
 
@@ -64,11 +62,11 @@ def test_incident_report(api_request_context_addin, example_mail, mailtrap):
     assert response.json()["error"] is None
 
     assert (
-        mailtrap.wait_for_mail(
-            AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
-            find_attachment(),
-        )
-        is not None
+            mailtrap.wait_for_mail(
+                AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+                find_attachment(),
+            )
+            is not None
     )
 
 
@@ -85,11 +83,11 @@ def test_assessment_report(api_request_context_addin, mailtrap):
 
     assert "id" in response.json()
 
-    id = response.json()["id"]
-    Log.info(f"assessment lro id: {id}")
+    assessment_lro_id = response.json()["id"]
+    Log.info(f"assessment lro id: {assessment_lro_id}")
     last_status = wait_for_lro(
         lambda: AssessmentService.assessment_report_by_id(
-            api_request_context_addin, id
+            api_request_context_addin, assessment_lro_id
         ),
         60,
     )
