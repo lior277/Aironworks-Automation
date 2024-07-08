@@ -11,7 +11,7 @@ class Topic:
 
 
 @dataclass
-class Parts:
+class Part:
     kind: str
     link: str = None
     link_type: str = None
@@ -26,7 +26,7 @@ class Item(BaseDataClass):
     description: str
     industry: str
     level: str
-    parts: List[Parts]
+    parts: List[Part]
     thumbnail_path: str
     title: str
     topic: Topic

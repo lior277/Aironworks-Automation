@@ -7,7 +7,6 @@ import pytest
 from playwright.sync_api import expect
 
 from src.apis.api_factory import api
-from src.apis.company import CompanyService
 from src.apis.public import PublicService
 from src.configs.config_loader import AppConfigs
 from src.models.campaign_model import CampaignModel
@@ -19,18 +18,12 @@ from src.utils.waiter import wait_for
 
 
 @allure.step("run campaign on single employee")
-def run_campaign_on_employee(
-    api_request_context_customer_admin, api_request_context, mailtrap, employee
-):
+def run_campaign_on_employee(api_request_context_customer_admin, api_request_context, mailtrap, employee):
     admin_service = api.admin(api_request_context_customer_admin)
-    result = admin_service.start_campaign(
-        campaign=CampaignModel(
-            campaign_name="Automation scenario",
-            attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
-            days_until_fail=1,
-            employees=[employee.employee_id],
-        )
-    )
+    result = admin_service.start_campaign(campaign=CampaignModel(campaign_name="Automation scenario",
+                                                                 attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
+                                                                 days_until_fail=1,
+                                                                 employees=[employee.employee_id]))
     expect(result).to_be_ok()
     assert "id" in result.json()
     campaign_id = result.json()["id"]
@@ -61,22 +54,17 @@ def run_campaign_on_employee(
 @pytest.mark.test_id("C31562")
 @pytest.mark.api
 @pytest.mark.smoke
-def test_attack_campaign(
-    api_request_context_customer_admin, api_request_context, employee, mailtrap
-):
-    run_campaign_on_employee(
-        api_request_context_customer_admin, api_request_context, mailtrap, employee
-    )
+def test_attack_campaign(api_request_context_customer_admin, api_request_context, employee, mailtrap):
+    run_campaign_on_employee(api_request_context_customer_admin, api_request_context, mailtrap, employee)
 
 
 @pytest.mark.test_id("C31511")
 @markers.common_resource(name="settings")
 @pytest.mark.api
 @pytest.mark.smoke
-def test_email_notification_match_setting(
-    api_request_context_customer_admin, api_request_context, mailtrap, employee
-):
-    config_result = CompanyService.localized_config(api_request_context_customer_admin)
+def test_email_notification_match_setting(api_request_context_customer_admin, api_request_context, mailtrap, employee):
+    company = api.company(api_request_context_customer_admin)
+    config_result = company.localized_config()
     expect(config_result).to_be_ok()
     company_config = config_result.json()
 
@@ -106,13 +94,13 @@ def test_email_notification_match_setting(
     Log.info("payload: \n" + payload)
 
     regex_string = (
-        company_config["data"][0]["custom_attack_notification"]
-        .replace("{{employee.name}}", "(?P<employee_name>[a-zA-Z]+)")
-        .replace(
-            "{{portal_url}}",
-            r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)",
-        )
-        + "(<img.*/>)?\n"
+            company_config["data"][0]["custom_attack_notification"]
+            .replace("{{employee.name}}", "(?P<employee_name>[a-zA-Z]+)")
+            .replace(
+                "{{portal_url}}",
+                r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)",
+            )
+            + "(<img.*/>)?\n"
     )
     Log.info("regex_string: \n" + regex_string)
 

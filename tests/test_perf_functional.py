@@ -1,7 +1,7 @@
 import pytest
+from playwright.sync_api import expect
 
-from src.apis.company import CompanyService
-from src.apis.education import EducationService
+from src.apis.api_factory import api
 from src.models.company.employee_delete_model import EmployeeDeleteModel
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.company.employee_update_model import EmployeeUpdateModel
@@ -10,11 +10,10 @@ from src.models.factories.education_campaign.education_campaign_model_factory im
     EducationCampaignModelFactory,
 )
 from src.models.general_models import LongRunningOperation
-from src.utils.waiter import wait_for_lro
 from src.models.mait_trap_model import MailTrapModelFactory
 from src.utils.list import divide_list_into_chunks
-from playwright.sync_api import expect
 from src.utils.log import Log
+from src.utils.waiter import wait_for_lro
 
 PERF_TIMEOUT = 60 * 120
 
@@ -24,7 +23,7 @@ PERF_TIMEOUT = 60 * 120
 @pytest.mark.delivered_emails
 @pytest.mark.timeout(60 * 100)
 def test_education_campaign_emails_delivered(
-    api_request_context_customer_admin, mailtrap, employees_count: int
+        api_request_context_customer_admin, mailtrap, employees_count: int
 ):
     """
 
@@ -42,32 +41,19 @@ def test_education_campaign_emails_delivered(
 
     # remove all employees
     Log.info("getting all employees before test")
-    response = CompanyService.get_employee_ids(
-        api_request_context_customer_admin,
-        EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None),
-    )
+    company = api.company(api_request_context_customer_admin)
+    response = company.get_employee_ids(EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None))
     if response.json()["items"]:
         Log.info("Updating all employees before test")
-        CompanyService.update_employees(
-            api_request_context_customer_admin,
-            employees=EmployeeUpdateModel(
-                employee_role=False, ids=list(response.json()["items"])
-            ),
-        )
+        company.update_employees(employees=EmployeeUpdateModel(employee_role=False, ids=list(response.json()["items"])))
     Log.info("getting all employees before test")
-    response = CompanyService.get_employee_ids(
-        api_request_context_customer_admin,
-        EmployeeListIdsModel(employee_role=False, admin_role=False, filters=None),
-    )
+    response = company.get_employee_ids(EmployeeListIdsModel(employee_role=False, admin_role=False, filters=None))
 
     if response.json()["items"]:
         Log.info("Dividing list into chunks")
         divided_list = divide_list_into_chunks(response.json()["items"], 2000)
         for chunk in divided_list:
-            CompanyService.delete_employees(
-                api_request_context_customer_admin,
-                employees=EmployeeDeleteModel(ids=chunk),
-            )
+            company.delete_employees(employees=EmployeeDeleteModel(ids=chunk))
     # create {employees_count} employees for each inbox
     Log.info("Creating employees for each inbox")
     for mail_trap_inbox in mail_trap_inboxes:
@@ -75,35 +61,25 @@ def test_education_campaign_emails_delivered(
             employees_count, mailtrap_inbox=mail_trap_inbox.email
         )
         Log.info(f"Creating employees for inbox {mail_trap_inbox.id}")
-        response = CompanyService.create_employees(
-            api_request_context_customer_admin, employees, overwrite=False
-        )
+        response = company.create_employees(employees, overwrite=False)
         expect(response).to_be_ok()
         response_body = LongRunningOperation.from_dict(response.json())
         assert response_body.status == "CREATED"
-        id = response_body.id
-        result = wait_for_lro(
-            lambda: CompanyService.create_employees_status(
-                api_request_context_customer_admin, id
-            ),
-            timeout=60 * 2,
-        )
+        operation_id = response_body.id
+        result = wait_for_lro(lambda: company.create_employees_status(operation_id), timeout=60 * 2)
         expect(result).to_be_ok()
         response_body = LongRunningOperation.from_dict(result.json())
 
         assert (
-            response_body.status == "DONE"
+                response_body.status == "DONE"
         ), f"Failed to upload file with employee. Response => {response_body}"
         employees_list.extend(employees)
 
     Log.info("Getting employee ids")
-    response = CompanyService.get_employee_ids(
-        api_request_context_customer_admin,
-        EmployeeListIdsModel(employee_role=True, filters=None),
-    )
+    response = company.get_employee_ids(EmployeeListIdsModel(employee_role=True, filters=None))
     employee_ids = response.json()
     assert (
-        len(employee_ids["items"]) >= len(employees_list)
+            len(employee_ids["items"]) >= len(employees_list)
     ), f"Expected employees => {len(employees_list)}\nActual employees => {len(employee_ids["items"])}"
     education_campaign = EducationCampaignModelFactory.get_education_campaign(
         employee_ids["items"]
@@ -111,9 +87,7 @@ def test_education_campaign_emails_delivered(
 
     # start education campaign
     Log.info("Starting education campaign")
-    response = EducationService.start_campaign(
-        api_request_context_customer_admin, education_campaign
-    )
+    response = api.education(api_request_context_customer_admin).start_campaign(education_campaign)
     expect(response).to_be_ok()
     employees_email_list = set(employee.email for employee in employees_list)
 

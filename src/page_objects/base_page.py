@@ -12,6 +12,7 @@ class BasePage:
         self.empty_state = self.page.get_by_test_id("empty-state")
         self.loading = self.page.get_by_text("Loading")
         self.progress_bar = self.page.get_by_role("progressbar")
+        self.alert_message = self.page.locator("[id='notistack-snackbar']")
         import src.page_objects.navigation_bar
 
         self.navigation_bar = src.page_objects.navigation_bar.NavigationBar(page)

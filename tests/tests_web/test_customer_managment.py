@@ -1,12 +1,10 @@
 import re
+import time
 
 import pytest
 from playwright.sync_api import expect, TimeoutError
 
 from src.apis.api_factory import api
-import time
-from src.apis.login import LoginService
-from src.apis.admin import AdminService
 from src.apis.utils import get_request_context_for_page
 from src.configs.config_loader import AppConfigs
 from src.models.factories.auth.signup_model_factory import SignupModelFactory
@@ -151,25 +149,20 @@ def test_new_customers_count(customers_page: CustomersPage, playwright):
     indirect=["customers_page"],
 )
 @pytest.mark.smoke
-def test_approve_new_customer(
-    customers_page,
-    sign_in_page,
-    dashboard_page,
-    playwright,
-    api_request_context_aw_admin,
-):
+def test_approve_new_customer(customers_page, sign_in_page, dashboard_page, playwright, api_request_context_aw_admin):
     referral = None
     if customers_page.user.is_reseller:
         signed_in_context = get_request_context_for_page(
             playwright, sign_in_page.page, AppConfigs.ADMIN_BASE_URL
         )
-        info = LoginService.info(signed_in_context)
+        info = api.login(signed_in_context).info()
         expect(info).to_be_ok()
         referral = info.json()["user"]["reseller_company_id"]
 
     context = playwright.request.new_context(base_url=AppConfigs.BASE_URL)
+
     new_customer = SignupModelFactory.random_customer(referral=referral)
-    expect(LoginService.register(context, new_customer)).to_be_ok()
+    expect(api.login(context).register(new_customer)).to_be_ok()
 
     customers_page.tabs["new"].click()
     customer_row = customers_page.page.get_by_role("row").filter(
@@ -180,7 +173,7 @@ def test_approve_new_customer(
 
     time.sleep(1)
     tries = 0
-    admin_service = AdminService(api_request_context_aw_admin)
+    admin_service = api.admin(api_request_context_aw_admin)
     while True and tries < 10:
         companies = admin_service.get_companies_list(type="active")
         expect(companies).to_be_ok()
@@ -209,10 +202,9 @@ def test_approve_new_customer(
 )
 @pytest.mark.smoke
 def test_copy_invitation_link(customers_page, sign_in_page, playwright):
-    signed_in_context = get_request_context_for_page(
-        playwright, sign_in_page.page, AppConfigs.ADMIN_BASE_URL
-    )
-    info = LoginService.info(signed_in_context)
+    signed_in_context = get_request_context_for_page(playwright, sign_in_page.page, AppConfigs.ADMIN_BASE_URL)
+
+    info = api.login(signed_in_context).info()
     expect(info).to_be_ok()
     referral = info.json()["user"]["reseller_company_id"]
 

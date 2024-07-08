@@ -1,3 +1,5 @@
+import allure
+
 from .base_page import BasePage
 from .employee_table_component import EmployeeTableComponent
 
@@ -11,7 +13,8 @@ class ExecuteCampaignPage(BasePage):
         self.confirm_execute_button = page.get_by_role("button", name="Confirm")
         self.employee_table = EmployeeTableComponent(page.get_by_test_id("table"), page)
 
-    def pick_company(self, company_name):
+    @allure.step("ExecuteCampaignPage: pick {company_name} company")
+    def pick_company(self, company_name: str):
         self.page.get_by_label("Customer").click()
         self.page.get_by_role("option", name=company_name, exact=True).click()
         return self
