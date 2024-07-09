@@ -1,5 +1,8 @@
 import re
+
+import allure
 from playwright.sync_api import Page
+
 from src.page_objects.base_page import BasePage
 
 
@@ -10,5 +13,6 @@ class EmployeeReportsPage(BasePage):
             "columnheader", name=re.compile("Last Report.*")
         )
 
+    @allure.step("EmployeeReportsPage: get report by {pattern} pattern")
     def get_report(self, pattern):
         return self.page.get_by_role("row", name=pattern)

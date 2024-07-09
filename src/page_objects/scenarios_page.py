@@ -1,11 +1,13 @@
-import allure
-import time
 import re
+import time
 from typing import Literal
+
+import allure
 from playwright.sync_api import Page, expect
+
+from src.models.scenario_model import ScenarioModel
 from src.page_objects.base_page import BasePage
 from src.page_objects.execute_campaign_page import ExecuteCampaignPage
-from src.models.scenario_model import ScenarioModel
 
 
 class ScenariosPage(BasePage):
@@ -83,7 +85,7 @@ class ScenariosPage(BasePage):
     def get_visible_results(self):
         return self.scenarios_list.get_by_role("button").all()
 
-    @allure.step("ScenariosPage: Create scenario")
+    @allure.step("ScenariosPage: Create scenario {scenario}")
     def create_scenario(self, scenario: ScenarioModel):
         self.navigate_create_scenario()
 
@@ -91,7 +93,7 @@ class ScenariosPage(BasePage):
 
         expect(self.page.get_by_text("Created new scenario")).to_be_visible()
 
-    @allure.step("Find scenario")
+    @allure.step("Find scenario by {scenario_name} name")
     def find_scenario(self, scenario_name: str):
         self.filter_by_name(scenario_name)
         self.filter_by_language("All")
