@@ -114,7 +114,7 @@ def test_new_customers_count(
     new_count = company_counts.json()["new"]
     content = customers_page.tabs["new"].text_content()
 
-    match = re.compile(r"New Customers\s+([0-9]+)", re.IGNORECASE).match(content)
+    match = re.compile(r"New Customers\s+\(?([0-9]+)\)?", re.IGNORECASE).match(content)
     assert match is not None, f"{content=}"
 
     assert abs(int(match.group(1)) - new_count) < 2
