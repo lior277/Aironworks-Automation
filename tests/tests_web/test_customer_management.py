@@ -13,12 +13,21 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.page_objects.customers_page import CustomersPage
 
 
-@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(),
-                                               id="active customers visible",
-                                               marks=pytest.mark.test_id("C31499")),
-                                  pytest.param(UserModelFactory.reseller_admin(),
-                                               id="active customers visible for reseller admin",
-                                               marks=pytest.mark.test_id("C31500"))])
+@pytest.mark.parametrize(
+    "user",
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            id="active customers visible",
+            marks=pytest.mark.test_id("C31499"),
+        ),
+        pytest.param(
+            UserModelFactory.reseller_admin(),
+            id="active customers visible for reseller admin",
+            marks=pytest.mark.test_id("C31500"),
+        ),
+    ],
+)
 @pytest.mark.smoke
 def test_active_customers_visible(user, customers_page):
     # when logging active customers should be the visible page
@@ -34,12 +43,21 @@ def test_active_customers_visible(user, customers_page):
     assert len(columns) == len(customers_page.active_customers_table_headers)
 
 
-@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(),
-                                               id="customer can be spectated",
-                                               marks=pytest.mark.test_id("C31502")),
-                                  pytest.param(UserModelFactory.reseller_admin(),
-                                               id="customer can be spectated as reseller admin",
-                                               marks=pytest.mark.test_id("C31501"))])
+@pytest.mark.parametrize(
+    "user",
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            id="customer can be spectated",
+            marks=pytest.mark.test_id("C31502"),
+        ),
+        pytest.param(
+            UserModelFactory.reseller_admin(),
+            id="customer can be spectated as reseller admin",
+            marks=pytest.mark.test_id("C31501"),
+        ),
+    ],
+)
 @pytest.mark.smoke
 def test_active_customer_spectate(user, customers_page):
     row = customers_page.get_customer_row()
@@ -61,20 +79,34 @@ def test_active_customer_spectate(user, customers_page):
         # this button only appears for some companies
         pass
 
-    expect(customers_page.page.get_by_label("scrollable content").get_by_role("paragraph")).to_contain_text(
-        f"Admin of {company_name}")
+    expect(
+        customers_page.page.get_by_label("scrollable content").get_by_role("paragraph")
+    ).to_contain_text(f"Admin of {company_name}")
 
 
-@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(),
-                                               id="new customer count is correct for aw admin",
-                                               marks=pytest.mark.test_id("C31503")),
-                                  pytest.param(UserModelFactory.reseller_admin(),
-                                               id="new customer count is correct for reseller admin",
-                                               marks=pytest.mark.test_id("C31504"))])
+@pytest.mark.parametrize(
+    "user",
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            id="new customer count is correct for aw admin",
+            marks=pytest.mark.test_id("C31503"),
+        ),
+        pytest.param(
+            UserModelFactory.reseller_admin(),
+            id="new customer count is correct for reseller admin",
+            marks=pytest.mark.test_id("C31504"),
+        ),
+    ],
+)
 @pytest.mark.smoke
-def test_new_customers_count(user: UserModel, customers_page: CustomersPage, playwright: Playwright):
+def test_new_customers_count(
+    user: UserModel, customers_page: CustomersPage, playwright: Playwright
+):
     expect(customers_page.page.get_by_test_id("empty-state")).not_to_be_visible()
-    request_context = get_request_context_for_page(playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL)
+    request_context = get_request_context_for_page(
+        playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
+    )
     admin_service = api.admin(request_context)
     company_counts = admin_service.company_count()
     expect(company_counts).to_be_ok()
@@ -82,23 +114,39 @@ def test_new_customers_count(user: UserModel, customers_page: CustomersPage, pla
     new_count = company_counts.json()["new"]
     content = customers_page.tabs["new"].text_content()
 
-    match = re.compile(f"New Customers.*({new_count})", re.IGNORECASE).match(content)
+    match = re.compile(r"New Customers\s+([0-9]+)", re.IGNORECASE).match(content)
     assert match is not None, f"{content=}"
 
     assert abs(int(match.group(1)) - new_count) < 2
 
 
-@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(),
-                                               id="aw admin can approve new customer",
-                                               marks=pytest.mark.test_id("C31505")),
-                                  pytest.param(UserModelFactory.reseller_admin(),
-                                               id="reseller admin can approve new customer",
-                                               marks=pytest.mark.test_id("C31506"))])
+@pytest.mark.parametrize(
+    "user",
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            id="aw admin can approve new customer",
+            marks=pytest.mark.test_id("C31505"),
+        ),
+        pytest.param(
+            UserModelFactory.reseller_admin(),
+            id="reseller admin can approve new customer",
+            marks=pytest.mark.test_id("C31506"),
+        ),
+    ],
+)
 @pytest.mark.smoke
-def test_approve_new_customer(user: UserModel, customers_page, playwright: Playwright, api_request_context_aw_admin):
+def test_approve_new_customer(
+    user: UserModel,
+    customers_page,
+    playwright: Playwright,
+    api_request_context_aw_admin,
+):
     referral = None
     if customers_page.user.is_reseller:
-        signed_in_context = get_request_context_for_page(playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL)
+        signed_in_context = get_request_context_for_page(
+            playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
+        )
         info = api.login(signed_in_context).info()
         expect(info).to_be_ok()
         referral = info.json()["user"]["reseller_company_id"]
@@ -133,12 +181,21 @@ def test_approve_new_customer(user: UserModel, customers_page, playwright: Playw
         admin_service.deactivate_company(company["id"])
 
 
-@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.reseller_admin(),
-                                               id="reseller admin can approve new customer",
-                                               marks=pytest.mark.test_id("C31507"))])
+@pytest.mark.parametrize(
+    "user",
+    [
+        pytest.param(
+            UserModelFactory.reseller_admin(),
+            id="reseller admin can approve new customer",
+            marks=pytest.mark.test_id("C31507"),
+        )
+    ],
+)
 @pytest.mark.smoke
 def test_copy_invitation_link(user: UserModel, customers_page, playwright: Playwright):
-    signed_in_context = get_request_context_for_page(playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL)
+    signed_in_context = get_request_context_for_page(
+        playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
+    )
 
     info = api.login(signed_in_context).info()
     expect(info).to_be_ok()
