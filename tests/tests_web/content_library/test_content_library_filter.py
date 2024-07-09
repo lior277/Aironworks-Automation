@@ -5,16 +5,13 @@ from playwright.sync_api import expect
 
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
+from src.page_objects.content_library_page import ContentLibraryPage
 
 
 @pytest.mark.parametrize("user", [UserModelFactory.aw_admin()])
 @pytest.mark.test_id("C31520")
 @pytest.mark.smoke
-def test_filter_company_by_visibility(user, sign_in_page):
-    sign_in_page.navigate(admin=user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    content_library_page = sign_in_page.navigation_bar.navigate_content_library()
+def test_filter_company_by_visibility(user, content_library_page: ContentLibraryPage):
     content_library_page.set_visibility_filter("QA Accounts")
 
     expect(content_library_page.cards).to_have_count(1)
@@ -36,11 +33,7 @@ def test_filter_company_by_visibility(user, sign_in_page):
     ],
 )
 @pytest.mark.smoke
-def test_filter_company_by_name(user: UserModel, sign_in_page):
-    sign_in_page.navigate(admin=user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    content_library_page = sign_in_page.navigation_bar.navigate_content_library()
+def test_filter_company_by_name(user: UserModel, content_library_page: ContentLibraryPage):
     content_library_page.set_name_filter("Test Content for QA")
 
     expect(content_library_page.cards).to_have_count(1)
@@ -63,11 +56,7 @@ def test_filter_company_by_name(user: UserModel, sign_in_page):
     ],
 )
 @pytest.mark.smoke
-def test_full_state_and_empty_state(user: UserModel, sign_in_page):
-    sign_in_page.navigate(admin=user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    content_library_page = sign_in_page.navigation_bar.navigate_content_library()
+def test_full_state_and_empty_state(user: UserModel, content_library_page: ContentLibraryPage):
     content_library_page.set_name_filter("qwepqwjoeinqwourbqiouwboasnodnqwoienoquwbeq")
 
     expect(content_library_page.cards).to_have_count(0)

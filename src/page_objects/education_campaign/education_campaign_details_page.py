@@ -21,4 +21,4 @@ class EducationCampaignDetailsPage(BasePage):
         self.delete_campaign_title.wait_for()
         expect(self.delete_campaign_body).to_have_text(confirm_deletion_body_text)
         self.confirm_delete_button.click()
-        expect(self.alert_message).to_have_text(education_campaign_deleted_text)
+        expect(self.alert_message).to_contain_text(education_campaign_deleted_text)

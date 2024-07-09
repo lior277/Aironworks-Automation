@@ -8,6 +8,7 @@ from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.page_objects.campaign_detalis_page import CampaignDetailsPage
+from src.page_objects.scenarios_page import ScenariosPage
 from src.utils.mailtrap import find_email
 
 
@@ -27,11 +28,7 @@ from src.utils.mailtrap import find_email
     ],
 )
 @pytest.mark.smoke
-def test_create_simulation_campaign(user: UserModel, employee, sign_in_page, mailtrap):
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    scenarios_page = sign_in_page.navigation_bar.navigate_scenarios()
+def test_create_simulation_campaign(user: UserModel, employee, scenarios_page: ScenariosPage, mailtrap):
     scenario_name = AppConfigs.EXAMPLE_SCENARIO_NAME
     scenarios_page.filter_by_name(scenario_name)
     generic_scenario = scenarios_page.find_scenario(scenario_name)
@@ -77,11 +74,7 @@ def test_create_simulation_campaign(user: UserModel, employee, sign_in_page, mai
     ],
 )
 @pytest.mark.smoke
-def test_campaigns_page_has_data(user, sign_in_page):
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    campaigns_page = sign_in_page.navigation_bar.navigate_campaigns()
+def test_campaigns_page_has_data(user, campaigns_page):
     tables = campaigns_page.page.get_by_test_id("executions-table")
     expect(tables).to_have_count(2)
     expect(campaigns_page.page.get_by_role("progressbar")).to_have_count(0)

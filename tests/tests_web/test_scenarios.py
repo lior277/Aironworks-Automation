@@ -6,8 +6,7 @@ from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
 from src.models.scenario_model import ScenarioModel
-from src.page_objects.dashboard_page import DashboardPage
-from src.page_objects.login_page import SignInPage
+from src.page_objects.scenarios_page import ScenariosPage
 
 fake = faker.Faker()
 
@@ -30,12 +29,7 @@ fake = faker.Faker()
     ],
 )
 @pytest.mark.smoke
-def test_create_scenario(user: UserModel, scenario, sign_in_page: SignInPage, dashboard_page: DashboardPage):
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    scenarios_page = dashboard_page.navigation_bar.navigate_scenarios()
-
+def test_create_scenario(user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage):
     scenarios_page.create_scenario(scenario)
 
 
@@ -55,16 +49,9 @@ def test_create_scenario(user: UserModel, scenario, sign_in_page: SignInPage, da
     ],
 )
 @pytest.mark.smoke
-def test_filter_scenario_by_name(user: UserModel, sign_in_page, dashboard_page):
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    scenarios_page = dashboard_page.navigation_bar.navigate_scenarios()
-
+def test_filter_scenario_by_name(user: UserModel, scenarios_page: ScenariosPage):
     filter_text = "QA Test Scenario"
-
     scenarios_page.find_scenario(filter_text)
-
     results = scenarios_page.get_visible_results()
 
     for res in results:
@@ -83,19 +70,11 @@ def test_filter_scenario_by_name(user: UserModel, sign_in_page, dashboard_page):
     ],
 )
 @pytest.mark.smoke
-def test_hide_scenario(user: UserModel, scenario: ScenarioModel, sign_in_page: SignInPage,
-                       dashboard_page: DashboardPage):
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    scenarios_page = dashboard_page.navigation_bar.navigate_scenarios()
+def test_hide_scenario(user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage):
     scenarios_page.create_scenario(scenario)
-
     scenario_element = scenarios_page.find_scenario(scenario.name)
-
     scenario_element.click()
     scenarios_page.finish_draft()
-
     scenarios_page.visible_tab.click()
     scenarios_page.wait_sync_filters()
 
@@ -123,11 +102,7 @@ def test_hide_scenario(user: UserModel, scenario: ScenarioModel, sign_in_page: S
     ],
 )
 @pytest.mark.smoke
-def test_clone_scenario(user: UserModel, scenario, sign_in_page, dashboard_page):
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-
-    scenarios_page = dashboard_page.navigation_bar.navigate_scenarios()
+def test_clone_scenario(user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage):
     scenarios_page.create_scenario(scenario)
 
     scenario_element = scenarios_page.find_scenario(scenario.name)

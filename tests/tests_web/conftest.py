@@ -1,3 +1,4 @@
+import os
 import tempfile
 
 import allure
@@ -6,10 +7,17 @@ from playwright.sync_api import Browser, Page
 
 from src.models.auth.user_model import UserModel
 from src.models.education.education_campaign_model import EducationCampaignDetailsModel
+from src.page_objects.campaigns_page import CampaignsPage
+from src.page_objects.content_library_page import ContentLibraryPage
+from src.page_objects.customers_page import CustomersPage
 from src.page_objects.dashboard_page import DashboardPage
+from src.page_objects.education_campaign.education_campaign_details_page import EducationCampaignDetailsPage
 from src.page_objects.education_campaign.education_campaign_page import EducationCampaignPage
+from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.login_page import SignInPage
+from src.page_objects.scenarios_page import ScenariosPage
 from src.utils.log import Log
+from src.utils.waiter import wait_for
 
 
 @pytest.fixture(scope="function")
@@ -57,22 +65,62 @@ def sign_in_page(playwright_config) -> SignInPage:
     # we want to use the already existing context
     page: Page = playwright_config[1].new_page()
     return SignInPage(page)
-    # return SignInPage(page)
 
 
 @pytest.fixture(scope="function")
-def dashboard_page(sign_in_page: SignInPage) -> DashboardPage:
+def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
+    remember_token = f"{user.email}_remember_token"
+    session = f"{user.email}_session"
+    if os.getenv(remember_token):
+        sign_in_page.page.context.set_extra_http_headers(
+            {"Cookie": f"remember_token={os.environ[remember_token]}; session={os.environ[session]}"})
+        sign_in_page.navigate(admin=user.is_admin)
+
+        def wait_for_cookies():
+            return sign_in_page.page.context.storage_state()['cookies']
+
+        wait_for(wait_for_cookies, timeout=10)
+
+    else:
+        sign_in_page.navigate(admin=user.is_admin)
+        sign_in_page.submit_sign_in_form(user)
+        cookies = sign_in_page.page.context.cookies()
+        os.environ[remember_token] = cookies[0]['value']
+        os.environ[session] = cookies[1]['value']
     return DashboardPage(sign_in_page.page)
 
 
 @pytest.fixture(scope="function")
-def education_campaign_page(sign_in_page: SignInPage, user: UserModel) -> EducationCampaignPage:
-    sign_in_page.navigate(admin=user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-    return sign_in_page.navigation_bar.navigate_education_campaigns_page()
+def education_campaign_page(dashboard_page: DashboardPage) -> EducationCampaignPage:
+    return dashboard_page.navigation_bar.navigate_education_campaigns_page()
 
 
 @pytest.fixture(scope="function")
 def education_campaign_detail_page(education_campaign_page,
-                                   education_campaign: EducationCampaignDetailsModel) -> EducationCampaignPage:
+                                   education_campaign: EducationCampaignDetailsModel) -> EducationCampaignDetailsPage:
     return education_campaign_page.open_campaign_details(education_campaign.title)
+
+
+@pytest.fixture(scope="function")
+def content_library_page(dashboard_page: DashboardPage) -> ContentLibraryPage:
+    return dashboard_page.navigation_bar.navigate_content_library()
+
+
+@pytest.fixture(scope="function")
+def employee_reports_page(dashboard_page: DashboardPage) -> EmployeeReportsPage:
+    return dashboard_page.navigation_bar.navigate_employee_reports()
+
+
+@pytest.fixture(scope="function")
+def scenarios_page(dashboard_page: DashboardPage) -> ScenariosPage:
+    return dashboard_page.navigation_bar.navigate_scenarios()
+
+
+@pytest.fixture(scope="function")
+def campaigns_page(dashboard_page: DashboardPage) -> CampaignsPage:
+    return dashboard_page.navigation_bar.navigate_campaigns()
+
+
+@pytest.fixture(scope="function")
+def customers_page(dashboard_page: DashboardPage, user: UserModel) -> CustomersPage:
+    return CustomersPage(dashboard_page.page, user)

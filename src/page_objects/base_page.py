@@ -1,3 +1,4 @@
+import allure
 from playwright.sync_api import Page
 
 from src.configs.config_loader import AppConfigs
@@ -20,6 +21,7 @@ class BasePage:
         if page.url:
             self.set_default_url('/'.join(page.url.split('/', 3)[:3]) + '/')
 
+    @allure.step("BasePage: wait for loading state")
     def wait_for_loading_state(self, timeout=10000):
         try:
             self.loading.wait_for(timeout=timeout, state="visible")
@@ -28,9 +30,11 @@ class BasePage:
             Log.info(f"{error=}")
             pass
 
+    @allure.step("BasePage: wait for progress bar disappears")
     def wait_for_progress_bar_disappears(self, timeout=10000):
         if self.progress_bar.is_visible(timeout=timeout):
             self.progress_bar.wait_for(timeout=timeout, state="hidden")
 
+    @allure.step("BasePage: set default {default_url} url")
     def set_default_url(self, default_url: str):
         self.default_url = default_url
