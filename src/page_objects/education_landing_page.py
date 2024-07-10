@@ -14,7 +14,7 @@ class EducationLandingPage:
 
     @property
     def iframe(self):
-        return self.page.main_frame.child_frames[1]
+        return self.page.main_frame.child_frames[2]
 
     @allure.step("EducationLandingPage: open page")
     def open(self):
