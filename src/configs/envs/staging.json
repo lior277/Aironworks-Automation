@@ -2,6 +2,7 @@
   "base_url": "https://staging.app.aironworks.com/",
   "admin_base_url": "https://staging.admin.aironworks.com/",
   "addin_base_url": "https://staging.outlookaddin.aironworks.com",
+  "addin_name": "PhishDetectAI Staging",
   "mailtrap_assessment_inbox_id": "2802760",
   "mailtrap_assessment_inbox_mail": "68fa80bce3-28fbb0@inbox.mailtrap.io",
   "mailtrap_account_id": "1311290",

@@ -11,9 +11,19 @@ from src.page_objects.campaigns_page import CampaignsPage
 from src.page_objects.content_library_page import ContentLibraryPage
 from src.page_objects.customers_page import CustomersPage
 from src.page_objects.dashboard_page import DashboardPage
-from src.page_objects.education_campaign.education_campaign_details_page import EducationCampaignDetailsPage
-from src.page_objects.education_campaign.education_campaign_page import EducationCampaignPage
+from src.page_objects.education_campaign.education_campaign_details_page import (
+    EducationCampaignDetailsPage,
+)
+from src.page_objects.education_campaign.education_campaign_page import (
+    EducationCampaignPage,
+)
 from src.page_objects.employee_reports_page import EmployeeReportsPage
+from src.page_objects.outlook_page import OutlookPage
+from src.configs.config_loader import AppConfigs
+from src.page_objects.dashboard_page import DashboardPage
+from src.page_objects.education_campaign.education_campaign_page import (
+    EducationCampaignPage,
+)
 from src.page_objects.login_page import SignInPage
 from src.page_objects.scenarios_page import ScenariosPage
 from src.utils.log import Log
@@ -50,13 +60,26 @@ def playwright_config(request, launch_browser, browser_type):
         context.tracing.stop(path=traceout)
         allure.attach.file(traceout, "trace.zip", "zip")
         for page in context.pages:
-            allure.attach(page.screenshot(), name=f"{page.title()}.png",
-                          attachment_type=allure.attachment_type.PNG)
+            allure.attach(
+                page.screenshot(),
+                name=f"{page.title()}.png",
+                attachment_type=allure.attachment_type.PNG,
+            )
     else:
         context.tracing.stop()
 
     context.close()
     browser.close()
+
+
+@pytest.fixture(scope="function")
+def outlook_page(playwright_config) -> OutlookPage:
+    page: Page = playwright_config[1].new_page()
+
+    outlook_page = OutlookPage(page)
+    outlook_page.login()
+
+    return outlook_page
 
 
 @pytest.fixture(scope="function")
@@ -73,11 +96,14 @@ def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
     session = f"{user.email}_session"
     if os.getenv(remember_token):
         sign_in_page.page.context.set_extra_http_headers(
-            {"Cookie": f"remember_token={os.environ[remember_token]}; session={os.environ[session]}"})
+            {
+                "Cookie": f"remember_token={os.environ[remember_token]}; session={os.environ[session]}"
+            }
+        )
         sign_in_page.navigate(admin=user.is_admin)
 
         def wait_for_cookies():
-            return sign_in_page.page.context.storage_state()['cookies']
+            return sign_in_page.page.context.storage_state()["cookies"]
 
         wait_for(wait_for_cookies, timeout=10)
 
@@ -85,8 +111,8 @@ def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
         sign_in_page.navigate(admin=user.is_admin)
         sign_in_page.submit_sign_in_form(user)
         cookies = sign_in_page.page.context.cookies()
-        os.environ[remember_token] = cookies[0]['value']
-        os.environ[session] = cookies[1]['value']
+        os.environ[remember_token] = cookies[0]["value"]
+        os.environ[session] = cookies[1]["value"]
     return DashboardPage(sign_in_page.page)
 
 
@@ -96,8 +122,9 @@ def education_campaign_page(dashboard_page: DashboardPage) -> EducationCampaignP
 
 
 @pytest.fixture(scope="function")
-def education_campaign_detail_page(education_campaign_page,
-                                   education_campaign: EducationCampaignDetailsModel) -> EducationCampaignDetailsPage:
+def education_campaign_detail_page(
+    education_campaign_page, education_campaign: EducationCampaignDetailsModel
+) -> EducationCampaignDetailsPage:
     return education_campaign_page.open_campaign_details(education_campaign.title)
 
 

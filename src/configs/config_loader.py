@@ -27,6 +27,7 @@ class AppConfigs:
     BASE_URL = _env_config["base_url"]
     ADMIN_BASE_URL = _env_config["admin_base_url"]
     ADDIN_BASE_URL = _env_config["addin_base_url"]
+    ADDIN_NAME = _env_config["addin_name"]
     EXAMPLE_SCENARIO = _env_config["example_scenario"]
     EXAMPLE_SCENARIO_NAME = _env_config["example_scenario_name"]
     EXAMPLE_EDUCATION_CONTENT = _env_config["example_education_content"]
@@ -154,3 +155,7 @@ class AppConfigs:
     PERF_EMPLOYEE_INBOX_ID_49 = 2936330
 
     QA_COMPANY_NAME = "QA Accounts"
+
+    MSLIVE_USER = os.getenv("MSLIVE_USER")
+    MSLIVE_PWD = os.getenv("MSLIVE_PWD")
+    MSLIVE_TOTP = os.getenv("MSLIVE_TOTP")
