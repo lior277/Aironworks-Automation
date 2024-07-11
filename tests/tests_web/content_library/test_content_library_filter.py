@@ -5,7 +5,7 @@ from playwright.sync_api import expect
 
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.page_objects.content_library_page import ContentLibraryPage
+from src.page_objects.content_library.content_library_page import ContentLibraryPage
 
 
 @pytest.mark.parametrize("user", [UserModelFactory.aw_admin()])

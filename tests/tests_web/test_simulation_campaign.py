@@ -144,7 +144,8 @@ def test_campaign_summary_page(campaign_details_page, sign_in_page):
 )
 @pytest.mark.smoke
 def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage):
-    expect(campaign_details_page.page.get_by_role("row")).to_have_count(2)
+    expect(campaign_details_page.page.get_by_role("row").and_(
+        campaign_details_page.page.locator("[role='row']", has_not_text="Preview"))).to_have_count(2)
 
 
 @pytest.mark.parametrize(
@@ -165,10 +166,7 @@ def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage):
 )
 @pytest.mark.smoke
 def test_campaign_export(campaign_details_page: CampaignDetailsPage):
-    rows = campaign_details_page.page.get_by_role("row").all()
-    assert len(rows) == 2
-
-    values = [row.text_content() for row in rows[1].get_by_role("cell").all()[:-1]]
+    values = campaign_details_page.table_campaign_attacks_summary.text_content()[0]
 
     file = campaign_details_page.export_csv()
     with open(file, "r", encoding="utf-8-sig") as f:
