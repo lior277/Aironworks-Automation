@@ -1,9 +1,10 @@
 import tempfile
 
 import allure
-from playwright.sync_api import Page
+from playwright.sync_api import Page, Locator
 
 from src.page_objects.base_page import BasePage
+from src.page_objects.data_types.table_element import Table
 
 
 class CampaignDetailsPage(BasePage):
@@ -11,6 +12,8 @@ class CampaignDetailsPage(BasePage):
         super().__init__(page)
         self.export_csv_button = self.page.get_by_role("button", name="Export CSV")
         self.url = self.default_url + "admin/dashboard/attacks/executions/"
+        self.table_campaign_attacks_summary = Table(page.locator('//div[contains(@class,"MuiDataGrid-row")]',
+                                                                 has_not_text="Preview"), CampaignAttacksSummary)
 
     @allure.step("CampaignDetailsPage: open campaign detailed page for {campaign_id} campaign id")
     def open_campaign_detailed_page(self, campaign_id: str):
@@ -25,3 +28,16 @@ class CampaignDetailsPage(BasePage):
         download_event = download_info.value
         download_event.save_as(path)
         return path
+
+
+class CampaignAttacksSummary:
+    def __init__(self, locator: Locator):
+        self.status = locator.locator('[data-field="status"]')
+        self.date_clicked = locator.locator('[data-field="date_clicked"]')
+        self.first_name = locator.locator('[data-field="target.first_name"]')
+        self.last_name = locator.locator('[data-field="target.last_name"]')
+        self.email = locator.locator('[data-field="target.email"]')
+        self.user_agent = locator.locator('[data-field="user_agent"]')
+        self.ip_address = locator.locator('[data-field="ip_address"]')
+        self.report_time = locator.locator('[data-field="report_time"]')
+        self.incident_time = locator.locator('[data-field="incident_time"]')

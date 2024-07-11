@@ -14,7 +14,7 @@ class Table(Generic[T]):
         self._Table__structure = structure
         self._Table__locator = locator
 
-    def get_content(self):
+    def get_content(self) -> T:
         out = []
         if self._Table__locator.first.is_visible():
             elements = self._Table__locator.all()
@@ -22,6 +22,15 @@ class Table(Generic[T]):
                 structure_object = self._Table__structure(element)
                 out.append(structure_object)
         return out
+
+    def text_content(self) -> list[list[str]]:
+        all_context = []
+        for element in self.get_content():
+            out = []
+            for fild in vars(element).values():
+                out.append(fild.text_content())
+            all_context.append(out)
+        return all_context
 
     def get_row_by_column_value(self, column_name: str, value: str, wait_time: int = 1) -> T:
         Log.debug("Getting row by column %s with value %s from the table" % (column_name, value))

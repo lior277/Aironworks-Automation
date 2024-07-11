@@ -1,6 +1,8 @@
-import allure
 import re
+
+import allure
 from playwright.sync_api import Page
+
 from src.page_objects.base_page import BasePage
 
 

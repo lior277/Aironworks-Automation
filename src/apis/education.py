@@ -8,6 +8,7 @@ from playwright.sync_api import APIRequestContext, APIResponse
 from src.models.education_campaign_model import EducationCampaignModel, EducationCampaignStatus
 from .base_service import BaseService
 from .psapi import PSApi
+from ..models.education.clone_education_content import CloneEducationContentModel
 from ..models.education.education_assignments import EducationAssignmentsModel
 
 
@@ -39,6 +40,18 @@ class EducationService(BaseService):
     def get_content_pagination(self, offset: int = 0, limit: int = 6) -> APIResponse:
         params = {"offset": offset, "limit": limit}
         return self._get(PSApi.EDUCATION_CONTENT.get_endpoint(), params=params)
+
+    @allure.step("EducationService: clone education content")
+    def clone_education_content(self, close_education_content: CloneEducationContentModel) -> APIResponse:
+        return self._post(PSApi.EDUCATION_CONTENT.get_endpoint(), data=close_education_content.to_filtered_dict())
+
+    @allure.step("EducationService: get education content details {content_id}")
+    def get_education_content_details(self, content_id: str) -> APIResponse:
+        return self._get(PSApi.EDUCATION_CONTENT_DETAILS.get_endpoint().format(content_id=content_id))
+
+    @allure.step("EducationService: delete education content")
+    def delete_education_content(self, content_id: str) -> APIResponse:
+        return self._delete(PSApi.EDUCATION_CONTENT_DETAILS.get_endpoint().format(content_id=content_id))
 
     @allure.step("EducationService: aw admin get education assignments")
     def aw_admin_education_assignments(self, campaign_id: int, wait_time: int = 100) -> APIResponse:

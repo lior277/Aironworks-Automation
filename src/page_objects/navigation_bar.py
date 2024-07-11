@@ -2,7 +2,7 @@ import allure
 from playwright.sync_api import Page
 
 from src.page_objects.campaigns_page import CampaignsPage
-from src.page_objects.content_library_page import ContentLibraryPage
+from src.page_objects.content_library.content_library_page import ContentLibraryPage
 from src.page_objects.education_campaign.education_campaign_page import EducationCampaignPage
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.scenarios_page import ScenariosPage

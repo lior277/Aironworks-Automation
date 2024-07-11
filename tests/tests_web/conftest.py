@@ -8,7 +8,7 @@ from playwright.sync_api import Browser, Page
 from src.models.auth.user_model import UserModel
 from src.models.education.education_campaign_model import EducationCampaignDetailsModel
 from src.page_objects.campaigns_page import CampaignsPage
-from src.page_objects.content_library_page import ContentLibraryPage
+from src.page_objects.content_library.content_library_page import ContentLibraryPage
 from src.page_objects.customers_page import CustomersPage
 from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.education_campaign.education_campaign_details_page import (
