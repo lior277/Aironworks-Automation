@@ -3,7 +3,9 @@ from playwright.sync_api import Page
 
 from src.page_objects.campaigns_page import CampaignsPage
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
-from src.page_objects.education_campaign.education_campaign_page import EducationCampaignPage
+from src.page_objects.education_campaign.education_campaign_page import (
+    EducationCampaignPage,
+)
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.settings_page import SettingsPage
@@ -15,11 +17,13 @@ class NavigationBar:
         self.scenarios_button = page.get_by_role("link", name="Scenarios")
         self.settings_button = page.get_by_role("link", name="Settings", exact=True)
         self.employee_reports_button = page.get_by_role(
-            "link", name="PhishDetect AI Reports"
+            "link", name="PhishDetectAI Reports"
         )
         self.content_library_button = page.get_by_role("link", name="Content Library")
         self.campaigns_button = page.get_by_role("link", name="Campaigns", exact=True)
-        self.education_campaigns_button = page.get_by_role("link", name="Education Campaigns", exact=True)
+        self.education_campaigns_button = page.get_by_role(
+            "link", name="Education Campaigns", exact=True
+        )
 
     @allure.step("NavigationBar: Navigate to scenarios")
     def navigate_scenarios(self):
