@@ -3,7 +3,7 @@ import tempfile
 
 import allure
 import pytest
-from playwright.sync_api import Browser, Page
+from playwright.sync_api import Browser, Page, expect
 
 from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
@@ -40,7 +40,7 @@ def playwright_config(request, launch_browser, browser_type):
         permissions=["clipboard-read", "clipboard-write"],
     )
     context.set_default_timeout(timeout=120 * 1000)
-
+    expect.set_options(timeout=10_000)
     context.tracing.start(
         name=request.node.name, snapshots=True, screenshots=True, sources=True
     )
