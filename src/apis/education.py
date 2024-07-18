@@ -17,15 +17,15 @@ class EducationService(BaseService):
     def __init__(self, request_context: APIRequestContext):
         super().__init__(request_context)
 
-    @allure.step("EducationService: start an education campaign")
+    @allure.step("EducationService: start an education campaign {campaign}")
     def start_campaign(self, campaign: EducationCampaignModel) -> APIResponse:
         return self._post(PSApi.EDUCATION_CAMPAIGN.get_endpoint(), data=asdict(campaign))
 
-    @allure.step("EducationService: get education campaign details")
+    @allure.step("EducationService: get education campaign details {campaign_id}")
     def get_campaign_details(self, campaign_id: str) -> APIResponse:
         return self._get(PSApi.EDUCATION_CAMPAIGN_DETAILS.get_endpoint().format(campaign_id=campaign_id))
 
-    @allure.step("EducationService: delete education campaign")
+    @allure.step("EducationService: delete {campaign_id} education campaign")
     def delete_education_campaign(self, campaign_id: str) -> APIResponse:
         return self._delete(PSApi.EDUCATION_CAMPAIGN_DETAILS.get_endpoint().format(campaign_id=campaign_id))
 
@@ -41,7 +41,7 @@ class EducationService(BaseService):
         params = {"offset": offset, "limit": limit}
         return self._get(PSApi.EDUCATION_CONTENT.get_endpoint(), params=params)
 
-    @allure.step("EducationService: clone education content")
+    @allure.step("EducationService: clone education content {close_education_content}")
     def clone_education_content(self, close_education_content: CloneEducationContentModel) -> APIResponse:
         return self._post(PSApi.EDUCATION_CONTENT.get_endpoint(), data=close_education_content.to_filtered_dict())
 
@@ -49,11 +49,11 @@ class EducationService(BaseService):
     def get_education_content_details(self, content_id: str) -> APIResponse:
         return self._get(PSApi.EDUCATION_CONTENT_DETAILS.get_endpoint().format(content_id=content_id))
 
-    @allure.step("EducationService: delete education content")
+    @allure.step("EducationService: delete education content {content_id}")
     def delete_education_content(self, content_id: str) -> APIResponse:
         return self._delete(PSApi.EDUCATION_CONTENT_DETAILS.get_endpoint().format(content_id=content_id))
 
-    @allure.step("EducationService: aw admin get education assignments")
+    @allure.step("EducationService: aw admin get education assignments {campaign_id}")
     def aw_admin_education_assignments(self, campaign_id: int, wait_time: int = 100) -> APIResponse:
         start_time = datetime.now()
         while True:

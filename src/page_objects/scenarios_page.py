@@ -6,6 +6,7 @@ import allure
 from playwright.sync_api import Page, expect
 
 from src.models.scenario_model import ScenarioModel
+from src.page_objects import created_new_scenario_text
 from src.page_objects.base_page import BasePage
 from src.page_objects.execute_campaign_page import ExecuteCampaignPage
 
@@ -87,10 +88,8 @@ class ScenariosPage(BasePage):
     @allure.step("ScenariosPage: Create scenario {scenario}")
     def create_scenario(self, scenario: ScenarioModel):
         self.navigate_create_scenario()
-
         self.submit_create_scenario_form(scenario)
-
-        expect(self.alert_message.first).to_contain_text("Created new scenario")
+        expect(self.alert_message.first).to_contain_text(created_new_scenario_text)
 
     @allure.step("Find scenario by {scenario_name} name")
     def find_scenario(self, scenario_name: str):

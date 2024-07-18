@@ -6,12 +6,12 @@ from playwright.sync_api import APIRequestContext, APIResponse
 
 def allure_attach(response: APIResponse):
     if response.body():
-        if response.json():
-            allure.attach(body=json.dumps(response.json(), indent=4),
-                          attachment_type=allure.attachment_type.JSON, name="response.json")
-        elif "<html" in response.text():
+        if "<html" in response.text():
             allure.attach(body=response.text(),
                           attachment_type=allure.attachment_type.HTML, name="response.html")
+        elif response.json():
+            allure.attach(body=json.dumps(response.json(), indent=4),
+                          attachment_type=allure.attachment_type.JSON, name="response.json")
         else:
             allure.attach(body=response.text(),
                           attachment_type=allure.attachment_type.TEXT, name="response.txt")
