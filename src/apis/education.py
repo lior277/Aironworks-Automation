@@ -60,7 +60,7 @@ class EducationService(BaseService):
             response = self._get(PSApi.ADMIN_EDUCATION_ASSIGNMENTS.get_endpoint().format(campaign_id=campaign_id))
             education_assignments = EducationAssignmentsModel.from_dict(response.json())
             if education_assignments.campaign_status in ['COMPLETED', 'ONGOING'] \
-                    and datetime.now() - start_time > timedelta(seconds=wait_time):
+                    or datetime.now() - start_time > timedelta(seconds=wait_time):
                 break
             time.sleep(1)
         return response

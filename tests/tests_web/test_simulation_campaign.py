@@ -8,25 +8,15 @@ from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.page_objects.campaign_detalis_page import CampaignDetailsPage
+from src.page_objects.entity.campaign_attacks_summary_entity import CampaignAttacksSummaryFactory
 from src.page_objects.scenarios_page import ScenariosPage
 from src.utils.mailtrap import find_email
 
 
-@pytest.mark.parametrize(
-    "user",
-    [
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            id="AW Admin",
-            marks=pytest.mark.test_id("C31544"),
-        ),
-        pytest.param(
-            UserModelFactory.customer_admin(),
-            id="Customer Admin",
-            marks=pytest.mark.test_id("C31545"),
-        ),
-    ],
-)
+@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(), id="AW Admin",
+                                               marks=pytest.mark.test_id("C31544")),
+                                  pytest.param(UserModelFactory.customer_admin(), id="Customer Admin",
+                                               marks=pytest.mark.test_id("C31545"))])
 @pytest.mark.smoke
 def test_create_simulation_campaign(user: UserModel, employee, scenarios_page: ScenariosPage, mailtrap):
     scenario_name = AppConfigs.EXAMPLE_SCENARIO_NAME
@@ -47,32 +37,15 @@ def test_create_simulation_campaign(user: UserModel, employee, scenarios_page: S
     execute_campaign_page.execute_button.click()
     execute_campaign_page.confirm_execute_button.click()
 
-    mail = mailtrap.wait_for_mail(
-        AppConfigs.EMPLOYEE_INBOX_ID,
-        find_email(
-            employee.email,
-        ),
-        timeout=240,
-    )
+    mail = mailtrap.wait_for_mail(AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email), timeout=240)
 
     assert mail is not None
 
 
-@pytest.mark.parametrize(
-    "user",
-    [
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            id="AW Admin",
-            marks=pytest.mark.test_id("C31547"),
-        ),
-        pytest.param(
-            UserModelFactory.customer_admin(),
-            id="Customer Admin",
-            marks=pytest.mark.test_id("C31546"),
-        ),
-    ],
-)
+@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(),
+                                               id="AW Admin", marks=pytest.mark.test_id("C31547")),
+                                  pytest.param(UserModelFactory.customer_admin(),
+                                               id="Customer Admin", marks=pytest.mark.test_id("C31546"))])
 @pytest.mark.smoke
 def test_campaigns_page_has_data(user, campaigns_page):
     tables = campaigns_page.page.get_by_test_id("executions-table")
@@ -83,99 +56,43 @@ def test_campaigns_page_has_data(user, campaigns_page):
     assert tables[1].get_by_role("row").count() >= 2
 
 
-@pytest.fixture
-def campaign_details_page(request, sign_in_page) -> CampaignDetailsPage:
-    user = request.param
-    sign_in_page.navigate(user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-    details_page = CampaignDetailsPage(sign_in_page.page)
-    details_page.open_campaign_detailed_page(campaign_id=AppConfigs.SAMPLE_CAMPAIGN)
-    expect(details_page.export_csv_button).to_be_visible(timeout=5000)
-
-    return details_page
-
-
-@pytest.mark.parametrize(
-    "campaign_details_page",
-    [
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            id="AW Admin",
-            marks=pytest.mark.test_id("C31547"),
-        ),
-        pytest.param(
-            UserModelFactory.customer_admin(),
-            id="Customer Admin",
-            marks=pytest.mark.test_id("C31546"),
-        ),
-    ],
-    indirect=["campaign_details_page"],
-)
+@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(),
+                                               id="AW Admin", marks=pytest.mark.test_id("C31547"), ),
+                                  pytest.param(UserModelFactory.customer_admin(), id="Customer Admin",
+                                               marks=pytest.mark.test_id("C31546"))])
 @pytest.mark.smoke
-def test_campaign_summary_page(campaign_details_page, sign_in_page):
-    expect(
-        campaign_details_page.page.get_by_role(
-            "heading", name=re.compile(AppConfigs.SAMPLE_CAMPAIGN_NAME + ".*")
-        )
-    ).to_have_count(1)  # test title
-    expect(campaign_details_page.page.get_by_text("1 days")).to_have_count(
-        1
-    )  # test duration
-    expect(
-        campaign_details_page.page.get_by_text(AppConfigs.QA_COMPANY_NAME)
-    ).to_have_count(1)  # test company name in page
+def test_campaign_summary_page(campaign_details_page, user):
+    expect(campaign_details_page.page.get_by_role(
+        "heading", name=re.compile(AppConfigs.SAMPLE_CAMPAIGN_NAME + ".*"))).to_have_count(1)  # test title
+    expect(campaign_details_page.page.get_by_text("1 days")).to_have_count(1)  # test duration
+    expect(campaign_details_page.page.get_by_text(AppConfigs.QA_COMPANY_NAME)).to_have_count(1)
 
 
-@pytest.mark.parametrize(
-    "campaign_details_page",
-    [
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            id="AW Admin",
-            marks=pytest.mark.test_id("C31549"),
-        ),
-        pytest.param(
-            UserModelFactory.customer_admin(),
-            id="Customer Admin",
-            marks=pytest.mark.test_id("C31552"),
-        ),
-    ],
-    indirect=["campaign_details_page"],
-)
+@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(), id="AW Admin",
+                                               marks=pytest.mark.test_id("C31549")),
+                                  pytest.param(UserModelFactory.customer_admin(), id="Customer Admin",
+                                               marks=pytest.mark.test_id("C31552"))])
 @pytest.mark.smoke
-def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage):
+def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage, user):
     expect(campaign_details_page.page.get_by_role("row").and_(
         campaign_details_page.page.locator("[role='row']", has_not_text="Preview"))).to_have_count(2)
 
 
-@pytest.mark.parametrize(
-    "campaign_details_page",
-    [
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            id="AW Admin",
-            marks=pytest.mark.test_id("C31550"),
-        ),
-        pytest.param(
-            UserModelFactory.customer_admin(),
-            id="Customer Admin",
-            marks=pytest.mark.test_id("C31553"),
-        ),
-    ],
-    indirect=["campaign_details_page"],
-)
+@pytest.mark.parametrize("user", [pytest.param(UserModelFactory.aw_admin(),
+                                               id="AW Admin", marks=pytest.mark.test_id("C31550")),
+                                  pytest.param(UserModelFactory.customer_admin(),
+                                               id="Customer Admin",
+                                               marks=pytest.mark.test_id("C31553"))])
 @pytest.mark.smoke
-def test_campaign_export(campaign_details_page: CampaignDetailsPage):
-    values = campaign_details_page.table_campaign_attacks_summary.text_content()[0]
+def test_campaign_export(campaign_details_page: CampaignDetailsPage, user):
+    page_entity = CampaignAttacksSummaryFactory.get_entity(
+        campaign_details_page.table_campaign_attacks_summary.text_content()[0])
 
     file = campaign_details_page.export_csv()
     with open(file, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
-        rows = [row for row in reader]
+        rows: list = [row for row in reader]
     assert len(rows) == 1
-    csv_values = tuple(rows[0].values())[:-1]
-    page = tuple(values)
+    csv_entity = CampaignAttacksSummaryFactory.get_entity_from_dict(rows[0])
 
-    assert csv_values[2:] == page[2:]
-    # TODO exported time is bugged
-    assert csv_values[0].lower() == page[0].lower()
+    assert page_entity == csv_entity

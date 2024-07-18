@@ -25,7 +25,8 @@ def cloned_education_content(request, api_request_context_aw_admin, user: UserMo
     response = education.get_content_pagination(limit=content.total)
     expect(response).to_be_ok()
     content = EducationContentModel.from_dict(response.json())
-    out = [item for item in content.items for part in item.parts if "QUESTION" in part.kind]
+    out = [item for item in content.items if item.title != "Test Content for QA" for part in item.parts if
+           "QUESTION" in part.kind]
 
     response = education.get_education_content_details(out[0].id)
     expect(response).to_be_ok()
@@ -46,4 +47,3 @@ def test_remove_quiz(user: UserModel, cloned_education_content: Item,
                      dashboard_page: DashboardPage):
     content_library_details_page = ContentLibraryDetailsPage(dashboard_page.page).open(cloned_education_content.id)
     content_library_details_page.remove_quiz()
-
