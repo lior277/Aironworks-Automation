@@ -1,7 +1,7 @@
 import tempfile
 
 import allure
-from playwright.sync_api import Page, Locator
+from playwright.sync_api import Page, Locator, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.table_element import Table
@@ -16,9 +16,11 @@ class CampaignDetailsPage(BasePage):
                                                                  has_not_text="Preview"), CampaignAttacksSummary)
 
     @allure.step("CampaignDetailsPage: open campaign detailed page for {campaign_id} campaign id")
-    def open_campaign_detailed_page(self, campaign_id: str):
+    def open(self, campaign_id: str):
         self.page.goto(self.url + campaign_id)
         self.wait_for_progress_bar_disappears()
+        expect(self.export_csv_button).to_be_visible()
+        return self
 
     @allure.step("CampaignDetailsPage: export csv")
     def export_csv(self):
@@ -33,6 +35,7 @@ class CampaignDetailsPage(BasePage):
 class CampaignAttacksSummary:
     def __init__(self, locator: Locator):
         self.status = locator.locator('[data-field="status"]')
+        self.opened = locator.locator('[data-field="open"]')
         self.date_clicked = locator.locator('[data-field="date_clicked"]')
         self.first_name = locator.locator('[data-field="target.first_name"]')
         self.last_name = locator.locator('[data-field="target.last_name"]')

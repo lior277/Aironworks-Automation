@@ -4,10 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytest = "8.1.1"
+pytest = "8.2.2"
 faker = "24.4.0"
-playwright = "*"
-pytest-playwright = "0.4.4"
+playwright = "1.44.0"
+pytest-playwright = "0.5.1"
 python-dotenv = "1.0.0"
 pytest-xdist = "3.5.0"
 allure-pytest = "2.13.5"

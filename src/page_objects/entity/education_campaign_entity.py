@@ -20,6 +20,12 @@ class EducationCampaignEntity:
                     self.assignments_count == other.assignments_count and self.company_name == other.company_name)
         return False
 
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return str(self.__dict__)
+
 
 class EducationCampaignFactory:
 

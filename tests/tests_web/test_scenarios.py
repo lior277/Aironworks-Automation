@@ -90,13 +90,13 @@ def test_hide_scenario(user: UserModel, scenario: ScenarioModel, scenarios_page:
         pytest.param(
             UserModelFactory.customer_admin(),
             ScenarioModelFactory.scenario(),
-            id="test create scenario customer admin",
+            id="test clone scenario with editing customer admin",
             marks=pytest.mark.test_id("C31492"),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(),
-            id="test create scenario aw admin",
+            id="test clone scenario with editing aw admin",
             marks=pytest.mark.test_id("C31491"),
         ),
     ],

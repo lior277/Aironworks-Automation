@@ -16,23 +16,25 @@ class EducationCampaignPage(BasePage):
     def get_education_campaigns(self) -> list[EducationCampaignEntity]:
         out = []
         for row in self.table.get_content():
-            out.append(EducationCampaignEntity(title=row.title.text_content(),
-                                               assignments_submission_rate=row.assignments_submission_rate.text_content(),
-                                               start_date=row.start_date.text_content(),
-                                               end_date=row.end_date.text_content(),
-                                               assignments_count=int(row.assignments_count.text_content()),
-                                               company_name=row.company_name.text_content() if row.company_name.is_visible() else None))
+            out.append(row.to_entity())
         return out
 
     @allure.step("EducationCampaignPage: get education campaigns by {title} title")
     def get_education_campaign(self, title: str) -> EducationCampaignEntity:
+        result = None
         for campaign in self.get_education_campaigns():
             if campaign.title == title:
-                return campaign
+                result = campaign
+                break
+        if not result:
+            raise ValueError(f"Unable to find campaign by {title} title")
+        return result
 
     @allure.step("EducationCampaignPage: open detail page for {title} education campaign")
     def open_campaign_details(self, title: str):
         row = self.table.get_row_by_column_value("title", title)
+        if not row:
+            raise ValueError(f"enable to find education campaign by {title} title")
         row.title.click()
         details_page = EducationCampaignDetailsPage(self.page)
         details_page.title_txt.wait_for(timeout=5000, state="visible")
@@ -48,3 +50,12 @@ class EducationCampaignsTableComponent:
         self.end_date = self.locator.locator('[data-field="end_date"]')
         self.assignments_count = self.locator.locator('[data-field="assignments_count"]')
         self.company_name = self.locator.locator('[data-field="company.name"]')
+
+    def to_entity(self) -> EducationCampaignEntity:
+        return EducationCampaignEntity(title=self.title.text_content(),
+                                       assignments_submission_rate=self.assignments_submission_rate.text_content(),
+                                       start_date=self.start_date.text_content(),
+                                       end_date=self.end_date.text_content(),
+                                       assignments_count=int(self.assignments_count.text_content()),
+                                       company_name=self.company_name.text_content()
+                                       if self.company_name.is_visible() else None)

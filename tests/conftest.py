@@ -59,9 +59,7 @@ def pytest_collection_modifyitems(session, config, items):
 
 
 @pytest.fixture(scope="session")
-def api_request_context_addin(
-        playwright: Playwright,
-) -> Generator[APIRequestContext, None, None]:
+def api_request_context_addin(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.ADDIN_BASE_URL
     # Get service account email and load the json data from the service account key file.
 

@@ -46,9 +46,8 @@ class ScenariosPage(BasePage):
 
     @allure.step("ScenariosPage: wait for filters to sync")
     def wait_sync_filters(self):
-        time.sleep(
-            1
-        )  # this page displays the old results for a brief moment before hiding it so unfortunatly we need to sleep a bit
+        # this page displays the old results for a brief moment before hiding it so unfortunatly we need to sleep a bit
+        time.sleep(1)
 
     @allure.step("ScenariosPage: finish draft")
     def finish_draft(self):
@@ -91,18 +90,14 @@ class ScenariosPage(BasePage):
 
         self.submit_create_scenario_form(scenario)
 
-        expect(self.page.get_by_text("Created new scenario")).to_be_visible()
+        expect(self.alert_message.first).to_contain_text("Created new scenario")
 
     @allure.step("Find scenario by {scenario_name} name")
     def find_scenario(self, scenario_name: str):
         self.filter_by_name(scenario_name)
         self.filter_by_language("All")
         self.wait_sync_filters()
-        scenario = (
-            self.page.get_by_role("button")
-            .filter(has_text=re.compile(scenario_name))
-            .first
-        )
+        scenario = self.page.get_by_role("button").filter(has_text=re.compile(scenario_name)).first
         expect(scenario).to_be_visible()
         return scenario
 

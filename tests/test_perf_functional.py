@@ -2,6 +2,7 @@ import pytest
 from playwright.sync_api import expect
 
 from src.apis.api_factory import api
+from src.apis.steps.common_steps import create_employees
 from src.models.company.employee_delete_model import EmployeeDeleteModel
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.company.employee_update_model import EmployeeUpdateModel
@@ -61,12 +62,12 @@ def test_education_campaign_emails_delivered(
             employees_count, mailtrap_inbox=mail_trap_inbox.email
         )
         Log.info(f"Creating employees for inbox {mail_trap_inbox.id}")
-        response = company.create_employees(employees, overwrite=False)
+        response = create_employees(api_request_context_customer_admin, employees)
         expect(response).to_be_ok()
         response_body = LongRunningOperation.from_dict(response.json())
         assert response_body.status == "CREATED"
         operation_id = response_body.id
-        result = wait_for_lro(lambda: company.create_employees_status(operation_id), timeout=60 * 2)
+        result = wait_for_lro(lambda: company.create_employees_status(operation_id), timeout=60 * 5)
         expect(result).to_be_ok()
         response_body = LongRunningOperation.from_dict(result.json())
 

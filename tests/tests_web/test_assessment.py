@@ -8,7 +8,6 @@ from src.apis.assessment import AssessmentService
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.utils.log import Log
 from src.utils.waiter import wait_for_lro
-from src.configs.config_loader import AppConfigs
 
 
 @pytest.mark.parametrize("user", [UserModelFactory.customer_admin()])
