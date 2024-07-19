@@ -78,7 +78,7 @@ run-tests:
 
 upload_testrail_run:
   stage: deploy
-  needs: [ run-tests ]
+  needs: [run-tests]
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
@@ -89,8 +89,7 @@ upload_testrail_run:
     if [ ! -z "$TEST_RUN_ID" ]; then
       TEST_RUN_ID="--run-id $TEST_RUN_ID"
     fi
-    source /root/.local/share/virtualenvs/*/bin/activate
-    trcli -h https://aironworksqa.testrail.io \
+    pipenv run trcli -h https://aironworksqa.testrail.io \
       --project "AironWorks" \
       --username info@aironworks.com \
       --key "$TESTRAIL_API_KEY" \
@@ -111,7 +110,7 @@ history_job:
         CURRENT_CONTENT_PATH: $ENV
   cache:
     key: gitlab-pages
-    paths: [ public ]
+    paths: [public]
   stage: history_copy
   tags:
     - saas-linux-small-amd64
@@ -147,7 +146,7 @@ pages:
   resource_group: pages
   cache:
     key: gitlab-pages
-    paths: [ public ]
+    paths: [public]
   tags:
     - saas-linux-small-amd64
   rules:
@@ -245,7 +244,7 @@ pages-clean-preview:
         ENV_NAME: $ENV
   cache:
     key: gitlab-pages
-    paths: [ public ]
+    paths: [public]
   variables:
     GIT_STRATEGY: none # git files not available after branch deletion
   script:
