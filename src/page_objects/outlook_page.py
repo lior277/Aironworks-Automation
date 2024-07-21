@@ -42,7 +42,7 @@ class OutlookPage:
         self.apps_locator.wait_for(timeout=10000)
         expect(self.apps_locator).to_be_visible()
         self.apps_locator.click()
-        self.page.get_by_label(AppConfigs.ADDIN_NAME).click()
+        self.page.get_by_label(AppConfigs.ADDIN_NAME, exact=True).click()
 
     @allure.step("OutlookPage: perform assessment")
     def perform_assessment(self):
