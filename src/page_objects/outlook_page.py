@@ -13,7 +13,9 @@ class OutlookPage:
 
         self.mail_icon = page.locator("#avatar-rq span")
         self.apps_locator = page.get_by_label("Apps", exact=True)
-        self.app_frame = page.frame_locator(f'[src^="{AppConfigs.ADDIN_BASE_URL}"]')
+        self.app_frame = page.frame_locator(
+            f'iframe[src^="{AppConfigs.ADDIN_BASE_URL}"]'
+        )
         self.perform_assessment_button = self.app_frame.get_by_role(
             "button", name="Perform Assessment"
         )
