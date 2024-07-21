@@ -38,7 +38,11 @@ def test_valid_email_entry(
     expect(page.page.get_by_text("Ongoing Content")).to_be_visible()
     expect(page.embedded_content.owner).to_be_visible()
     with pytest.raises(Exception):
-        json.loads(page.iframe.content())
+        json.loads(
+            page.embedded_content.locator(":root").evaluate(
+                "document.documentElement.outerHTML"
+            )
+        )
 
 
 @pytest.mark.test_id("C31536")
@@ -97,4 +101,6 @@ def test_iframe_is_correct(
 
     expect(page.page.get_by_text("Ongoing Content")).to_be_visible()
 
-    assert re.compile("https://www.youtube.com/embed/.*").match(page.iframe.url)
+    expect(page.iframe).to_have_attribute(
+        "src", re.compile("https://www.youtube.com/embed/.*")
+    )

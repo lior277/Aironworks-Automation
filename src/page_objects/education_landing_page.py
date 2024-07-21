@@ -1,7 +1,7 @@
 import re
 
 import allure
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page, expect, FrameLocator
 
 
 class EducationLandingPage:
@@ -10,12 +10,12 @@ class EducationLandingPage:
         self.email_input = self.page.get_by_role("textbox", name="email")
         self.submit_button = self.page.get_by_role("button", name="Submit")
         self.complete_button = self.page.get_by_role("button", name="Complete")
-        self.embedded_content = self.page.frame_locator("iframe")
+        self.embedded_content: FrameLocator = self.page.frame_locator("iframe")
         self.link_url = link_url
 
     @property
     def iframe(self):
-        return self.page.main_frame.child_frames[2]
+        return self.embedded_content.owner
 
     @allure.step("EducationLandingPage: open page")
     def open(self):
@@ -32,4 +32,6 @@ class EducationLandingPage:
             self.submit_button.click()
 
         expect(self.embedded_content.owner).to_be_visible()
-        self.iframe.wait_for_url(re.compile("https://.*"))
+        expect(self.embedded_content.owner).to_have_attribute(
+            "src", re.compile("https://.*")
+        )
