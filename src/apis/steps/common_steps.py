@@ -62,9 +62,7 @@ def create_employees_wait(request_context: APIRequestContext, employees: list[Em
     expect(result).to_be_ok()
     response_body = LongRunningOperation.from_dict(result.json())
 
-    assert (
-            response_body.status == "DONE"
-    ), f"Failed to upload file with employee. Response => {response_body}"
+    assert response_body.status == "DONE", f"Failed to upload file with employee. Response => {response_body}"
     return result
 
 

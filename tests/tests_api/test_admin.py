@@ -7,7 +7,6 @@ import pytest
 from playwright.sync_api import expect
 
 from src.apis.api_factory import api
-from src.apis.public import PublicService
 from src.configs.config_loader import AppConfigs
 from src.models.campaign_model import CampaignModel
 from src.utils import markers
@@ -20,6 +19,7 @@ from src.utils.waiter import wait_for
 @allure.step("run campaign on single employee")
 def run_campaign_on_employee(api_request_context_customer_admin, api_request_context, mailtrap, employee):
     admin_service = api.admin(api_request_context_customer_admin)
+    public_service = api.public(api_request_context_customer_admin)
     result = admin_service.start_campaign(campaign=CampaignModel(campaign_name="Automation scenario",
                                                                  attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
                                                                  days_until_fail=1,
@@ -39,7 +39,7 @@ def run_campaign_on_employee(api_request_context_customer_admin, api_request_con
 
     attack_id = attack_url_to_api_url_input(links[0])
 
-    verify = PublicService.verify_url_click(api_request_context, url=attack_id)
+    verify = public_service.verify_url_click(url=attack_id)
     expect(verify).to_be_ok()
 
     def validate_campaign_status():
