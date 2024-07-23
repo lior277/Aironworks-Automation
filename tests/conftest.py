@@ -9,7 +9,6 @@ from playwright.sync_api import Playwright, APIRequestContext, expect
 
 from src.apis.api_factory import api
 from src.apis.steps.common_steps import create_employee
-from src.apis.survey_service import SurveyService
 from src.configs.config_loader import AppConfigs
 from src.models.company.employee_delete_model import EmployeeDeleteModel
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
@@ -170,6 +169,7 @@ def clean_up_employees(api_request_context_customer_admin):
 def set_up_perf_survey(api_request_context_customer_admin) -> Survey:
     perf_survey = AddSurveyModelFactory.get_performance_survey()
     company = api.company(api_request_context_customer_admin)
+    survey_service = api.survey(api_request_context_customer_admin)
     localized_config_response = company.localized_config()
     assert localized_config_response.ok, f"{localized_config_response.json()=}"
     data = LocalizedConfigsModel.from_dict(localized_config_response.json()).data[0]
@@ -177,17 +177,17 @@ def set_up_perf_survey(api_request_context_customer_admin) -> Survey:
     patch_localized_configs.show_survey_button = True
     response = company.patch_localized_config(language=data.language, localized_configs_model=patch_localized_configs)
     assert response.ok, f"{response.json()=}"
-    response = SurveyService.get_list_surveys(api_request_context_customer_admin)
+    response = survey_service.get_list_surveys()
     assert response.ok, f"{response.json()=}"
     surveys_model = SurveysModel.from_dict(response.json())
     survey = surveys_model.has_survey(perf_survey.survey_name)
     if not survey:
-        response = SurveyService.add_survey(api_request_context_customer_admin, perf_survey)
+        response = survey_service.add_survey(perf_survey)
         assert response.ok, f"{response.json()=}"
-        response = SurveyService.get_list_surveys(api_request_context_customer_admin)
+        response = survey_service.get_list_surveys()
         assert response.ok, f"{response.json()=}"
         surveys_model = SurveysModel.from_dict(response.json())
         survey = surveys_model.has_survey(perf_survey.survey_name)
     if not survey.always_sent:
-        SurveyService.set_default_survey(api_request_context_customer_admin, survey.id)
+        survey_service.set_default_survey(survey.id)
     return survey

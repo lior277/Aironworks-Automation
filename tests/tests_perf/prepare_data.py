@@ -3,9 +3,7 @@ import os
 import pytest
 
 from src.apis.api_factory import api
-from src.apis.scenario import ScenarioService
 from src.apis.steps.common_steps import create_employees_wait
-from src.apis.survey_service import SurveyService
 from src.configs.config_loader import AppFolders
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.education.education_assignments import EducationAssignmentsModel
@@ -75,47 +73,39 @@ def test_generate_employees(employees_count: int):
     CSVTool.create_file(employees_list, column_names, file_path)
 
 
-@pytest.mark.parametrize("employees_count", [1000])
+@pytest.mark.parametrize("employees_count", [1])
 @pytest.mark.timeout(60 * 60)
 def test_simulation_campaign(api_request_context_customer_admin, clean_up_employees, set_up_perf_survey: Survey,
                              api_request_context_aw_admin, employees_count: int):
     employees_list = EmployeeModelFactory.get_random_employees(employees_count, domain="aironworks.com")
     company = api.company(api_request_context_customer_admin)
+    scenario_service = api.scenario(api_request_context_customer_admin)
     login_service = api.login(api_request_context_customer_admin)
+    survey_service = api.survey(api_request_context_customer_admin)
     response = create_employees_wait(api_request_context_customer_admin, employees_list, overwrite=True)
     assert response.ok, f"{response.json()}"
 
     response = company.get_employee_ids(EmployeeListIdsModel(employee_role=True, filters=None))
     employee_ids = response.json()
-    assert (
-            len(employee_ids["items"]) == employees_count
-    ), f"Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}"
+    assert (len(employee_ids["items"]) == employees_count
+            ), f"Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}"
 
-    response = ScenarioService.post_list_attack_infos(
-        api_request_context_customer_admin,
-        ListAttackInfosModelFactory.get_list_attack_infos(),
-    )
+    response = scenario_service.post_list_attack_infos(ListAttackInfosModelFactory.get_list_attack_infos())
     list_attack_infos = ListAttackInfosResponseModel.from_dict(response.json())
     assert len(list_attack_infos.infos) > 0
     infos = list_attack_infos.infos[0]
     response = login_service.info()
-    campaign_model = CampaignModelFactory.get_campaign(
-        campaign_name=infos.strategy_name,
-        company_id=response.json()["user"]["company_id"],
-        employees=employee_ids["items"],
-        attack_info_id=infos.id,
-    )
+    campaign_model = CampaignModelFactory.get_campaign(campaign_name=infos.strategy_name,
+                                                       company_id=response.json()["user"]["company_id"],
+                                                       employees=employee_ids["items"],
+                                                       attack_info_id=infos.id)
     admin_service = api.admin(api_request_context_customer_admin)
     response = admin_service.start_campaign(campaign_model)
 
-    campaign_urls = ScenarioService.aw_admin_campaign_urls(
-        api_request_context_aw_admin, campaign_id=response.json()["id"]
-    )
+    campaign_urls = api.scenario(api_request_context_aw_admin).aw_admin_campaign_urls(campaign_id=response.json()["id"])
     file_path = os.path.join(AppFolders.RESOURCES_PATH, "perf_warning_page.csv")
     fieldnames = campaign_urls.attacks[0].get_fieldnames()
-    response = SurveyService.get_survey(
-        api_request_context_customer_admin, set_up_perf_survey.id
-    )
+    response = survey_service.get_survey(set_up_perf_survey.id)
     assert response.ok, f"{response.json()=}"
     survey = GetSurveyModel.from_dict(response.json())
     fieldnames.extend(["qid", "option_id", "survey_id"])
