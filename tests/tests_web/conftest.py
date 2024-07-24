@@ -143,8 +143,8 @@ def campaigns_page(dashboard_page: DashboardPage) -> CampaignsPage:
 
 
 @pytest.fixture(scope="function")
-def customers_page(dashboard_page: DashboardPage, user: UserModel) -> CustomersPage:
-    return CustomersPage(dashboard_page.page, user)
+def customers_page(dashboard_page: DashboardPage) -> CustomersPage:
+    return CustomersPage(dashboard_page.page)
 
 
 @pytest.fixture
