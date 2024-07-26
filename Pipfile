@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytest = "8.2.2"
-faker = "24.4.0"
-playwright = "1.44.0"
+pytest = "8.3.2"
+faker = "26.0.0"
+playwright = "1.45.1"
 pytest-playwright = "0.5.1"
-python-dotenv = "1.0.0"
-pytest-xdist = "3.5.0"
+python-dotenv = "1.0.1"
+pytest-xdist = "3.6.1"
 allure-pytest = "2.13.5"
 google-auth = "==2.19.1"
 locust = "2.27.0"
