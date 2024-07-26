@@ -5,11 +5,10 @@ from playwright.sync_api import Locator
 
 from src.utils.log import Log
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class Table(Generic[T]):
-
     def __init__(self, locator: Locator, structure: Callable[[Locator], T]):
         self._Table__structure = structure
         self._Table__locator = locator
@@ -34,17 +33,17 @@ class Table(Generic[T]):
             all_context.append(out)
         return all_context
 
-    def get_row_by_column_value(self, column_name: str, value: str, wait_time: int = 1) -> T:
-        Log.debug("Getting row by column %s with value %s from the table" % (column_name, value))
-        end_time = time.time() + wait_time
-        while True:
-            content = self.get_content()
-            for row in content:
-                if getattr(row, column_name).is_visible():
-                    row_value = getattr(row, column_name).text_content()
-                    Log.info(f"{row_value=}")
-                    if row_value == value:
-                        return row
-            if time.time() > end_time:
-                break
-        return None
+    def get_row_by_column_value(
+        self, column_name: str, value: str, wait_time: int = 1
+    ) -> T:
+        Log.debug(
+            "Getting row by column %s with value %s from the table"
+            % (column_name, value)
+        )
+        return self._Table__structure(
+            self._Table__locator.filter(
+                has=getattr(
+                    self._Table__structure(self._Table__locator.page), column_name
+                ).get_by_text(value)
+            )
+        )
