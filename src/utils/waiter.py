@@ -15,13 +15,13 @@ def wait_for(predicate, timeout):
 
 
 def wait_for_lro(
-    lro_request: Callable[[], Response], timeout, end_status=("DONE", "ERROR")
+    lro_request: Callable[[], Response], timeout, end_status=('DONE', 'ERROR')
 ):
     def _wait_for():
         result = lro_request()
         if result.status != 200:
             return False
-        return result.json()["status"] in end_status
+        return result.json()['status'] in end_status
 
     wait_for(_wait_for, timeout)
 

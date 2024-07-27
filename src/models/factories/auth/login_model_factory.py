@@ -9,5 +9,10 @@ fake = faker.Faker()
 class LoginModelFactory:
     @classmethod
     def customer_admin(cls) -> LoginModel:
-        return LoginModel(email=AppConfigs.CUSTOMER_ADMIN_USERNAME, password=AppConfigs.CUSTOMER_ADMIN_PASSWORD,
-                          remember=True, otp="", admin=False)
+        return LoginModel(
+            email=AppConfigs.CUSTOMER_ADMIN_USERNAME,
+            password=AppConfigs.CUSTOMER_ADMIN_PASSWORD,
+            remember=True,
+            otp='',
+            admin=False,
+        )

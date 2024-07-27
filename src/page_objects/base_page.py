@@ -10,10 +10,10 @@ class BasePage:
         self.page = page
         self.customerBaseUrl = AppConfigs.BASE_URL
         self.adminBaseUrl = AppConfigs.ADMIN_BASE_URL
-        self.empty_state = self.page.get_by_test_id("empty-state")
-        self.save_button = self.page.get_by_text("Save")
-        self.loading = self.page.get_by_text("Loading")
-        self.progress_bar = self.page.get_by_role("progressbar")
+        self.empty_state = self.page.get_by_test_id('empty-state')
+        self.save_button = self.page.get_by_text('Save')
+        self.loading = self.page.get_by_text('Loading')
+        self.progress_bar = self.page.get_by_role('progressbar')
         self.alert_message = self.page.locator("[id='notistack-snackbar']")
         import src.page_objects.navigation_bar
 
@@ -21,22 +21,22 @@ class BasePage:
         self.default_url = None
         if page.url:
             self.set_default_url('/'.join(page.url.split('/', 3)[:3]) + '/')
-        Log.info(f"page URL = {self.page.url}\n page Title = {self.page.title()}")
+        Log.info(f'page URL = {self.page.url}\n page Title = {self.page.title()}')
 
-    @allure.step("BasePage: wait for loading state")
+    @allure.step('BasePage: wait for loading state')
     def wait_for_loading_state(self, timeout=10000):
         try:
-            self.loading.wait_for(timeout=timeout, state="visible")
-            self.loading.wait_for(timeout=timeout, state="hidden")
+            self.loading.wait_for(timeout=timeout, state='visible')
+            self.loading.wait_for(timeout=timeout, state='hidden')
         except Exception as error:
-            Log.info(f"{error=}")
+            Log.info(f'{error=}')
             pass
 
-    @allure.step("BasePage: wait for progress bar disappears")
+    @allure.step('BasePage: wait for progress bar disappears')
     def wait_for_progress_bar_disappears(self, timeout=10000):
         if self.progress_bar.is_visible(timeout=timeout):
-            self.progress_bar.wait_for(timeout=timeout, state="hidden")
+            self.progress_bar.wait_for(timeout=timeout, state='hidden')
 
-    @allure.step("BasePage: set default {default_url} url")
+    @allure.step('BasePage: set default {default_url} url')
     def set_default_url(self, default_url: str):
         self.default_url = default_url

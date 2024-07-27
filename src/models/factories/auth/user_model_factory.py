@@ -13,9 +13,9 @@ class UserModelFactory:
     @staticmethod
     def user() -> UserModel:
         return UserModel(
-            email="".join(random.choices(string.ascii_lowercase + string.digits, k=8))
-                  + "@"
-                  + fake.domain_name(),
+            email=''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+            + '@'
+            + fake.domain_name(),
             password=fake.password(),
             company=fake.company(),
             is_admin=False,

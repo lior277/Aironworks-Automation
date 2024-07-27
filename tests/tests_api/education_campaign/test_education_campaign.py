@@ -12,7 +12,7 @@ from src.utils import markers
 from src.utils.links import get_text_links
 
 
-@pytest.mark.test_id("C31564")
+@pytest.mark.test_id('C31564')
 @pytest.mark.api
 @pytest.mark.smoke
 def test_education_campaign(api_request_context_customer_admin, employee, mailtrap):
@@ -20,16 +20,18 @@ def test_education_campaign(api_request_context_customer_admin, employee, mailtr
         api_request_context_customer_admin, mailtrap, employee
     )
     assert mail is not None
-    source = mailtrap.message_source(AppConfigs.EMPLOYEE_INBOX_ID, mail["id"]).body()
+    source = mailtrap.message_source(AppConfigs.EMPLOYEE_INBOX_ID, mail['id']).body()
     links = get_text_links(source.decode())
     assert len(links) == 1
 
 
-@pytest.mark.test_id("C31513")
-@markers.common_resource(name="settings")
+@pytest.mark.test_id('C31513')
+@markers.common_resource(name='settings')
 @pytest.mark.api
 @pytest.mark.smoke
-def test_education_campaign_notification_match_settings(api_request_context_customer_admin, employee, mailtrap):
+def test_education_campaign_notification_match_settings(
+    api_request_context_customer_admin, employee, mailtrap
+):
     company = api.company(api_request_context_customer_admin)
     config_result = company.localized_config()
     expect(config_result).to_be_ok()
@@ -40,27 +42,24 @@ def test_education_campaign_notification_match_settings(api_request_context_cust
         api_request_context_customer_admin, mailtrap, employee
     )
     assert mail is not None
-    source = mailtrap.raw_message(AppConfigs.EMPLOYEE_INBOX_ID, mail["id"]).body()
+    source = mailtrap.raw_message(AppConfigs.EMPLOYEE_INBOX_ID, mail['id']).body()
 
     message: Message = message_from_bytes(source)
     payload = message.get_payload()
 
     regex_string = (
-            company_config["data"][0]["education_content_publication_email"]
-            .replace("{{employee.name}}", "(?P<employee_name>[a-zA-Z]+)")
-            .replace(
-                "{{portal_url}}",
-                r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)",
-            )
-            + "(<img.*/>)?\n"
+        company_config['data'][0]['education_content_publication_email']
+        .replace('{{employee.name}}', '(?P<employee_name>[a-zA-Z]+)')
+        .replace(
+            '{{portal_url}}',
+            r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
+        )
+        + '(<img.*/>)?\n'
     )
 
-    regex = re.compile(
-        regex_string,
-        re.MULTILINE,
-    )
+    regex = re.compile(regex_string, re.MULTILINE)
 
-    match = regex.match(payload.replace("=\n", ""))
+    match = regex.match(payload.replace('=\n', ''))
     assert match is not None
 
-    assert match.group("employee_name") == employee.first_name
+    assert match.group('employee_name') == employee.first_name

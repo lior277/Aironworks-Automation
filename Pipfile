@@ -21,6 +21,8 @@ pygsheets = "2.0.6"
 trcli = "*"
 pytest-timeout = "*"
 pytest-sugar = "*"
+ruff = "*"
+pre-commit = "*"
 
 [dev-packages]
 

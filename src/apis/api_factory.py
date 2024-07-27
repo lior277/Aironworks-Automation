@@ -13,7 +13,6 @@ from src.apis.upload import UploadService
 
 
 class ServiceFactory:
-
     @staticmethod
     def admin(request_context: APIRequestContext) -> AdminService:
         return AdminService(request_context)

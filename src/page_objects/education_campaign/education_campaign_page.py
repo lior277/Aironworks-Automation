@@ -17,14 +17,14 @@ class EducationCampaignPage(BasePage):
             EducationCampaignsTableComponent,
         )
 
-    @allure.step("EducationCampaignPage: education campaigns")
+    @allure.step('EducationCampaignPage: education campaigns')
     def get_education_campaigns(self) -> list[EducationCampaignEntity]:
         out = []
         for row in self.table.get_content():
             out.append(row.to_entity())
         return out
 
-    @allure.step("EducationCampaignPage: get education campaigns by {title} title")
+    @allure.step('EducationCampaignPage: get education campaigns by {title} title')
     def get_education_campaign(self, title: str) -> EducationCampaignEntity:
         result = None
         for campaign in self.get_education_campaigns():
@@ -32,19 +32,19 @@ class EducationCampaignPage(BasePage):
                 result = campaign
                 break
         if not result:
-            raise ValueError(f"Unable to find campaign by {title} title")
+            raise ValueError(f'Unable to find campaign by {title} title')
         return result
 
     @allure.step(
-        "EducationCampaignPage: open detail page for {title} education campaign"
+        'EducationCampaignPage: open detail page for {title} education campaign'
     )
     def open_campaign_details(self, title: str):
-        row = self.table.get_row_by_column_value("title", title)
+        row = self.table.get_row_by_column_value('title', title)
         if not row:
-            raise ValueError(f"unable to find education campaign by {title} title")
+            raise ValueError(f'unable to find education campaign by {title} title')
         row.title.click()
         details_page = EducationCampaignDetailsPage(self.page)
-        details_page.title_txt.wait_for(timeout=5000, state="visible")
+        details_page.title_txt.wait_for(timeout=5000, state='visible')
         return details_page
 
 
