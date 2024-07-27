@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Page, Locator
+from playwright.sync_api import Locator, Page
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.table_element import Table

@@ -2,7 +2,7 @@ import re
 import time
 
 import pytest
-from playwright.sync_api import expect, TimeoutError, Playwright
+from playwright.sync_api import Playwright, TimeoutError, expect
 
 from src.apis.api_factory import api
 from src.apis.utils import get_request_context_for_page

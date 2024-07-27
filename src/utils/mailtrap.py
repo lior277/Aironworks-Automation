@@ -1,14 +1,13 @@
 import time
-from base64 import b64decode
 from datetime import datetime
 from email import message_from_bytes
 from email.message import Message
 
-from playwright.sync_api import Playwright, APIRequestContext, expect
+from playwright.sync_api import APIRequestContext, Playwright, expect
 
 from src.configs.config_loader import AppConfigs
 from src.models.mait_trap_model import MailTrapModel
-from src.utils.log import print_execution_time, Log
+from src.utils.log import Log, print_execution_time
 
 
 def find_attachment(content_type: str = 'application/x-zip'):

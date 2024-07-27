@@ -1,7 +1,7 @@
 import re
 
 import allure
-from playwright.sync_api import Page, expect, FrameLocator
+from playwright.sync_api import FrameLocator, Page, expect
 
 
 class EducationLandingPage:

@@ -9,10 +9,11 @@ from src.models.education_campaign_model import (
     EducationCampaignModel,
     EducationCampaignStatus,
 )
-from .base_service import BaseService
-from .psapi import PSApi
+
 from ..models.education.clone_education_content import CloneEducationContentModel
 from ..models.education.education_assignments import EducationAssignmentsModel
+from .base_service import BaseService
+from .psapi import PSApi
 
 
 class EducationService(BaseService):

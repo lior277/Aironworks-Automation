@@ -3,7 +3,7 @@ from csv import DictWriter
 from datetime import datetime, timedelta
 
 import allure
-from playwright.sync_api import expect, APIResponse, APIRequestContext
+from playwright.sync_api import APIRequestContext, APIResponse, expect
 
 from src.apis.api_factory import api
 from src.apis.education import EducationCampaignModel

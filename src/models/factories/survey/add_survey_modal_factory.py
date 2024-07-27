@@ -1,4 +1,4 @@
-from src.models.survey.add_survey_modal import AddSurveyModel, Options, Model
+from src.models.survey.add_survey_modal import AddSurveyModel, Model, Options
 
 
 class AddSurveyModelFactory:

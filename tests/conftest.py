@@ -5,7 +5,7 @@ from typing import Generator
 
 import pytest
 from faker import Faker
-from playwright.sync_api import Playwright, APIRequestContext, expect
+from playwright.sync_api import APIRequestContext, Playwright, expect
 
 from src.apis.api_factory import api
 from src.apis.steps.common_steps import create_employee
@@ -20,7 +20,7 @@ from src.models.factories.company.patch_localized_configs_model import (
     PatchLocalizedConfigsModelFactory,
 )
 from src.models.factories.survey.add_survey_modal_factory import AddSurveyModelFactory
-from src.models.survey.surveys_model import SurveysModel, Survey
+from src.models.survey.surveys_model import Survey, SurveysModel
 from src.utils.list import divide_list_into_chunks
 from src.utils.mailtrap import MailTrap
 from src.utils.service_account_utils import generate_jwt

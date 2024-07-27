@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
+
 from src.configs.config_loader import AppConfigs
-from src.models.education.education_content_model import Item
 from src.models.education_campaign_model import EducationCampaignModel
 
 

@@ -1,5 +1,4 @@
-import time
-from typing import Generic, Callable, TypeVar
+from typing import Callable, Generic, TypeVar
 
 from playwright.sync_api import Locator
 

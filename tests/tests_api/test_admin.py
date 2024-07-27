@@ -10,7 +10,7 @@ from src.apis.api_factory import api
 from src.configs.config_loader import AppConfigs
 from src.models.campaign_model import CampaignModel
 from src.utils import markers
-from src.utils.links import get_text_links, attack_url_to_api_url_input
+from src.utils.links import attack_url_to_api_url_input, get_text_links
 from src.utils.log import Log
 from src.utils.mailtrap import find_email
 from src.utils.waiter import wait_for

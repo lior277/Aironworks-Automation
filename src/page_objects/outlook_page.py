@@ -1,9 +1,6 @@
-import re
-import time
-from typing import Literal
-
 import allure
 from playwright.sync_api import Page, expect
+
 from src.configs.config_loader import AppConfigs
 
 

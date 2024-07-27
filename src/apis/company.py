@@ -1,14 +1,14 @@
 from dataclasses import asdict
 
 import allure
-from playwright.sync_api import APIRequestContext, expect, APIResponse
+from playwright.sync_api import APIRequestContext, APIResponse, expect
 
-from .base_service import BaseService
-from .psapi import PSApi
 from ..models.company.employee_delete_model import EmployeeDeleteModel
 from ..models.company.employee_list_ids_model import EmployeeListIdsModel
 from ..models.company.employee_update_model import EmployeeUpdateModel
 from ..models.company.patch_localized_configs_model import PatchLocalizedConfigsModel
+from .base_service import BaseService
+from .psapi import PSApi
 
 
 class CompanyService(BaseService):

@@ -1,8 +1,8 @@
 import pytest
 from playwright.sync_api import expect
 
-from src.configs.config_loader import AppConfigs
 from src.apis.api_factory import api
+from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.education.education_campaign_model import EducationCampaignDetailsModel

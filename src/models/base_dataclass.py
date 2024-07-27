@@ -1,7 +1,6 @@
 import json
 from dataclasses import fields
-
-from typing import Type, TypeVar, Any, get_type_hints, List
+from typing import Any, List, Type, TypeVar, get_type_hints
 
 T = TypeVar('T')
 

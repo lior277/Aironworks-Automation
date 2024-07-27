@@ -1,7 +1,8 @@
 import io
 import json
-from google.oauth2 import service_account
+
 import google.auth.transport.requests
+from google.oauth2 import service_account
 
 
 def generate_jwt(sa_keyfile, audience, expiry_length=1000):

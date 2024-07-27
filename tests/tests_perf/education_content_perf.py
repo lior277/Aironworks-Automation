@@ -1,8 +1,7 @@
 import csv
 import logging
 
-from gevent.event import Event
-from locust import FastHttpUser, task, SequentialTaskSet, events
+from locust import FastHttpUser, SequentialTaskSet, events, task
 from locust.exception import StopUser
 
 logger = logging.getLogger('locust')
@@ -25,7 +24,7 @@ csv_data = load_csv(
 def on_locust_init(environment, **kwargs):
     @environment.events.spawning_complete.add_listener
     def on_spawning_complete(**kwargs):
-        logger.info(f'All users spawned. Releasing all users.')
+        logger.info('All users spawned. Releasing all users.')
         # all_users_spawned.set()  # Signal that all users have been spawned
 
 

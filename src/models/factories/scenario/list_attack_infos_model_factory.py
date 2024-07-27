@@ -1,4 +1,4 @@
-from src.models.scenario.list_attack_infos_model import ListAttackInfosModel, Filters
+from src.models.scenario.list_attack_infos_model import Filters, ListAttackInfosModel
 
 
 class ListAttackInfosModelFactory:

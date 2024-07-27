@@ -5,6 +5,7 @@ import allure
 from playwright.sync_api import APIRequestContext
 
 from src.models.campaign_model import CampaignModel
+
 from .base_service import BaseService
 from .psapi import PSApi
 
