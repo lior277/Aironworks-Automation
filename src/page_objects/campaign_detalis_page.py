@@ -1,7 +1,7 @@
 import tempfile
 
 import allure
-from playwright.sync_api import Page, Locator, expect
+from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.table_element import Table

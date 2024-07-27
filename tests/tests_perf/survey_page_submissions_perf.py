@@ -1,7 +1,7 @@
 import csv
 import logging
 
-from locust import FastHttpUser, task, SequentialTaskSet, events
+from locust import FastHttpUser, SequentialTaskSet, events, task
 from locust.exception import StopUser
 
 logger = logging.getLogger('locust')
@@ -23,7 +23,7 @@ csv_data = load_csv('perf_warning_page.csv')  # Change the file path for local e
 def on_locust_init(environment, **kwargs):
     @environment.events.spawning_complete.add_listener
     def on_spawning_complete(**kwargs):
-        logger.info(f'All users spawned. Releasing all users.')
+        logger.info('All users spawned. Releasing all users.')
         # all_users_spawned.set()  # Signal that all users have been spawned
 
 
@@ -59,7 +59,7 @@ class MySequentialTaskSet(SequentialTaskSet):
         json = {'url': f'{url}'}
 
         with self.client.post(
-            f'/api/public/verify_url_click', json=json, catch_response=True
+            '/api/public/verify_url_click', json=json, catch_response=True
         ) as response:
             if response.status_code != 200:
                 response.failure(f'{json=},{response.text=},{response.status_code=}')

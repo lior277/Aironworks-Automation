@@ -1,4 +1,4 @@
-from playwright.sync_api import Page, Playwright, APIRequestContext
+from playwright.sync_api import APIRequestContext, Page, Playwright
 
 
 def get_request_context_for_page(

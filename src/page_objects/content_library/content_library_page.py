@@ -1,7 +1,7 @@
 import re
 
 import allure
-from playwright.sync_api import Page, Locator
+from playwright.sync_api import Locator, Page
 
 from src.models.education.education_content_model import Item
 from src.page_objects.base_page import BasePage

@@ -3,7 +3,7 @@ from collections import OrderedDict
 from typing import Literal
 
 import allure
-from playwright.sync_api import APIRequestContext, FilePayload, APIResponse, expect
+from playwright.sync_api import APIRequestContext, APIResponse, FilePayload, expect
 
 from .base_service import BaseService
 from .psapi import PSApi

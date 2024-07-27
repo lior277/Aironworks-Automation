@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from src.configs.config_loader import AppConfigs
 
 

@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Page, Locator, expect
+from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.content_library import created_education_campaign_text
@@ -47,7 +47,7 @@ class CreateCampaignPage(BasePage):
         self.target_employees_drop_down.select_item_by_text('Specific Employees')
         self.wait_for_loading_state()
         specific_employees = self.table_specific_employees.get_content()
-        assert len(specific_employees) > 0, f'no any employees to select'
+        assert len(specific_employees) > 0, 'no any employees to select'
         specific_employees[0].check_box.set_checked(True)
         expect(specific_employees[0].check_box).to_be_checked(checked=True)
 

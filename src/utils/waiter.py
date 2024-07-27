@@ -1,6 +1,7 @@
 import datetime
 import time
 from typing import Callable
+
 from playwright.sync_api import Response
 
 

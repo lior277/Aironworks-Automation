@@ -61,6 +61,8 @@ run-tests:
     - saas-linux-large-amd64
   script: |
     EXIT=0
+    pipenv run ruff check .
+    pipenv run ruff format --check .
     pipenv run pytest -vv -n 4 -m "not delivered_emails" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
     echo "EXIT_CODE=$EXIT" > .exit_code
     exit $EXIT

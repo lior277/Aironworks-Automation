@@ -3,9 +3,9 @@ from playwright.sync_api import Page, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.content_library import (
-    quiz_attached_text,
     attach_quiz_text,
     content_successfully_updated_text,
+    quiz_attached_text,
 )
 
 
