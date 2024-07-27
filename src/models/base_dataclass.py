@@ -27,7 +27,13 @@ class BaseDataClass:
     def from_dict(cls: Type[T], data: Any) -> T:
         if isinstance(data, dict):
             field_types = get_type_hints(cls)
-            return cls(**{f: from_dict(field_types[f], data[f]) for f in data if f in field_types})
+            return cls(
+                **{
+                    f: from_dict(field_types[f], data[f])
+                    for f in data
+                    if f in field_types
+                }
+            )
         elif isinstance(data, list):
             elem_type = cls.__args__[0]
             return [from_dict(elem_type, item) for item in data]
@@ -35,7 +41,11 @@ class BaseDataClass:
             return data
 
     def to_filtered_dict(self):
-        return {key: self._convert_value(value) for key, value in self.__dict__.items() if value is not None}
+        return {
+            key: self._convert_value(value)
+            for key, value in self.__dict__.items()
+            if value is not None
+        }
 
     def _convert_value(self, value):
         if hasattr(value, 'to_filtered_dict'):
@@ -51,7 +61,9 @@ class BaseDataClass:
 def from_dict(data_class: Type[T], data: Any) -> T:
     if isinstance(data, dict):
         field_types = get_type_hints(data_class)
-        return data_class(**{f: from_dict(field_types[f], data[f]) for f in data if f in field_types})
+        return data_class(
+            **{f: from_dict(field_types[f], data[f]) for f in data if f in field_types}
+        )
     elif isinstance(data, list):
         elem_type = data_class.__args__[0]
         return [from_dict(elem_type, item) for item in data]

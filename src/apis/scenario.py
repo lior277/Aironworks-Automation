@@ -15,24 +15,40 @@ class ScenarioService(BaseService):
     def __init__(self, request_context: APIRequestContext):
         super().__init__(request_context)
 
-    @allure.step("ScenarioService: post list attack infos {list_attack_infos}")
-    def post_list_attack_infos(self, list_attack_infos: ListAttackInfosModel) -> APIResponse:
-        return self._post(PSApi.LIST_ATTACK_INFOS.get_endpoint(), data=asdict(list_attack_infos))
+    @allure.step('ScenarioService: post list attack infos {list_attack_infos}')
+    def post_list_attack_infos(
+        self, list_attack_infos: ListAttackInfosModel
+    ) -> APIResponse:
+        return self._post(
+            PSApi.LIST_ATTACK_INFOS.get_endpoint(), data=asdict(list_attack_infos)
+        )
 
-    @allure.step("ScenarioService: get attack infos {scenario_id}")
+    @allure.step('ScenarioService: get attack infos {scenario_id}')
     def get_attack_info(self, scenario_id: str) -> APIResponse:
-        return self._get(PSApi.GET_ATTACK_INFO.get_endpoint(), params={"id": f"{scenario_id}"})
+        return self._get(
+            PSApi.GET_ATTACK_INFO.get_endpoint(), params={'id': f'{scenario_id}'}
+        )
 
-    @allure.step("ScenarioService: aw admin get campaign urls {campaign_id} campaign_id")
-    def aw_admin_campaign_urls(self, campaign_id: int, wait_time: int = 100) -> CampaignUrls:
+    @allure.step(
+        'ScenarioService: aw admin get campaign urls {campaign_id} campaign_id'
+    )
+    def aw_admin_campaign_urls(
+        self, campaign_id: int, wait_time: int = 100
+    ) -> CampaignUrls:
         start_time = datetime.now()
         while True:
-            response = self._get(PSApi.ADMIN_CAMPAIGN_ATTACK_URLS.get_endpoint().format(campaign_id=campaign_id))
-            assert response.ok, f"{response.json()=}"
+            response = self._get(
+                PSApi.ADMIN_CAMPAIGN_ATTACK_URLS.get_endpoint().format(
+                    campaign_id=campaign_id
+                )
+            )
+            assert response.ok, f'{response.json()=}'
             campaign_urls = CampaignUrls.from_dict(response.json())
 
-            if (campaign_urls.attacks[0].status in ["COMPLETED", "ONGOING"]
-                    or datetime.now() - start_time > timedelta(seconds=wait_time)):
+            if campaign_urls.attacks[0].status in [
+                'COMPLETED',
+                'ONGOING',
+            ] or datetime.now() - start_time > timedelta(seconds=wait_time):
                 break
             time.sleep(1)
         return campaign_urls

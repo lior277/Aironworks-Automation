@@ -11,7 +11,7 @@ class SignupModelFactory:
         return EmailSignupModel(
             email=fake.email(),
             password=fake.password(),
-            language="en",
+            language='en',
             first_name=fake.first_name(),
             last_name=fake.last_name(),
             company_name=fake.name(),

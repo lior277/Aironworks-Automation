@@ -26,14 +26,14 @@ from src.models.survey.surveys_model import Survey
 from src.utils.csv_tool import CSVTool
 
 
-@pytest.mark.parametrize("employees_count", [2])
+@pytest.mark.parametrize('employees_count', [2])
 def test_education_campaign(
     api_request_context_customer_admin,
     api_request_context_aw_admin,
     employees_count: int,
 ):
     employees_list = EmployeeModelFactory.get_random_employees(
-        employees_count, domain="aironworks.com"
+        employees_count, domain='aironworks.com'
     )
     company = api.company(api_request_context_customer_admin)
     education = api.education(api_request_context_customer_admin)
@@ -41,36 +41,36 @@ def test_education_campaign(
     response_body = LongRunningOperation.from_dict(response.json())
     assert (
         response.ok
-    ), f"Failed to upload file with employee. Response => {response_body}"
+    ), f'Failed to upload file with employee. Response => {response_body}'
 
     response = company.get_employee_ids(
         EmployeeListIdsModel(employee_role=True, filters=None)
     )
     employee_ids = response.json()
     assert (
-        len(employee_ids["items"]) == employees_count
+        len(employee_ids['items']) == employees_count
     ), f"Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}"
 
     response = education.get_content_pagination()
-    assert response.ok, f"Failed to fetch education content => {response.json()}"
+    assert response.ok, f'Failed to fetch education content => {response.json()}'
     education_content = EducationContentModel.from_dict(response.json())
     education_campaign = (
         EducationCampaignModelFactory.get_education_campaign_from_education_content(
-            education_content.items[0].id, employee_ids["items"]
+            education_content.items[0].id, employee_ids['items']
         )
     )
     response = education.start_campaign(education_campaign)
-    assert response.ok, f"Failed to start education campaign => {response_body}"
+    assert response.ok, f'Failed to start education campaign => {response_body}'
     response = api.education(
         api_request_context_aw_admin
-    ).aw_admin_education_assignments(campaign_id=response.json()["id"])
+    ).aw_admin_education_assignments(campaign_id=response.json()['id'])
     education_assignments = EducationAssignmentsModel.from_dict(response.json())
-    file_path = os.path.join(AppFolders.RESOURCES_PATH, "perf_education_campaign.csv")
+    file_path = os.path.join(AppFolders.RESOURCES_PATH, 'perf_education_campaign.csv')
     fieldnames = education_assignments.assignments[0].get_fieldnames()
     CSVTool.create_file(education_assignments.assignments, fieldnames, file_path)
 
 
-@pytest.mark.parametrize("employees_count", [1])
+@pytest.mark.parametrize('employees_count', [1])
 def test_generate_employees(employees_count: int):
     employees_list = EmployeeModelFactory.get_random_employees(
         employees_count,
@@ -78,13 +78,13 @@ def test_generate_employees(employees_count: int):
     )
 
     file_path = os.path.join(
-        AppFolders.RESOURCES_PATH, f"employees{employees_count}.csv"
+        AppFolders.RESOURCES_PATH, f'employees{employees_count}.csv'
     )
-    column_names = ["First Name", "Last Name", "Email"]
+    column_names = ['First Name', 'Last Name', 'Email']
     CSVTool.create_file(employees_list, column_names, file_path)
 
 
-@pytest.mark.parametrize("employees_count", [1])
+@pytest.mark.parametrize('employees_count', [1])
 @pytest.mark.timeout(60 * 60)
 def test_simulation_campaign(
     api_request_context_customer_admin,
@@ -94,7 +94,7 @@ def test_simulation_campaign(
     employees_count: int,
 ):
     employees_list = EmployeeModelFactory.get_random_employees(
-        employees_count, domain="aironworks.com"
+        employees_count, domain='aironworks.com'
     )
     company = api.company(api_request_context_customer_admin)
     scenario_service = api.scenario(api_request_context_customer_admin)
@@ -103,14 +103,14 @@ def test_simulation_campaign(
     response = create_employees_wait(
         api_request_context_customer_admin, employees_list, overwrite=True
     )
-    assert response.ok, f"{response.json()}"
+    assert response.ok, f'{response.json()}'
 
     response = company.get_employee_ids(
         EmployeeListIdsModel(employee_role=True, filters=None)
     )
     employee_ids = response.json()
     assert (
-        len(employee_ids["items"]) == employees_count
+        len(employee_ids['items']) == employees_count
     ), f"Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}"
 
     response = scenario_service.post_list_attack_infos(
@@ -122,25 +122,25 @@ def test_simulation_campaign(
     response = login_service.info()
     campaign_model = CampaignModelFactory.get_campaign(
         campaign_name=infos.strategy_name,
-        company_id=response.json()["user"]["company_id"],
-        employees=employee_ids["items"],
+        company_id=response.json()['user']['company_id'],
+        employees=employee_ids['items'],
         attack_info_id=infos.id,
     )
     admin_service = api.admin(api_request_context_customer_admin)
     response = admin_service.start_campaign(campaign_model)
 
     campaign_urls = api.scenario(api_request_context_aw_admin).aw_admin_campaign_urls(
-        campaign_id=response.json()["id"]
+        campaign_id=response.json()['id']
     )
-    file_path = os.path.join(AppFolders.RESOURCES_PATH, "perf_warning_page.csv")
+    file_path = os.path.join(AppFolders.RESOURCES_PATH, 'perf_warning_page.csv')
     fieldnames = campaign_urls.attacks[0].get_fieldnames()
     response = survey_service.get_survey(set_up_perf_survey.id)
-    assert response.ok, f"{response.json()=}"
+    assert response.ok, f'{response.json()=}'
     survey = GetSurveyModel.from_dict(response.json())
-    fieldnames.extend(["qid", "option_id", "survey_id"])
+    fieldnames.extend(['qid', 'option_id', 'survey_id'])
     data_to_update = {
-        "qid": f"{survey.model.questions[0].id}",
-        "option_id": f"{survey.model.questions[0].options[0].id}",
-        "survey_id": f"{survey.model.id}",
+        'qid': f'{survey.model.questions[0].id}',
+        'option_id': f'{survey.model.questions[0].options[0].id}',
+        'survey_id': f'{survey.model.id}',
     }
     CSVTool.create_file(campaign_urls.attacks, fieldnames, file_path, data_to_update)

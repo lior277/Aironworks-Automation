@@ -11,9 +11,9 @@ from src.models.mait_trap_model import MailTrapModel
 from src.utils.log import print_execution_time, Log
 
 
-def find_attachment(content_type: str = "application/x-zip"):
+def find_attachment(content_type: str = 'application/x-zip'):
     def predicate(mailtrap: MailTrap, mail):
-        mail_id = mail["id"]
+        mail_id = mail['id']
         mail_raw = mailtrap.raw_message(
             AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID, mail_id
         )
@@ -31,9 +31,9 @@ def find_attachment(content_type: str = "application/x-zip"):
 
 def find_email(email, subject=None):
     def predicate(_, mail):
-        result = mail["to_email"] == email
+        result = mail['to_email'] == email
         if subject is not None:
-            result = result and mail["subject"] == subject
+            result = result and mail['subject'] == subject
         return result
 
     return predicate
@@ -43,10 +43,10 @@ class MailTrap:
     def __init__(
         self,
         playwright: Playwright,
-        base_url="https://mailtrap.io",
+        base_url='https://mailtrap.io',
         account_id=AppConfigs.MAILTRAP_ACCOUNT_ID,
     ):
-        headers = {"Api-Token": AppConfigs.MAILTRAP_API_TOKEN}
+        headers = {'Api-Token': AppConfigs.MAILTRAP_API_TOKEN}
         self.request_context: APIRequestContext = playwright.request.new_context(
             base_url=base_url, extra_http_headers=headers
         )
@@ -55,11 +55,11 @@ class MailTrap:
     def messages(self, inbox_id, page: int = None, email_to: str = None):
         params = {}
         if email_to:
-            params.update({"search": f"{email_to}"})
+            params.update({'search': f'{email_to}'})
         if page:
-            params.update({"page": page})
+            params.update({'page': page})
         response = self.request_context.get(
-            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages",
+            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages',
             params=params,
         )
         expect(response).to_be_ok()
@@ -68,22 +68,21 @@ class MailTrap:
     def inbox_attributes(self, inbox_id):
         params = {}
         response = self.request_context.get(
-            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}",
-            params=params,
+            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}', params=params
         )
         expect(response).to_be_ok()
         return response
 
     def raw_message(self, inbox_id, message_id):
         response = self.request_context.get(
-            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.raw"
+            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.raw'
         )
         expect(response).to_be_ok()
         return response
 
     def message_source(self, inbox_id, message_id):
         response = self.request_context.get(
-            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.htmlsource"
+            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.htmlsource'
         )
         expect(response).to_be_ok()
         return response
@@ -92,21 +91,21 @@ class MailTrap:
         self, message_id, inbox_id: str = AppConfigs.PERF_EMPLOYEE_INBOX_ID
     ):
         response = self.request_context.delete(
-            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}"
+            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}'
         )
         expect(response).to_be_ok()
         return response
 
     def clean_inbox(self, inbox_id):
         response = self.request_context.patch(
-            f"/api/accounts/{self._account_id}/inboxes/{inbox_id}/clean"
+            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/clean'
         )
         expect(response).to_be_ok()
 
     def clean_inboxes(self, list_mail_traps: list[MailTrapModel]):
         for mail in list_mail_traps:
             response = self.request_context.patch(
-                f"/api/accounts/{self._account_id}/inboxes/{mail.id}/clean"
+                f'/api/accounts/{self._account_id}/inboxes/{mail.id}/clean'
             )
             expect(response).to_be_ok()
 
@@ -131,7 +130,7 @@ class MailTrap:
             get_mails = self.messages(inbox_id, email_to=email_to)
             if get_mails.json():
                 if delete_message:
-                    self.delete_message(inbox_id, get_mails.json()[0]["id"])
+                    self.delete_message(inbox_id, get_mails.json()[0]['id'])
                 return get_mails.json()[0]
             time.sleep(1)
             if (datetime.now() - start_time).seconds > timeout:
@@ -156,9 +155,9 @@ class MailTrap:
         while len(employees_email_list) > 0:
             emails = self.wait_for_mails(timeout=600)
             for email in emails:
-                if email["to_email"] in employees_email_list:
-                    employees_email_list.remove(email["to_email"])
-                    self.delete_message(email["id"])
+                if email['to_email'] in employees_email_list:
+                    employees_email_list.remove(email['to_email'])
+                    self.delete_message(email['id'])
             if (
                 len(employees_email_list) == 0
                 or (datetime.now() - start_time).seconds > timeout
@@ -180,25 +179,25 @@ class MailTrap:
         while len(employees_email_list) > 0:
             to_be_removed = set()
             for mail_trap in list_mail_traps:
-                Log.info(f"Checking {mail_trap.id}")
+                Log.info(f'Checking {mail_trap.id}')
                 attributes = self.inbox_attributes(mail_trap.id)
-                if attributes.json()["emails_count"] < emails_per_inbox:
-                    Log.info(f"not enough mails received {mail_trap.id}")
+                if attributes.json()['emails_count'] < emails_per_inbox:
+                    Log.info(f'not enough mails received {mail_trap.id}')
                     continue
                 page = 0
                 while True:
                     page += 1  # 1 is the first page
                     emails = self.messages(inbox_id=mail_trap.id, page=page)
-                    Log.info(f"Checking page {page} in {mail_trap.id}")
+                    Log.info(f'Checking page {page} in {mail_trap.id}')
                     if emails.json():
                         for email in emails.json():
-                            if email["to_email"] in employees_email_list:
-                                employees_email_list.remove(email["to_email"])
+                            if email['to_email'] in employees_email_list:
+                                employees_email_list.remove(email['to_email'])
                                 if remove_messages:
                                     try:
                                         self.delete_message(
                                             inbox_id=mail_trap.id,
-                                            message_id=email["id"],
+                                            message_id=email['id'],
                                         )
                                     except Exception:
                                         Log.info(
@@ -206,7 +205,7 @@ class MailTrap:
                                         )
                     else:
                         break
-                Log.info(f"{len(employees_email_list)} left to check")
+                Log.info(f'{len(employees_email_list)} left to check')
                 if (
                     len(employees_email_list) == 0
                     or (datetime.now() - start_time).seconds > timeout

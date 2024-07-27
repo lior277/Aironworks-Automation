@@ -16,24 +16,29 @@ from src.utils.mailtrap import find_email
 from src.utils.waiter import wait_for
 
 
-@allure.step("run campaign on single employee")
-def run_campaign_on_employee(api_request_context_customer_admin, api_request_context, mailtrap, employee):
+@allure.step('run campaign on single employee')
+def run_campaign_on_employee(
+    api_request_context_customer_admin, api_request_context, mailtrap, employee
+):
     admin_service = api.admin(api_request_context_customer_admin)
     public_service = api.public(api_request_context_customer_admin)
-    result = admin_service.start_campaign(campaign=CampaignModel(campaign_name="Automation scenario",
-                                                                 attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
-                                                                 days_until_fail=1,
-                                                                 employees=[employee.employee_id]))
+    result = admin_service.start_campaign(
+        campaign=CampaignModel(
+            campaign_name='Automation scenario',
+            attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
+            days_until_fail=1,
+            employees=[employee.employee_id],
+        )
+    )
     expect(result).to_be_ok()
-    assert "id" in result.json()
-    campaign_id = result.json()["id"]
+    assert 'id' in result.json()
+    campaign_id = result.json()['id']
     mail = mailtrap.wait_for_mail(
-        AppConfigs.EMPLOYEE_INBOX_ID,
-        find_email(employee.email),
+        AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email)
     )
     assert mail is not None
 
-    source = mailtrap.message_source(AppConfigs.EMPLOYEE_INBOX_ID, mail["id"]).body()
+    source = mailtrap.message_source(AppConfigs.EMPLOYEE_INBOX_ID, mail['id']).body()
     links = get_text_links(source.decode())
     assert len(links) == 1
 
@@ -46,23 +51,29 @@ def run_campaign_on_employee(api_request_context_customer_admin, api_request_con
         campaign_status = admin_service.get_attack_execution(campaign_id=campaign_id)
         expect(campaign_status).to_be_ok()
 
-        return campaign_status.json()["execution"]["finished"]
+        return campaign_status.json()['execution']['finished']
 
     assert wait_for(validate_campaign_status, 60)
 
 
-@pytest.mark.test_id("C31562")
+@pytest.mark.test_id('C31562')
 @pytest.mark.api
 @pytest.mark.smoke
-def test_attack_campaign(api_request_context_customer_admin, api_request_context, employee, mailtrap):
-    run_campaign_on_employee(api_request_context_customer_admin, api_request_context, mailtrap, employee)
+def test_attack_campaign(
+    api_request_context_customer_admin, api_request_context, employee, mailtrap
+):
+    run_campaign_on_employee(
+        api_request_context_customer_admin, api_request_context, mailtrap, employee
+    )
 
 
-@pytest.mark.test_id("C31511")
-@markers.common_resource(name="settings")
+@pytest.mark.test_id('C31511')
+@markers.common_resource(name='settings')
 @pytest.mark.api
 @pytest.mark.smoke
-def test_email_notification_match_setting(api_request_context_customer_admin, api_request_context, mailtrap, employee):
+def test_email_notification_match_setting(
+    api_request_context_customer_admin, api_request_context, mailtrap, employee
+):
     company = api.company(api_request_context_customer_admin)
     config_result = company.localized_config()
     expect(config_result).to_be_ok()
@@ -80,36 +91,33 @@ def test_email_notification_match_setting(api_request_context_customer_admin, ap
         AppConfigs.EMPLOYEE_INBOX_ID,
         find_email(
             employee.email,
-            company_config["data"][0]["custom_attack_notification_subject"],
+            company_config['data'][0]['custom_attack_notification_subject'],
         ),
     )
-    Log.info(f"employee email: {employee.email}")
+    Log.info(f'employee email: {employee.email}')
 
     assert mail is not None
 
-    mail_id = mail["id"]
+    mail_id = mail['id']
     mail_raw = mailtrap.raw_message(AppConfigs.EMPLOYEE_INBOX_ID, mail_id)
     message: Message = message_from_bytes(mail_raw.body())
     payload = message.get_payload()
-    Log.info("payload: \n" + payload)
+    Log.info('payload: \n' + payload)
 
     regex_string = (
-            company_config["data"][0]["custom_attack_notification"]
-            .replace("{{employee.name}}", "(?P<employee_name>[a-zA-Z]+)")
-            .replace(
-                "{{portal_url}}",
-                r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)",
-            )
-            + "(<img.*/>)?\n"
+        company_config['data'][0]['custom_attack_notification']
+        .replace('{{employee.name}}', '(?P<employee_name>[a-zA-Z]+)')
+        .replace(
+            '{{portal_url}}',
+            r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
+        )
+        + '(<img.*/>)?\n'
     )
-    Log.info("regex_string: \n" + regex_string)
+    Log.info('regex_string: \n' + regex_string)
 
-    regex = re.compile(
-        regex_string,
-        re.MULTILINE,
-    )
+    regex = re.compile(regex_string, re.MULTILINE)
 
-    match = regex.match(payload.replace("=\n", ""))
+    match = regex.match(payload.replace('=\n', ''))
     assert match is not None
 
-    assert match.group("employee_name") == employee.first_name
+    assert match.group('employee_name') == employee.first_name

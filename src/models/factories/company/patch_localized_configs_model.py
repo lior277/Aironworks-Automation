@@ -10,6 +10,8 @@ class PatchLocalizedConfigsModelFactory:
         src_fields = {f.name: getattr(data, f.name) for f in fields(data)}
         dest_fields = {f.name for f in fields(PatchLocalizedConfigsModel)}
 
-        init_kwargs = {field: src_fields[field] for field in dest_fields if field in src_fields}
+        init_kwargs = {
+            field: src_fields[field] for field in dest_fields if field in src_fields
+        }
 
         return PatchLocalizedConfigsModel(**init_kwargs)

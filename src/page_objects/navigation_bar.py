@@ -14,48 +14,52 @@ from src.page_objects.settings_page import SettingsPage
 class NavigationBar:
     def __init__(self, page: Page):
         self.page = page
-        self.scenarios_button = page.get_by_role("link", name="Scenarios")
-        self.settings_button = page.get_by_role("link", name="Settings", exact=True)
-        self.employee_reports_button = page.get_by_role("link", name="PhishDetectAI Reports")
-        self.content_library_button = page.get_by_role("link", name="Content Library")
-        self.campaigns_button = page.get_by_role("link", name="Campaigns", exact=True)
-        self.education_campaigns_button = page.get_by_role("link", name="Education Campaigns", exact=True)
+        self.scenarios_button = page.get_by_role('link', name='Scenarios')
+        self.settings_button = page.get_by_role('link', name='Settings', exact=True)
+        self.employee_reports_button = page.get_by_role(
+            'link', name='PhishDetectAI Reports'
+        )
+        self.content_library_button = page.get_by_role('link', name='Content Library')
+        self.campaigns_button = page.get_by_role('link', name='Campaigns', exact=True)
+        self.education_campaigns_button = page.get_by_role(
+            'link', name='Education Campaigns', exact=True
+        )
 
-    @allure.step("NavigationBar: Navigate to scenarios")
+    @allure.step('NavigationBar: Navigate to scenarios')
     def navigate_scenarios(self):
         self.scenarios_button.click()
         self.page.wait_for_load_state(timeout=5)
 
         return ScenariosPage(self.page)
 
-    @allure.step("NavigationBar: Navigate to settings")
+    @allure.step('NavigationBar: Navigate to settings')
     def navigate_settings(self):
         self.settings_button.click()
         self.page.wait_for_load_state(timeout=5)
 
         return SettingsPage(self.page)
 
-    @allure.step("NavigationBar: Navigate to employee reports")
+    @allure.step('NavigationBar: Navigate to employee reports')
     def navigate_employee_reports(self):
         self.employee_reports_button.click()
         self.page.wait_for_load_state(timeout=5)
 
         return EmployeeReportsPage(self.page)
 
-    @allure.step("NavigationBar: Navigate to content library")
+    @allure.step('NavigationBar: Navigate to content library')
     def navigate_content_library(self):
         self.content_library_button.click()
         self.page.wait_for_load_state(timeout=5)
         return ContentLibraryPage(self.page)
 
-    @allure.step("NavigationBar: Navigate to campaigns")
+    @allure.step('NavigationBar: Navigate to campaigns')
     def navigate_campaigns(self):
         self.campaigns_button.click()
         self.page.wait_for_load_state(timeout=5)
 
         return CampaignsPage(self.page)
 
-    @allure.step("NavigationBar: Navigate to education campaigns page")
+    @allure.step('NavigationBar: Navigate to education campaigns page')
     def navigate_education_campaigns_page(self):
         self.education_campaigns_button.click()
         education_page = EducationCampaignPage(self.page)

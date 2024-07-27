@@ -13,7 +13,7 @@ class EmployeeModel(BaseDataClass):
 
     def to_csv_file(self):
         return {
-            "Email": self.email,
-            "First Name": self.first_name,
-            "Last Name": self.last_name,
+            'Email': self.email,
+            'First Name': self.first_name,
+            'Last Name': self.last_name,
         }

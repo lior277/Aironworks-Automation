@@ -12,7 +12,7 @@ from src.models.factories.education_campaign.education_campaign_model_factory im
 )
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope='function')
 def get_education_content(
     api_request_context_customer_admin, api_request_context_aw_admin, user: UserModel
 ) -> Item:
@@ -36,7 +36,7 @@ def get_education_content(
     return out[0]
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope='function')
 def education_campaign(
     api_request_context_customer_admin,
     api_request_context_aw_admin,
@@ -49,7 +49,7 @@ def education_campaign(
         response = company.get_employee_ids(
             EmployeeListIdsModel(employee_role=True, filters=None)
         )
-        employee_ids = response.json()["items"][:1]
+        employee_ids = response.json()['items'][:1]
     education_campaign = (
         EducationCampaignModelFactory.get_education_campaign_from_education_content(
             AppConfigs.EXAMPLE_EDUCATION_CONTENT, employee_ids
@@ -57,9 +57,9 @@ def education_campaign(
     )
     result = education.start_campaign(education_campaign)
     expect(result).to_be_ok()
-    assert "id" in result.json()
+    assert 'id' in result.json()
     education_service = api.education(api_request_context_aw_admin)
-    education_service.aw_admin_education_assignments(campaign_id=result.json()["id"])
+    education_service.aw_admin_education_assignments(campaign_id=result.json()['id'])
 
     api_request_context = (
         api_request_context_aw_admin
@@ -67,13 +67,13 @@ def education_campaign(
         else api_request_context_customer_admin
     )
     result = api.education(api_request_context).get_campaign_details(
-        campaign_id=result.json()["id"]
+        campaign_id=result.json()['id']
     )
     education_campaign = EducationCampaignDetailsModel.from_dict(result.json())
     return education_campaign
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope='function')
 def remove_education_campaign(
     request, education_campaign, api_request_context_aw_admin
 ) -> EducationCampaignDetailsModel:

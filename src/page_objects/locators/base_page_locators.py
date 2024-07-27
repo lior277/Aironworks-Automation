@@ -1,2 +1,2 @@
 class BasePageLocators:
-    MUI_ALERT_MESSAGE = ".MuiAlert-message"
+    MUI_ALERT_MESSAGE = '.MuiAlert-message'

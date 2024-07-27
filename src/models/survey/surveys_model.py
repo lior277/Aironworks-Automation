@@ -29,4 +29,6 @@ class SurveysModel(BaseDataClass):
         return any(survey.always_sent for survey in self.surveys)
 
     def has_survey(self, survey_name: str):
-        return next((survey for survey in self.surveys if survey.name == survey_name), None)
+        return next(
+            (survey for survey in self.surveys if survey.name == survey_name), None
+        )

@@ -5,7 +5,7 @@ from playwright.sync_api import Locator
 
 from src.utils.log import Log
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 
 class Table(Generic[T]):
@@ -37,7 +37,7 @@ class Table(Generic[T]):
         self, column_name: str, value: str, wait_time: int = 1
     ) -> T:
         Log.debug(
-            "Getting row by column %s with value %s from the table"
+            'Getting row by column %s with value %s from the table'
             % (column_name, value)
         )
         return self._Table__structure(

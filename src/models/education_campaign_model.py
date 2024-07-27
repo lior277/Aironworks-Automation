@@ -4,10 +4,10 @@ from typing import List
 
 
 class EducationCampaignStatus(str, Enum):
-    CREATED = "CREATED"
-    PENDING = "PENDING"
-    ONGOING = "ONGOING"
-    COMPLETED = "COMPLETED"
+    CREATED = 'CREATED'
+    PENDING = 'PENDING'
+    ONGOING = 'ONGOING'
+    COMPLETED = 'COMPLETED'
 
 
 @dataclass

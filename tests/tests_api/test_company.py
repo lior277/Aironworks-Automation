@@ -9,7 +9,7 @@ from src.models.factories.company.employee_model_factory import EmployeeModelFac
 fake = Faker()
 
 
-@pytest.mark.test_id("C31563")
+@pytest.mark.test_id('C31563')
 @pytest.mark.api
 @pytest.mark.smoke
 def test_upload_employees(api_request_context_customer_admin):
@@ -21,6 +21,6 @@ def test_upload_employees(api_request_context_customer_admin):
 
     employee = company.employee_by_mail(email=email)
 
-    assert employee["employee_role"]
-    assert not employee["admin_role"]
-    assert employee["email"] == email
+    assert employee['employee_role']
+    assert not employee['admin_role']
+    assert employee['email'] == email

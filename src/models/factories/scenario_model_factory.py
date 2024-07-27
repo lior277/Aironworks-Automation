@@ -9,7 +9,7 @@ class ScenarioModelFactory:
     @staticmethod
     def scenario() -> ScenarioModel:
         return ScenarioModel(
-            name="QA Test Scenario " + fake.name(),
+            name='QA Test Scenario ' + fake.name(),
             sender_address=fake.pystr().lower(),
             sender_name=fake.name(),
             subject=fake.sentence(),

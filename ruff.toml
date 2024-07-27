@@ -1,0 +1,14 @@
+target-version = "py39"
+
+[format]
+quote-style = "single"
+skip-magic-trailing-comma = true
+
+[lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[lint.per-file-ignores]
+"**/__init__.py" = ["F401", "F403"]
+
+[lint.isort]
+split-on-trailing-comma = false

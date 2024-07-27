@@ -10,21 +10,27 @@ from src.page_objects.data_types.table_element import Table
 class CampaignDetailsPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.export_csv_button = self.page.get_by_role("button", name="Export CSV")
-        self.url = self.default_url + "admin/dashboard/attacks/executions/"
-        self.table_campaign_attacks_summary = Table(page.locator('//div[contains(@class,"MuiDataGrid-row")]',
-                                                                 has_not_text="Preview"), CampaignAttacksSummary)
+        self.export_csv_button = self.page.get_by_role('button', name='Export CSV')
+        self.url = self.default_url + 'admin/dashboard/attacks/executions/'
+        self.table_campaign_attacks_summary = Table(
+            page.locator(
+                '//div[contains(@class,"MuiDataGrid-row")]', has_not_text='Preview'
+            ),
+            CampaignAttacksSummary,
+        )
 
-    @allure.step("CampaignDetailsPage: open campaign detailed page for {campaign_id} campaign id")
+    @allure.step(
+        'CampaignDetailsPage: open campaign detailed page for {campaign_id} campaign id'
+    )
     def open(self, campaign_id: str):
         self.page.goto(self.url + campaign_id)
         self.wait_for_progress_bar_disappears()
         expect(self.export_csv_button).to_be_visible()
         return self
 
-    @allure.step("CampaignDetailsPage: export csv")
+    @allure.step('CampaignDetailsPage: export csv')
     def export_csv(self):
-        path = tempfile.mktemp(suffix=".csv")
+        path = tempfile.mktemp(suffix='.csv')
         with self.page.expect_download() as download_info:
             self.export_csv_button.click()
         download_event = download_info.value

@@ -16,7 +16,9 @@ from src.models.company.employee_model import EmployeeModel
 from src.models.company.employee_update_model import EmployeeUpdateModel
 from src.models.company.localized_configs_model import LocalizedConfigsModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.models.factories.company.patch_localized_configs_model import PatchLocalizedConfigsModelFactory
+from src.models.factories.company.patch_localized_configs_model import (
+    PatchLocalizedConfigsModelFactory,
+)
 from src.models.factories.survey.add_survey_modal_factory import AddSurveyModelFactory
 from src.models.survey.surveys_model import SurveysModel, Survey
 from src.utils.list import divide_list_into_chunks
@@ -30,35 +32,37 @@ def is_debug():
     return sys.monitoring.get_tool(sys.monitoring.DEBUGGER_ID) is not None
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def mailtrap(playwright):
     mailtrap = MailTrap(playwright)
     yield mailtrap
     mailtrap.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def example_mail():
-    with open("tests/resources/example_mail.eml", "rb") as f:
+    with open('tests/resources/example_mail.eml', 'rb') as f:
         return f.read().replace(
-            b"RANDOM_TEXT", str(random.randint(100000000, 999999999)).encode("utf-8")
+            b'RANDOM_TEXT', str(random.randint(100000000, 999999999)).encode('utf-8')
         )
 
 
 def pytest_collection_modifyitems(session, config, items):
     if not is_debug():
         for item in items:
-            if item.get_closest_marker("timeout") is None:
+            if item.get_closest_marker('timeout') is None:
                 item.add_marker(pytest.mark.timeout(3 * 60))
 
     for item in items:
-        for marker in item.iter_markers(name="test_id"):
+        for marker in item.iter_markers(name='test_id'):
             test_id = marker.args[0]
-            item.user_properties.append(("test_id", test_id))
+            item.user_properties.append(('test_id', test_id))
 
 
-@pytest.fixture(scope="session")
-def api_request_context_addin(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+@pytest.fixture(scope='session')
+def api_request_context_addin(
+    playwright: Playwright,
+) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.ADDIN_BASE_URL
     # Get service account email and load the json data from the service account key file.
 
@@ -66,7 +70,7 @@ def api_request_context_addin(playwright: Playwright) -> Generator[APIRequestCon
         AppConfigs.LOGIN_SA_ACCOUNT,
         audience=base_url,  # doesn't actually matter
     )
-    headers = {"Authorization": "GG " + token}
+    headers = {'Authorization': 'GG ' + token}
     request_context = playwright.request.new_context(
         base_url=base_url, extra_http_headers=headers
     )
@@ -74,8 +78,10 @@ def api_request_context_addin(playwright: Playwright) -> Generator[APIRequestCon
     request_context.dispose()
 
 
-@pytest.fixture(scope="session")
-def api_request_context_customer_admin(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+@pytest.fixture(scope='session')
+def api_request_context_customer_admin(
+    playwright: Playwright,
+) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.BASE_URL
     # Get service account email and load the json data from the service account key file.
 
@@ -85,18 +91,18 @@ def api_request_context_customer_admin(playwright: Playwright) -> Generator[APIR
     login_info_response = login_service.info()
     expect(login_info_response).to_be_ok()
     login_info = login_info_response.json()
-    assert "user" in login_info
-    assert "roles" in login_info["user"]
-    assert len(login_info["user"]["roles"]) == 1
-    role_id = login_info["user"]["roles"][0]["id"]
+    assert 'user' in login_info
+    assert 'roles' in login_info['user']
+    assert len(login_info['user']['roles']) == 1
+    role_id = login_info['user']['roles'][0]['id']
     expect(login_service.pick_role(role_id)).to_be_ok()
     yield request_context
     request_context.dispose()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def api_request_context(
-        playwright: Playwright,
+    playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
     base_url = AppConfigs.BASE_URL
     # Get service account email and load the json data from the service account key file.
@@ -108,7 +114,7 @@ def api_request_context(
     request_context.dispose()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope='function')
 def employee(api_request_context_customer_admin):
     email = AppConfigs.EMPLOYEE_INBOX % fake.pystr().lower()
 
@@ -121,19 +127,19 @@ def employee(api_request_context_customer_admin):
 
     employee_data = company.employee_by_mail(email=email)
 
-    assert employee_data["employee_role"]
-    assert not employee_data["admin_role"]
-    assert employee_data["email"] == email
+    assert employee_data['employee_role']
+    assert not employee_data['admin_role']
+    assert employee_data['email'] == email
 
-    return replace(employee, employee_id=employee_data["id"])
+    return replace(employee, employee_id=employee_data['id'])
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def api_request_context_aw_admin(
-        playwright: Playwright,
+    playwright: Playwright,
 ) -> Generator[APIRequestContext, None, None]:
-    if AppConfigs.ENV.startswith("production"):
-        pytest.skip("This test is not supported in production")
+    if AppConfigs.ENV.startswith('production'):
+        pytest.skip('This test is not supported in production')
     request_context = playwright.request.new_context(base_url=AppConfigs.ADMIN_BASE_URL)
     login_service = api.login(request_context)
     expect(login_service.login(UserModelFactory.aw_admin())).to_be_ok()
@@ -141,51 +147,63 @@ def api_request_context_aw_admin(
     expect(login_info_response).to_be_ok()
     login_info = login_info_response.json()
 
-    assert "user" in login_info
-    assert "roles" in login_info["user"]
-    assert len(login_info["user"]["roles"]) == 1
+    assert 'user' in login_info
+    assert 'roles' in login_info['user']
+    assert len(login_info['user']['roles']) == 1
 
-    role_id = login_info["user"]["roles"][0]["id"]
+    role_id = login_info['user']['roles'][0]['id']
     expect(login_service.pick_role(role_id)).to_be_ok()
 
     yield request_context
     request_context.dispose()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope='function')
 def clean_up_employees(api_request_context_customer_admin):
     company = api.company(api_request_context_customer_admin)
-    response = company.get_employee_ids(EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None))
-    if response.json()["items"]:
-        company.update_employees(employees=EmployeeUpdateModel(employee_role=False, ids=list(response.json()["items"])))
-    response = company.get_employee_ids(EmployeeListIdsModel(employee_role=False, admin_role=False, filters=None))
-    if response.json()["items"]:
-        divided_list = divide_list_into_chunks(response.json()["items"], 2000)
+    response = company.get_employee_ids(
+        EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None)
+    )
+    if response.json()['items']:
+        company.update_employees(
+            employees=EmployeeUpdateModel(
+                employee_role=False, ids=list(response.json()['items'])
+            )
+        )
+    response = company.get_employee_ids(
+        EmployeeListIdsModel(employee_role=False, admin_role=False, filters=None)
+    )
+    if response.json()['items']:
+        divided_list = divide_list_into_chunks(response.json()['items'], 2000)
         for chunk in divided_list:
             company.delete_employees(employees=EmployeeDeleteModel(ids=chunk))
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope='function')
 def set_up_perf_survey(api_request_context_customer_admin) -> Survey:
     perf_survey = AddSurveyModelFactory.get_performance_survey()
     company = api.company(api_request_context_customer_admin)
     survey_service = api.survey(api_request_context_customer_admin)
     localized_config_response = company.localized_config()
-    assert localized_config_response.ok, f"{localized_config_response.json()=}"
+    assert localized_config_response.ok, f'{localized_config_response.json()=}'
     data = LocalizedConfigsModel.from_dict(localized_config_response.json()).data[0]
-    patch_localized_configs = PatchLocalizedConfigsModelFactory.get_patch_localized_configs(data)
+    patch_localized_configs = (
+        PatchLocalizedConfigsModelFactory.get_patch_localized_configs(data)
+    )
     patch_localized_configs.show_survey_button = True
-    response = company.patch_localized_config(language=data.language, localized_configs_model=patch_localized_configs)
-    assert response.ok, f"{response.json()=}"
+    response = company.patch_localized_config(
+        language=data.language, localized_configs_model=patch_localized_configs
+    )
+    assert response.ok, f'{response.json()=}'
     response = survey_service.get_list_surveys()
-    assert response.ok, f"{response.json()=}"
+    assert response.ok, f'{response.json()=}'
     surveys_model = SurveysModel.from_dict(response.json())
     survey = surveys_model.has_survey(perf_survey.survey_name)
     if not survey:
         response = survey_service.add_survey(perf_survey)
-        assert response.ok, f"{response.json()=}"
+        assert response.ok, f'{response.json()=}'
         response = survey_service.get_list_surveys()
-        assert response.ok, f"{response.json()=}"
+        assert response.ok, f'{response.json()=}'
         surveys_model = SurveysModel.from_dict(response.json())
         survey = surveys_model.has_survey(perf_survey.survey_name)
     if not survey.always_sent:
