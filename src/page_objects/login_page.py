@@ -21,6 +21,8 @@ class SignInPage(BasePage):
 
     @allure.step('SignInPage: open page')
     def navigate(self, admin=False):
+        if AppConfigs.ENV.startswith('production') and admin:
+            pytest.skip('Admin login is not available in production')
         self.set_default_url(self.adminBaseUrl if admin else self.customerBaseUrl)
         result = self.page.goto(self.default_url)
         result.request.response()
