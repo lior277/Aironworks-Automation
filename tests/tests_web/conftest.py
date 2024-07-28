@@ -27,6 +27,14 @@ from src.utils.log import Log
 from src.utils.waiter import wait_for
 
 
+def safe_title(page: Page) -> str:
+    try:
+        return page.title()
+    except Exception as e:
+        Log.warning(f'Failed to get page title: {e}')
+        return 'unknown'
+
+
 @pytest.fixture(scope='function')
 def playwright_config(request, launch_browser, browser_type):
     # with sync_playwright() as p:
@@ -59,7 +67,7 @@ def playwright_config(request, launch_browser, browser_type):
         for page in context.pages:
             allure.attach(
                 page.screenshot(),
-                name=f'{page.title()}.png',
+                name=f'{safe_title(page)}.png',
                 attachment_type=allure.attachment_type.PNG,
             )
     else:
