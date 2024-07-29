@@ -5,6 +5,8 @@ from playwright.sync_api import Locator, Page
 
 from src.models.education.education_content_model import Item
 from src.page_objects.base_page import BasePage
+from src.page_objects.content_library import ContentType
+from src.page_objects.content_library.add_content_page import AddContentPage
 from src.page_objects.content_library.content_library_details_page import (
     ContentLibraryDetailsPage,
 )
@@ -19,7 +21,11 @@ class ContentLibraryPage(BasePage):
         self.visibility_filter = self.page.get_by_label('Visibility')
         self.name_filter = self.page.get_by_placeholder('Search by Content Name')
         self.cards = self.page.get_by_label('content-card')
-        self.table_cards = Table(page.get_by_label('content-card'), ContentCard)
+        self.table_cards = Table(self.page.get_by_label('content-card'), ContentCard)
+        self.add_content_button = self.page.get_by_text('Add Content')
+        self.add_content_component = AddContentComponent(
+            self.page.locator("//h2[contains(text(),'Add Content')]/..")
+        )
 
     @allure.step('ContentLibraryPage: Set visibility filter')
     def set_visibility_filter(self, name):
@@ -41,6 +47,12 @@ class ContentLibraryPage(BasePage):
         card.title.click()
         return ContentLibraryDetailsPage(self.page)
 
+    @allure.step('ContentLibraryPage: open add content page')
+    def open_add_content_page(self, content_type: ContentType) -> AddContentPage:
+        self.add_content_button.click()
+        self.add_content_component.add_content(content_type)
+        return AddContentPage(self.page, content_type)
+
 
 class ContentCard:
     def __init__(self, locator: Locator):
@@ -48,3 +60,25 @@ class ContentCard:
         self.attached = locator.get_by_label('Attached to the Education Campaigns.')
         self.date_created = locator.locator('//*[@id="calendar 1"]/../..')
         self.content_visibility = locator.locator('[data-testid="content-visibility"]')
+
+
+class AddContentComponent:
+    def __init__(self, locator: Locator):
+        self.locator = locator
+        self.video_button = self.locator.get_by_text('Video', exact=True)
+        self.slides_button = self.locator.get_by_text('Slides', exact=True)
+        self.pdf_button = self.locator.get_by_text('PDF', exact=True)
+        self.assessment_button = self.locator.get_by_text('Assessment', exact=True)
+
+    @allure.step('AddContentComponent: add {content_type} content type')
+    def add_content(self, content_type: ContentType):
+        match content_type:
+            case ContentType.VIDEO:
+                self.video_button.click()
+            case ContentType.SLIDES:
+                self.slides_button.click()
+            case ContentType.PDF:
+                self.pdf_button.click()
+            case ContentType.ASSESSMENT:
+                self.assessment_button.click()
+        self.locator.wait_for(state='hidden')
