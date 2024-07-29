@@ -10,6 +10,8 @@ from src.models.auth.user_model import UserModel
 from src.models.education.education_campaign_model import EducationCampaignDetailsModel
 from src.page_objects.campaign_detalis_page import CampaignDetailsPage
 from src.page_objects.campaigns_page import CampaignsPage
+from src.page_objects.content_library import ContentType
+from src.page_objects.content_library.add_content_page import AddContentPage
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
 from src.page_objects.customers_page import CustomersPage
 from src.page_objects.dashboard_page import DashboardPage
@@ -140,6 +142,13 @@ def content_library_page(dashboard_page: DashboardPage) -> ContentLibraryPage:
 
 
 @pytest.fixture(scope='function')
+def add_content_page(
+    content_library_page: ContentLibraryPage, content_type
+) -> AddContentPage:
+    return content_library_page.open_add_content_page(content_type)
+
+
+@pytest.fixture(scope='function')
 def employee_reports_page(dashboard_page: DashboardPage) -> EmployeeReportsPage:
     return dashboard_page.navigation_bar.navigate_employee_reports()
 
@@ -164,3 +173,8 @@ def campaign_details_page(dashboard_page) -> CampaignDetailsPage:
     return CampaignDetailsPage(dashboard_page.page).open(
         campaign_id=AppConfigs.SAMPLE_CAMPAIGN
     )
+
+
+@pytest.fixture(scope='function')
+def content_type() -> ContentType:
+    return ContentType.VIDEO
