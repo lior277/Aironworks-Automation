@@ -6,6 +6,7 @@ from src.page_objects.base_page import BasePage
 from src.page_objects.content_library import (
     ContentType,
     new_content_successfully_published_text,
+    pdf_file_attached_text,
     sensitive_information_description_text,
 )
 from src.page_objects.data_types.drop_down_element import DropDown
@@ -29,6 +30,9 @@ class AddContentPage(BasePage):
             self.page.get_by_label('Content visibility')
         )
         self.quiz = QuizComponent(self.page.get_by_label('Quiz'))
+        self.assessment_form = AssessmentFormComponent(
+            self.page.get_by_label('Assessment Form')
+        )
         self.save_and_publish_button = self.page.get_by_text('Save and Publish')
 
     @allure.step('AddContentPage: create education content {education_content}')
@@ -45,9 +49,20 @@ class AddContentPage(BasePage):
         else:
             expect(self.content_visibility.locator).not_to_be_visible()
         self.general_information.fill_data(education_content)
+        if education_content.content_type == ContentType.PDF:
+            self.upload_pdf_file(education_content)
         self.save_and_publish_button.click()
         expect(self.alert_message).to_contain_text(
             new_content_successfully_published_text
+        )
+
+    @allure.step('AddContentPage: upload pdf file')
+    def upload_pdf_file(self, education_content: ContentLibraryEntity):
+        with self.page.expect_file_chooser() as fc:
+            self.general_information.upload_pdf_button.click()
+            fc.value.set_files(education_content.pdf_file_path)
+        expect(self.alert_message).to_contain_text(
+            pdf_file_attached_text, timeout=20_000
         )
 
 
@@ -58,6 +73,7 @@ class GeneralInformationComponent:
         self.title = self.locator.locator('[name="title"]')
         self.description = self.locator.locator('[name="description"]')
         self.thumbnail_path_button = self.locator.locator('[id="thumbnail_path"]')
+        self.upload_pdf_button = self.locator.locator('[id="file_path"]')
 
     @allure.step('GeneralInformationComponent: fill data')
     def fill_data(self, education_content: ContentLibraryEntity):
@@ -123,3 +139,9 @@ class QuizComponent:
     def __init__(self, locator: Locator):
         self.locator = locator
         self.attach_quiz_button = self.locator.get_by_role('button')
+
+
+class AssessmentFormComponent:
+    def __init__(self, locator: Locator):
+        self.locator = locator
+        self.attach_assessment_button = self.locator.get_by_text('Attach Assessment')
