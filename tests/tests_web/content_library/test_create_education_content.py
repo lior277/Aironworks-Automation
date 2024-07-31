@@ -40,7 +40,7 @@ def remove_education_content(
     request.addfinalizer(finalizer)
 
 
-class TestCreateVideoEducationContent:
+class TestCreateEducationContent:
     @pytest.mark.smoke
     @pytest.mark.web
     @pytest.mark.parametrize(
@@ -58,7 +58,59 @@ class TestCreateVideoEducationContent:
             ),
         ],
     )
-    def test_create_education_content(
+    def test_create_video_education_content(
+        self,
+        add_content_page: AddContentPage,
+        user: UserModel,
+        education_content: ContentLibraryEntity,
+        remove_education_content,
+    ):
+        add_content_page.create_content(education_content, user)
+
+    @pytest.mark.smoke
+    @pytest.mark.web
+    @pytest.mark.parametrize(
+        'user,education_content',
+        [
+            pytest.param(
+                UserModelFactory.aw_admin(),
+                ContentLibraryEntityFactory.get_pdf_content(),
+                marks=pytest.mark.test_id('C31642'),
+            ),
+            pytest.param(
+                UserModelFactory.customer_admin(),
+                ContentLibraryEntityFactory.get_pdf_content(),
+                marks=pytest.mark.test_id('C31649'),
+            ),
+        ],
+    )
+    def test_create_pdf_education_content(
+        self,
+        add_content_page: AddContentPage,
+        user: UserModel,
+        education_content: ContentLibraryEntity,
+        remove_education_content,
+    ):
+        add_content_page.create_content(education_content, user)
+
+    @pytest.mark.smoke
+    @pytest.mark.web
+    @pytest.mark.parametrize(
+        'user,education_content',
+        [
+            pytest.param(
+                UserModelFactory.aw_admin(),
+                ContentLibraryEntityFactory.get_slides_content(),
+                marks=pytest.mark.test_id('C31640'),
+            ),
+            pytest.param(
+                UserModelFactory.customer_admin(),
+                ContentLibraryEntityFactory.get_slides_content(),
+                marks=pytest.mark.test_id('C31648'),
+            ),
+        ],
+    )
+    def test_create_slides_education_content(
         self,
         add_content_page: AddContentPage,
         user: UserModel,
