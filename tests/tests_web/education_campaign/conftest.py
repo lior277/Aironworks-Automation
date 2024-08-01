@@ -29,9 +29,13 @@ def get_education_content(
     expect(response).to_be_ok()
     content = EducationContentModel.from_dict(response.json())
     if user.is_admin:
-        out = [item for item in content.items if item.any_company]
+        out = [
+            item
+            for item in content.items
+            if item.any_company and 'Automation' not in item.title
+        ]
     else:
-        out = [item for item in content.items]
+        out = [item for item in content.items if 'Automation' not in item.title]
     assert len(out) > 0
     return out[0]
 

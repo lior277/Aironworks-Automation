@@ -118,3 +118,29 @@ class TestCreateEducationContent:
         remove_education_content,
     ):
         add_content_page.create_content(education_content, user)
+
+    @pytest.mark.smoke
+    @pytest.mark.web
+    @pytest.mark.parametrize(
+        'user,education_content',
+        [
+            pytest.param(
+                UserModelFactory.aw_admin(),
+                ContentLibraryEntityFactory.get_assessment_content(),
+                marks=pytest.mark.test_id('C31635'),
+            ),
+            pytest.param(
+                UserModelFactory.customer_admin(),
+                ContentLibraryEntityFactory.get_assessment_content(),
+                marks=pytest.mark.test_id('C31650'),
+            ),
+        ],
+    )
+    def test_create_assessment_education_content(
+        self,
+        add_content_page: AddContentPage,
+        user: UserModel,
+        education_content: ContentLibraryEntity,
+        remove_education_content,
+    ):
+        add_content_page.create_content(education_content, user)
