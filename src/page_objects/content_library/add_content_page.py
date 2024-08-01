@@ -9,6 +9,7 @@ from src.page_objects.content_library import (
     pdf_file_attached_text,
     sensitive_information_description_text,
 )
+from src.page_objects.content_library.attach_assessment_page import AddAssessmentPage
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 
@@ -51,6 +52,8 @@ class AddContentPage(BasePage):
         self.general_information.fill_data(education_content)
         if education_content.content_type == ContentType.PDF:
             self.upload_pdf_file(education_content)
+        elif education_content.content_type == ContentType.ASSESSMENT:
+            self.add_assessment(education_content)
         self.save_and_publish_button.click()
         expect(self.alert_message).to_contain_text(
             new_content_successfully_published_text
@@ -64,6 +67,11 @@ class AddContentPage(BasePage):
         expect(self.alert_message).to_contain_text(
             pdf_file_attached_text, timeout=20_000
         )
+
+    @allure.step('AddContentPage: add assessment {education_content}')
+    def add_assessment(self, education_content: ContentLibraryEntity):
+        self.assessment_form.attach_assessment_button.click()
+        AddAssessmentPage(self.page).apply_assessment(education_content.assessment)
 
 
 class GeneralInformationComponent:
@@ -144,4 +152,4 @@ class QuizComponent:
 class AssessmentFormComponent:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.attach_assessment_button = self.locator.get_by_text('Attach Assessment')
+        self.attach_assessment_button = self.locator.get_by_role('button')
