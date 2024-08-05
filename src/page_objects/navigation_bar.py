@@ -6,6 +6,7 @@ from src.page_objects.content_library.content_library_page import ContentLibrary
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
+from src.page_objects.employee_directory_page import EmployeeDirectoryPage
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.settings_page import SettingsPage
@@ -21,6 +22,9 @@ class NavigationBar:
         )
         self.content_library_button = page.get_by_role('link', name='Content Library')
         self.campaigns_button = page.get_by_role('link', name='Campaigns', exact=True)
+        self.employee_directory_button = page.get_by_role(
+            'link', name='Employee directory', exact=True
+        )
         self.education_campaigns_button = page.get_by_role(
             'link', name='Education Campaigns', exact=True
         )
@@ -58,6 +62,13 @@ class NavigationBar:
         self.page.wait_for_load_state(timeout=5)
 
         return CampaignsPage(self.page)
+
+    @allure.step('NavigationBar: Navigate to employee directory page')
+    def navigate_employee_directory(self) -> EmployeeDirectoryPage:
+        self.employee_directory_button.click()
+        employee_directory_page = EmployeeDirectoryPage(self.page)
+        employee_directory_page.wait_for_loading_state()
+        return employee_directory_page
 
     @allure.step('NavigationBar: Navigate to education campaigns page')
     def navigate_education_campaigns_page(self):
