@@ -12,6 +12,7 @@ from src.models.company.employee_delete_model import EmployeeDeleteModel
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.company.employee_model_factory import EmployeeModelFactory
+from src.page_objects import update_succeeded_text
 from src.page_objects.employee_directory_page import EmployeeDirectoryPage
 from src.utils.csv_tool import CSVTool
 
@@ -82,3 +83,6 @@ class TestUploadEmployees:
         generate_employees_file,
     ):
         employee_directory_page.upload_file(generate_employees_file, override)
+        expect(employee_directory_page.alert_message).to_contain_text(
+            update_succeeded_text
+        )

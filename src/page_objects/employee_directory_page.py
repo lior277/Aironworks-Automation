@@ -1,11 +1,7 @@
 import allure
 from playwright.sync_api import Locator, Page, expect
 
-from src.page_objects import (
-    file_type_must_be_csv_xlsx,
-    get_file_size_error_message,
-    update_succeeded_text,
-)
+from src.page_objects import file_type_must_be_csv_xlsx, get_file_size_error_message
 from src.page_objects.base_page import BasePage
 
 
@@ -58,7 +54,6 @@ class EmployeeDirectoryPage(BasePage):
                 expect(self.loading).to_be_visible()
                 self.wait_for_loading_state()
                 expect(self.upload_employees_component.locator).not_to_be_visible()
-                expect(self.alert_message).to_contain_text(update_succeeded_text)
 
 
 class UploadEmployeesComponent:
