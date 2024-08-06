@@ -6,7 +6,7 @@ class CSVTool:
     @classmethod
     def create_file(
         cls, data, fieldnames: List[str], file_path: str, data_to_update: dict = None
-    ):
+    ) -> str:
         with open(file_path, mode='w', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
 
@@ -26,3 +26,4 @@ class CSVTool:
                     item.update(data_to_update)
             writer.writeheader()
             writer.writerows(data_to_write)
+        return file_path

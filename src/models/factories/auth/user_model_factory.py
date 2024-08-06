@@ -46,3 +46,12 @@ class UserModelFactory:
             is_admin=True,
             is_reseller=True,
         )
+
+    @staticmethod
+    def customer_admin_upload() -> UserModel:
+        return UserModel(
+            email=AppConfigs.CUSTOMER_ADMIN_UPLOAD_USERNAME,
+            password=AppConfigs.CUSTOMER_ADMIN_UPLOAD_PASSWORD,
+            company='Upload Admin',
+            is_admin=False,
+        )
