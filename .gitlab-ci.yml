@@ -50,6 +50,7 @@ build-tests-image:
 run-tests:
   stage: test
   image: $SERVER_TAG
+  resource_group: tests-$ENV
   rules:
     # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
