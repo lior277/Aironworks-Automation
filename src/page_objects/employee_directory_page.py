@@ -1,8 +1,11 @@
+import tempfile
+
 import allure
 from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects import file_type_must_be_csv_xlsx, get_file_size_error_message
 from src.page_objects.base_page import BasePage
+from src.utils.log import Log
 
 
 class EmployeeDirectoryPage(BasePage):
@@ -54,6 +57,21 @@ class EmployeeDirectoryPage(BasePage):
                 expect(self.loading).to_be_visible()
                 self.wait_for_loading_state()
                 expect(self.upload_employees_component.locator).not_to_be_visible()
+
+    @allure.step('EmployeeDirectoryPage: download csv file')
+    def download_csv_file(self, with_additional_fields: bool = False):
+        self.upload_employees_button.click()
+        expect(self.upload_employees_component.locator).to_be_visible()
+        path = tempfile.mktemp(suffix='.csv')
+        with self.page.expect_download() as download_info:
+            if with_additional_fields:
+                self.upload_employees_component.download_optional_button.click()
+            else:
+                self.upload_employees_component.download_required_button.click()
+        download_event = download_info.value
+        download_event.save_as(path)
+        Log.info(f'{path=}')
+        return path
 
 
 class UploadEmployeesComponent:
