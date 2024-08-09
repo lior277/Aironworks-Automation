@@ -67,7 +67,7 @@ def test_submit_quiz(api_request_context_customer_admin, mailtrap, employee, new
 
     # Select the first question option
     page.page.locator('#field_control_0').first.click()
-    page.complete_button.click()
+    page.confirm_quiz()
 
     expect(
         page.page.get_by_role(

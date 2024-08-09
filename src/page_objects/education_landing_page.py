@@ -12,6 +12,10 @@ class EducationLandingPage:
         self.complete_button = self.page.get_by_role('button', name='Complete')
         self.embedded_content: FrameLocator = self.page.frame_locator('iframe')
         self.link_url = link_url
+        self.confirm_completion_dialog = self.page.get_by_role(
+            'heading', level=2, name='Confirm Completion'
+        )
+        self.confirm_button = self.page.get_by_role('button', name='Confirm')
 
     @property
     def iframe(self):
@@ -35,3 +39,10 @@ class EducationLandingPage:
         expect(self.embedded_content.owner).to_have_attribute(
             'src', re.compile('https://.*')
         )
+
+    @allure.step('EducationLandingPage: confirm quiz')
+    def confirm_quiz(self):
+        self.complete_button.click()
+        expect(self.confirm_completion_dialog).to_be_visible()
+        self.confirm_button.click()
+        expect(self.confirm_completion_dialog).not_to_be_visible()
