@@ -8,7 +8,7 @@ class OutlookPage:
     def __init__(self, page: Page):
         self.page = page
 
-        self.mail_icon = page.locator('#avatar-rq span')
+        self.mail_icon = page.locator('[data-testid="SentReceivedSavedTime"]')
         self.apps_locator = page.get_by_label('Apps', exact=True)
         self.app_frame = page.frame_locator(
             f'iframe[src^="{AppConfigs.ADDIN_BASE_URL}"]'
@@ -27,14 +27,16 @@ class OutlookPage:
         self.page.click('[type="submit"]')
 
         self.page.fill('input[type="password"]', AppConfigs.MSLIVE_PWD)
-        self.page.get_by_role('button', name='Sign in').click()
-        self.page.get_by_role('button', name='Yes').click()
-        self.page.get_by_role('treeitem', name='Inbox', exact=True).click()
+        self.page.locator('[data-report-event="Signin_Submit"]').click()
+        self.page.locator('[type="submit"]').click()
+        self.page.locator(
+            '[aria-labelledby="favoritesRoot"] [data-folder-name="inbox"]'
+        ).click()
 
     @allure.step('OutlookPage: goto message id')
     def goto_message(self, message_id: str):
         self.page.goto(f'https://outlook.office.com/mail/inbox/id/{message_id}')
-        self.mail_icon.click()
+        self.mail_icon.last.click()
 
     @allure.step('OutlookPage: open addin')
     def open_addin(self):
