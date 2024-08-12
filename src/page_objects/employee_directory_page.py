@@ -37,7 +37,8 @@ class EmployeeDirectoryPage(BasePage):
 
     @allure.step('EmployeeDirectoryPage: upload file {file_path} override = {override}')
     def upload_file(self, file_path: str, override: bool = False):
-        self.upload_employees_button.click()
+        if self.upload_employees_button.is_visible():
+            self.upload_employees_button.click()
         expect(self.upload_employees_component.locator).to_be_visible()
         with self.page.expect_file_chooser() as fc:
             self.upload_employees_component.upload_button.click()
