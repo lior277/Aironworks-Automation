@@ -17,7 +17,7 @@ class EmployeeDirectoryPage(BasePage):
         self.admins_tab = self.page.get_by_role('tab', name='Admins')
         self.inactive_tab = self.page.get_by_role('tab', name='Inactive')
         self.upload_employees_button = self.page.get_by_role(
-            'button', name='Upload Employees'
+            'button', name='Upload Employees', exact=True
         )
         self.export_csv_button = self.page.get_by_role('button', name='Export CSV')
         self.deactivate_button = self.page.get_by_role('button', name='Deactivate')
