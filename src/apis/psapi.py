@@ -13,6 +13,7 @@ class PSApi(Enum):
     EMPLOYEE_DELETE = '/company/employee_delete'
     COMPANY_LOCALIZED_CONFIG = '/company/localized-configs'
     COMPANY_LOCALIZED_CONFIG_LANGUAGE = '/company/localized-configs/{language}'
+    COMPANY_EMPLOYEE_COUNT = '/company/employee_count'
 
     LOGIN = '/auth/login'
     INFO = '/auth/info'

@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 
+from src.models.base_dataclass import BaseDataClass
+
 
 @dataclass
-class EmailSignupModel:
+class EmailSignupModel(BaseDataClass):
     email: str
     password: str
     language: str

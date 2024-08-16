@@ -13,7 +13,9 @@ from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.company.employee_model_factory import EmployeeModelFactory
 from src.page_objects import update_succeeded_text
-from src.page_objects.employee_directory_page import EmployeeDirectoryPage
+from src.page_objects.employee_directory.employee_directory_page import (
+    EmployeeDirectoryPage,
+)
 from src.utils.csv_tool import CSVTool
 
 

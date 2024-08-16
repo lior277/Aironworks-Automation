@@ -6,7 +6,9 @@ from src.page_objects.content_library.content_library_page import ContentLibrary
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
-from src.page_objects.employee_directory_page import EmployeeDirectoryPage
+from src.page_objects.employee_directory.employee_directory_page import (
+    EmployeeDirectoryPage,
+)
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.settings_page import SettingsPage

@@ -6,6 +6,10 @@ from playwright.sync_api import expect
 
 from src.apis.api_factory import api
 from src.configs.config_loader import AppConfigs
+from src.models.addin.assessment_info_model import AssessmentInfoModel
+from src.models.factories.adding.assessment_info_model_factory import (
+    AssessmentInfoModelFactory,
+)
 from src.utils.log import Log
 from src.utils.mailtrap import find_attachment
 from src.utils.waiter import wait_for_lro
@@ -14,11 +18,18 @@ from src.utils.waiter import wait_for_lro
 @pytest.mark.test_id('C31557')
 @pytest.mark.addin_api
 def test_credentials_should_be_correct(api_request_context_addin):
+    expected_assessment_info = AssessmentInfoModelFactory.get_default_info(
+        AppConfigs.MAILTRAP_ASSESSMENT_INBOX_MAIL
+    )
     assessment_service = api.assessment(api_request_context_addin)
 
     response = assessment_service.info()
     expect(response).to_be_ok()
-    assert response.json() == {'soc_email': AppConfigs.MAILTRAP_ASSESSMENT_INBOX_MAIL}
+    actual_assessment_info = AssessmentInfoModel.from_dict(response.json())
+
+    assert (
+        expected_assessment_info == actual_assessment_info
+    ), f'{expected_assessment_info=}\n\n{actual_assessment_info=}'
 
 
 @pytest.mark.test_id('C31558')
