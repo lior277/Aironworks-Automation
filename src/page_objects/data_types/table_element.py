@@ -32,9 +32,7 @@ class Table(Generic[T]):
             all_context.append(out)
         return all_context
 
-    def get_row_by_column_value(
-        self, column_name: str, value: str, wait_time: int = 1
-    ) -> T:
+    def get_row_by_column_value(self, column_name: str, value: str) -> T:
         Log.debug(
             'Getting row by column %s with value %s from the table'
             % (column_name, value)

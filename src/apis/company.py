@@ -32,6 +32,10 @@ class CompanyService(BaseService):
     def localized_config(self) -> APIResponse:
         return self._get(PSApi.COMPANY_LOCALIZED_CONFIG.get_endpoint())
 
+    @allure.step('CompanyService: get employee count')
+    def employee_count(self) -> APIResponse:
+        return self._get(PSApi.COMPANY_EMPLOYEE_COUNT.get_endpoint())
+
     @allure.step('CompanyService: update company config')
     def patch_localized_config(
         self, language: str, localized_configs_model: PatchLocalizedConfigsModel
@@ -72,6 +76,17 @@ class CompanyService(BaseService):
         assert 'items' in data
         assert len(data['items']) == 1
         return data['items'][0]
+
+    @allure.step('CompanyService: get employee list')
+    def get_employee_list(self, total: int = 15) -> APIResponse:
+        payload = {
+            'employee_role': True,
+            'filters': None,
+            'limit': total,
+            'offset': 0,
+            'sorting': [],
+        }
+        return self._post(PSApi.EMPLOYEE_LIST.get_endpoint(), data=payload)
 
     @allure.step('CompanyService: get employee ids')
     def get_employee_ids(self, employee_ids: EmployeeListIdsModel) -> APIResponse:

@@ -20,7 +20,9 @@ from src.page_objects.education_campaign.education_campaign_details_page import 
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
-from src.page_objects.employee_directory_page import EmployeeDirectoryPage
+from src.page_objects.employee_directory.employee_directory_page import (
+    EmployeeDirectoryPage,
+)
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 from src.page_objects.login_page import SignInPage

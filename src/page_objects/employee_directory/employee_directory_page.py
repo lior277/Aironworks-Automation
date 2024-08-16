@@ -3,8 +3,16 @@ import tempfile
 import allure
 from playwright.sync_api import Locator, Page, expect
 
+from src.models.company.employee_list_model import EmployeeItemModel
 from src.page_objects import file_type_must_be_csv_xlsx, get_file_size_error_message
 from src.page_objects.base_page import BasePage
+from src.page_objects.data_types.filter import Filter
+from src.page_objects.data_types.table_element import Table
+from src.page_objects.employee_directory.edit_employee_page import EditEmployeePage
+from src.page_objects.entity.employee_entity import (
+    EmployeeEntity,
+    EmployeeEntityFactory,
+)
 from src.utils.log import Log
 
 
@@ -21,6 +29,14 @@ class EmployeeDirectoryPage(BasePage):
         )
         self.export_csv_button = self.page.get_by_role('button', name='Export CSV')
         self.deactivate_button = self.page.get_by_role('button', name='Deactivate')
+        self.edit_button = self.page.get_by_label('Edit')
+        self.show_filters_button = self.page.get_by_label('Show filters')
+        self.filter = Filter(
+            self.page.locator('//button[contains(text(),"Filters")]'),
+            self.page.locator('select', has_text='Email'),
+            self.page.locator('[placeholder="Filter value"]'),
+        )
+
         self.add_new_employees_only_button = self.page.get_by_role(
             'button', name='Add new employees only'
         )
@@ -33,6 +49,9 @@ class EmployeeDirectoryPage(BasePage):
         )
         self.rejected_upload_component = RejectedUploadItemComponent(
             self.page.get_by_label('rejected-upload-item')
+        )
+        self.table_employees = Table(
+            page.locator('[aria-label="Employee row"]'), EmployeesTableComponent
         )
 
     @allure.step('EmployeeDirectoryPage: upload file {file_path} override = {override}')
@@ -73,6 +92,41 @@ class EmployeeDirectoryPage(BasePage):
         download_event.save_as(path)
         Log.info(f'{path=}')
         return path
+
+    @allure.step('EmployeeDirectoryPage: filter employee by {email} email')
+    def filter_employee_by_email(self, email: str):
+        self.filter.filter_by('Email', email)
+        assert (
+            len(self.table_employees.get_content()) == 1
+        ), f'{self.table_employees.get_content()=}'
+
+    @allure.step('EmployeeDirectoryPage: edit employee to {expected_employee} values')
+    def edit_employee(self, expected_employee: EmployeeItemModel):
+        self.edit_button.click()
+        self.wait_for_progress_bar_disappears()
+        edit_employee_page = EditEmployeePage(self.page)
+        edit_employee_page.edit_employee(expected_employee)
+
+    @allure.step('EmployeeDirectoryPage: get employee entity by {email} email')
+    def get_employee_entity_by_email(self, email: str) -> EmployeeEntity:
+        self.filter_employee_by_email(email)
+        out = self.table_employees.text_content()
+        assert len(out) == 1
+        return EmployeeEntityFactory.get_entity_from_dict(out[0])
+
+
+class EmployeesTableComponent:
+    def __init__(self, locator: Locator):
+        self.first_name = locator.locator('[data-field="first_name"]')
+        self.last_name = locator.locator('[data-field="last_name"]')
+        self.email = locator.locator('[data-field="email"]')
+        self.language = locator.locator('[data-field="language"]')
+        self.mobile_number = locator.locator('[data-field="national_number"]')
+        self.linked_in = locator.locator('[data-field="linkedin"]')
+        self.instagram = locator.locator('[data-field="instagram"]')
+        self.dial_code = locator.locator('[data-field="dial_code"]')
+        self.facebook = locator.locator('[data-field="facebook"]')
+        self.twitter = locator.locator('[data-field="twitter"]')
 
 
 class UploadEmployeesComponent:

@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 
+from src.models.base_dataclass import BaseDataClass
+
 
 @dataclass
-class UserModel:
+class UserModel(BaseDataClass):
     email: str
     password: str
     is_admin: bool
