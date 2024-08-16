@@ -35,6 +35,7 @@ class EmployeeDirectoryPage(BasePage):
             self.page.locator('//button[contains(text(),"Filters")]'),
             self.page.locator('select', has_text='Email'),
             self.page.locator('[placeholder="Filter value"]'),
+            self.page.locator('[data-testid="LoadIcon"]'),
         )
 
         self.add_new_employees_only_button = self.page.get_by_role(

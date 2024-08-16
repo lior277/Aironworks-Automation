@@ -5,11 +5,8 @@ import string
 import pytest
 from playwright.sync_api import expect
 
-from src.apis.api_factory import api
 from src.configs.config_loader import AppFolders
 from src.models.auth.user_model import UserModel
-from src.models.company.employee_delete_model import EmployeeDeleteModel
-from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.company.employee_model_factory import EmployeeModelFactory
 from src.page_objects import update_succeeded_text
@@ -25,29 +22,6 @@ class TestUploadEmployees:
         self, request, api_request_context_customer_admin_upload, is_csv_file
     ) -> str:
         def finalizer():
-            company_service = api.company(api_request_context_customer_admin_upload)
-            response = company_service.get_employee_ids(
-                EmployeeListIdsModel(
-                    employee_role=False, admin_role=False, filters=None
-                )
-            )
-            expect(response).to_be_ok()
-            if response.json()['items']:
-                expect(
-                    company_service.delete_employees(
-                        employees=EmployeeDeleteModel(ids=response.json()['items'])
-                    )
-                ).to_be_ok()
-            response = company_service.get_employee_ids(
-                EmployeeListIdsModel(employee_role=True, admin_role=False, filters=None)
-            )
-            expect(response).to_be_ok()
-            if response.json()['items']:
-                expect(
-                    company_service.delete_employees(
-                        employees=EmployeeDeleteModel(ids=response.json()['items'])
-                    )
-                ).to_be_ok()
             os.remove(file_path)
 
         request.addfinalizer(finalizer)
