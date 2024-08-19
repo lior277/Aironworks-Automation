@@ -122,12 +122,12 @@ class EmployeesTableComponent:
         self.last_name = locator.locator('[data-field="last_name"]')
         self.email = locator.locator('[data-field="email"]')
         self.language = locator.locator('[data-field="language"]')
-        self.mobile_number = locator.locator('[data-field="national_number"]')
         self.linked_in = locator.locator('[data-field="linkedin"]')
-        self.instagram = locator.locator('[data-field="instagram"]')
-        self.dial_code = locator.locator('[data-field="dial_code"]')
-        self.facebook = locator.locator('[data-field="facebook"]')
         self.twitter = locator.locator('[data-field="twitter"]')
+        self.dial_code = locator.locator('[data-field="dial_code"]')
+        self.instagram = locator.locator('[data-field="instagram"]')
+        self.mobile_number = locator.locator('[data-field="national_number"]')
+        self.facebook = locator.locator('[data-field="facebook"]')
 
 
 class UploadEmployeesComponent:

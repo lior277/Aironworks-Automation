@@ -1,4 +1,4 @@
-from playwright.sync_api import Locator
+from playwright.sync_api import Locator, expect
 
 from src.utils.log import Log
 
@@ -15,7 +15,7 @@ class DropDown:
         self.extent_list_by_click_on_field = extent_list_by_click_on_field
 
     def select_item_by_text(self, text: str, search: bool = False):
-        Log.info(f'Selecting {text} in the select list')
+        Log.info(f'Selecting {text}')
         selected = False
         if (
             self.extent_list_by_click_on_field
@@ -24,11 +24,8 @@ class DropDown:
             self.locator.click()
         if search:
             self.locator.fill(text)
-        try:
-            self.options_list.wait_for()
-        except Exception as e:
-            Log.info(e)
         option_text = []
+        expect(self.options_list.first).to_be_visible(timeout=10_000)
         for option in self.options_list.all():
             option_text.append(option.text_content())
             if option.text_content() == text:
