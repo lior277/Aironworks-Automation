@@ -28,7 +28,7 @@ class Table(Generic[T]):
             out = []
             for fild in vars(element).values():
                 fild.scroll_into_view_if_needed()
-                out.append(fild.text_content())
+                out.append(fild.text_content(timeout=0))
             all_context.append(out)
         return all_context
 
