@@ -14,7 +14,7 @@ class OutlookPage:
             f'iframe[src^="{AppConfigs.ADDIN_BASE_URL}"]'
         )
         self.perform_assessment_button = self.app_frame.get_by_role(
-            'button', name='Perform Assessment'
+            'button', name='Perform AI Risk Assessment'
         )
         self.report_incident_button = self.app_frame.get_by_role(
             'button', name='Report an Incident'
