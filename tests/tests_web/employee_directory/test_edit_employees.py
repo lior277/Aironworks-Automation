@@ -19,20 +19,23 @@ from src.page_objects.entity.employee_entity import EmployeeEntityFactory
 
 
 @pytest.fixture(scope='function')
-def get_employee(api_request_context_customer_admin_upload) -> EmployeeItemModel:
-    company_service = api.company(api_request_context_customer_admin_upload)
+def get_employee(api_request_context_customer_admin) -> EmployeeItemModel:
+    company_service = api.company(api_request_context_customer_admin)
 
-    employees_list = EmployeeModelFactory.get_random_employees(1)
-    create_employees_wait(
-        api_request_context_customer_admin_upload, employees_list, overwrite=False
-    )
+    employee = EmployeeModelFactory.get_random_employees(1)
+    create_employees_wait(api_request_context_customer_admin, employee, overwrite=False)
     response = company_service.employee_count()
     expect(response).to_be_ok()
     employee_count_model = EmployeeCountModel.from_dict(response.json())
     response = company_service.get_employee_list(employee_count_model.employee_role)
     expect(response).to_be_ok()
     employee_list = EmployeeListModel.from_dict(response.json())
-    return employee_list.items[0]
+    employee_item = next(
+        item
+        for item in employee_list.items
+        if item.email.lower() == employee[0].email.lower()
+    )
+    return employee_item
 
 
 @pytest.mark.smoke
@@ -41,7 +44,7 @@ def get_employee(api_request_context_customer_admin_upload) -> EmployeeItemModel
     'user,employee_item',
     [
         pytest.param(
-            UserModelFactory.customer_admin_upload(),
+            UserModelFactory.customer_admin(),
             EmployeeItemModelFactory.get_random_employee(),
             marks=pytest.mark.test_id('C31666'),
         )
@@ -73,8 +76,7 @@ def test_edit_employee_all_fields(
     'user',
     [
         pytest.param(
-            UserModelFactory.customer_admin_upload(),
-            marks=pytest.mark.test_id('C31667'),
+            UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C31667')
         )
     ],
 )

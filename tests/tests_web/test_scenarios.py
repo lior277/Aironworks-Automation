@@ -81,7 +81,7 @@ def test_hide_scenario(
     scenarios_page.finish_draft()
     scenarios_page.visible_tab.click()
     scenarios_page.wait_sync_filters()
-
+    scenarios_page.hide_scenario.wait_for()
     scenarios_page.hide_scenario.click()
     scenarios_page.page.wait_for_load_state(timeout=5)
 
