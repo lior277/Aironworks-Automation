@@ -32,7 +32,7 @@ def api_request_context_customer_admin_upload(
     request_context.dispose()
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='session')
 def clean_up_employees(request, api_request_context_customer_admin_upload):
     def finalizer():
         company_service = api.company(api_request_context_customer_admin_upload)

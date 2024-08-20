@@ -6,7 +6,7 @@ import allure
 from playwright.sync_api import Page, expect
 
 from src.models.scenario_model import ScenarioModel
-from src.page_objects import created_new_scenario_text
+from src.page_objects import created_new_scenario_text, marked_attack_non_draft_message
 from src.page_objects.base_page import BasePage
 from src.page_objects.execute_campaign_page import ExecuteCampaignPage
 
@@ -54,7 +54,7 @@ class ScenariosPage(BasePage):
     def finish_draft(self):
         self.page.get_by_role('button', name='Finish Draft').click()
         self.page.get_by_role('button', name='OK').click()
-        self.page.wait_for_load_state(timeout=5)
+        expect(self.alert_message).to_have_text(marked_attack_non_draft_message)
 
     @allure.step('ScenariosPage: submit create scenario form')
     def submit_create_scenario_form(self, scenario: ScenarioModel, clone_mode=False):
