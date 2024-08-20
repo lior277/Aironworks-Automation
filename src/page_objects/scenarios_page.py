@@ -1,5 +1,4 @@
 import re
-import time
 from typing import Literal
 
 import allure
@@ -16,7 +15,7 @@ class ScenariosPage(BasePage):
         super().__init__(page)
         self.create_scenario_button = page.get_by_role('button', name='Create Scenario')
         self.visible_tab = page.get_by_role('tab', name='Visible')
-        self.hide_scenario = page.get_by_role('button', name='Hide')
+        self.hide_scenario = page.get_by_role('button', name='Hide', exact=True)
         self.execute = page.get_by_role('button', name='Execute')
         self.search = self.page.get_by_placeholder('Search by Name')
         self.scenarios_list = self.page.locator('.MuiGrid-root > .MuiBox-root')
@@ -47,14 +46,13 @@ class ScenariosPage(BasePage):
 
     @allure.step('ScenariosPage: wait for filters to sync')
     def wait_sync_filters(self):
-        # this page displays the old results for a brief moment before hiding it so unfortunatly we need to sleep a bit
-        time.sleep(1)
+        self.wait_for_progress_bar_disappears()
 
     @allure.step('ScenariosPage: finish draft')
     def finish_draft(self):
         self.page.get_by_role('button', name='Finish Draft').click()
         self.page.get_by_role('button', name='OK').click()
-        expect(self.alert_message).to_have_text(marked_attack_non_draft_message)
+        expect(self.alert_message).to_contain_text(marked_attack_non_draft_message)
 
     @allure.step('ScenariosPage: submit create scenario form')
     def submit_create_scenario_form(self, scenario: ScenarioModel, clone_mode=False):

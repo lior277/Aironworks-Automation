@@ -1,6 +1,7 @@
 import faker
 
 from src.models.company.employee_list_model import AttackVectorModel, EmployeeItemModel
+from src.utils.randomizer import get_random_email
 
 fake = faker.Faker()
 
@@ -31,7 +32,7 @@ class EmployeeItemModelFactory:
         return EmployeeItemModel(
             first_name=first_name,
             last_name=last_name,
-            email=fake.email(),
+            email=get_random_email(),
             admin_role=False,
             attack_vector_addresses=attack_vectors,
             employee_role=True,
