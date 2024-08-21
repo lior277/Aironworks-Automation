@@ -1,16 +1,12 @@
 import pytest
 from playwright.sync_api import expect
 
-from src.apis.api_factory import api
-from src.apis.steps.common_steps import create_employees_wait
 from src.models.auth.user_model import UserModel
-from src.models.company.employee_count_model import EmployeeCountModel
-from src.models.company.employee_list_model import EmployeeItemModel, EmployeeListModel
+from src.models.company.employee_list_model import EmployeeItemModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.company.employee_item_model_factory import (
     EmployeeItemModelFactory,
 )
-from src.models.factories.company.employee_model_factory import EmployeeModelFactory
 from src.page_objects.employee_directory import update_employee_success_message
 from src.page_objects.employee_directory.employee_directory_page import (
     EmployeeDirectoryPage,
@@ -18,34 +14,15 @@ from src.page_objects.employee_directory.employee_directory_page import (
 from src.page_objects.entity.employee_entity import EmployeeEntityFactory
 
 
-@pytest.fixture(scope='function')
-def get_employee(api_request_context_customer_admin) -> EmployeeItemModel:
-    company_service = api.company(api_request_context_customer_admin)
-
-    employee = EmployeeModelFactory.get_random_employees(1)
-    create_employees_wait(api_request_context_customer_admin, employee, overwrite=False)
-    response = company_service.employee_count()
-    expect(response).to_be_ok()
-    employee_count_model = EmployeeCountModel.from_dict(response.json())
-    response = company_service.get_employee_list(employee_count_model.employee_role)
-    expect(response).to_be_ok()
-    employee_list = EmployeeListModel.from_dict(response.json())
-    employee_item = next(
-        item
-        for item in employee_list.items
-        if item.email.lower() == employee[0].email.lower()
-    )
-    return employee_item
-
-
 @pytest.mark.smoke
 @pytest.mark.web
 @pytest.mark.parametrize(
-    'user,employee_item',
+    'user,employee_item,inactive',
     [
         pytest.param(
             UserModelFactory.customer_admin(),
             EmployeeItemModelFactory.get_random_employee(),
+            False,
             marks=pytest.mark.test_id('C31666'),
         )
     ],
@@ -55,6 +32,7 @@ def test_edit_employee_all_fields(
     employee_directory_page: EmployeeDirectoryPage,
     user: UserModel,
     employee_item: EmployeeItemModel,
+    inactive: bool,
 ):
     expected_employee = EmployeeEntityFactory.from_employee_item(employee_item)
     employee_directory_page.filter_employee_by_email(get_employee.email)
@@ -73,14 +51,38 @@ def test_edit_employee_all_fields(
 @pytest.mark.smoke
 @pytest.mark.web
 @pytest.mark.parametrize(
-    'user',
+    'user,inactive',
     [
         pytest.param(
-            UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C31667')
+            UserModelFactory.customer_admin(),
+            False,
+            marks=pytest.mark.test_id('C31667'),
         )
     ],
 )
 def test_deactivate_employee(
-    get_employee, employee_directory_page: EmployeeDirectoryPage, user: UserModel
+    get_employee,
+    employee_directory_page: EmployeeDirectoryPage,
+    user: UserModel,
+    inactive: bool,
 ):
     employee_directory_page.deactivate_employee(email=get_employee.email)
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user,inactive',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(), True, marks=pytest.mark.test_id('C30815')
+        )
+    ],
+)
+def test_restore_employee(
+    get_employee,
+    employee_directory_page: EmployeeDirectoryPage,
+    user: UserModel,
+    inactive: bool,
+):
+    employee_directory_page.restore_employee(email=get_employee.email)
