@@ -4,10 +4,15 @@ import pytest
 from playwright.sync_api import APIRequestContext, Playwright, expect
 
 from src.apis.api_factory import api
+from src.apis.steps.common_steps import create_employees_wait
 from src.configs.config_loader import AppConfigs
+from src.models.company.employee_count_model import EmployeeCountModel
 from src.models.company.employee_delete_model import EmployeeDeleteModel
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
+from src.models.company.employee_list_model import EmployeeItemModel, EmployeeListModel
+from src.models.company.employee_update_model import EmployeeUpdateModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
+from src.models.factories.company.employee_model_factory import EmployeeModelFactory
 
 
 @pytest.fixture(scope='session')
@@ -58,3 +63,29 @@ def clean_up_employees(request, api_request_context_customer_admin_upload):
             ).to_be_ok()
 
     request.addfinalizer(finalizer)
+
+
+@pytest.fixture(scope='function')
+def get_employee(
+    api_request_context_customer_admin, inactive: bool
+) -> EmployeeItemModel:
+    company_service = api.company(api_request_context_customer_admin)
+
+    employee = EmployeeModelFactory.get_random_employees(1)
+    create_employees_wait(api_request_context_customer_admin, employee, overwrite=False)
+    response = company_service.employee_count()
+    expect(response).to_be_ok()
+    employee_count_model = EmployeeCountModel.from_dict(response.json())
+    response = company_service.get_employee_list(employee_count_model.employee_role)
+    expect(response).to_be_ok()
+    employee_list = EmployeeListModel.from_dict(response.json())
+    employee_item = next(
+        item
+        for item in employee_list.items
+        if item.email.lower() == employee[0].email.lower()
+    )
+    if inactive:
+        company_service.update_employees(
+            employees=EmployeeUpdateModel(employee_role=False, ids=[employee_item.id])
+        )
+    return employee_item

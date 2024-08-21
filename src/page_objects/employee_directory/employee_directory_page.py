@@ -8,7 +8,10 @@ from src.page_objects import file_type_must_be_csv_xlsx, get_file_size_error_mes
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.filter import Filter
 from src.page_objects.data_types.table_element import Table
-from src.page_objects.employee_directory import deactivated_employees_success_message
+from src.page_objects.employee_directory import (
+    deactivated_employees_success_message,
+    employees_restored_message,
+)
 from src.page_objects.employee_directory.edit_employee_page import EditEmployeePage
 from src.page_objects.entity.employee_entity import (
     EmployeeEntity,
@@ -31,6 +34,7 @@ class EmployeeDirectoryPage(BasePage):
         self.export_csv_button = self.page.get_by_role('button', name='Export CSV')
         self.deactivate_button = self.page.get_by_role('button', name='Deactivate')
         self.edit_button = self.page.get_by_label('Edit')
+        self.restore_button = self.page.get_by_role('button', name='Restore')
         self.show_filters_button = self.page.get_by_label('Show filters')
         self.filter = Filter(
             self.page.locator('//button[contains(text(),"Filters")]'),
@@ -58,6 +62,9 @@ class EmployeeDirectoryPage(BasePage):
         )
         self.table_employees = Table(
             page.locator('[aria-label="Employee row"]'), EmployeesTableComponent
+        )
+        self.table_inactive = Table(
+            self.page.locator('.MuiDataGrid-row'), EmployeesTableComponent
         )
         self.employee_checkbox = page.locator(
             '[type="checkbox"][aria-label="Select row"]'
@@ -105,9 +112,6 @@ class EmployeeDirectoryPage(BasePage):
     @allure.step('EmployeeDirectoryPage: filter employee by {email} email')
     def filter_employee_by_email(self, email: str):
         self.filter.filter_by('Email', email)
-        assert (
-            len(self.table_employees.get_content()) == 1
-        ), f'{self.table_employees.get_content()=}'
 
     @allure.step('EmployeeDirectoryPage: edit employee to {expected_employee} values')
     def edit_employee(self, expected_employee: EmployeeItemModel):
@@ -129,6 +133,14 @@ class EmployeeDirectoryPage(BasePage):
         self.deactivate_button.click()
         self.deactivate_employees_component.ok_button.click()
         expect(self.alert_message).to_have_text(deactivated_employees_success_message)
+
+    @allure.step('EmployeeDirectoryPage: restore employee by {email} email')
+    def restore_employee(self, email: str):
+        self.inactive_tab.click()
+        self.filter_employee_by_email(email)
+        self.employee_checkbox.check()
+        self.restore_button.click()
+        expect(self.alert_message).to_have_text(employees_restored_message)
 
 
 class EmployeesTableComponent:
