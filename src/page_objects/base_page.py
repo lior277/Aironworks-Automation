@@ -33,7 +33,7 @@ class BasePage:
             pass
 
     @allure.step('BasePage: wait for progress bar disappears')
-    def wait_for_progress_bar_disappears(self, timeout=10000):
+    def wait_for_progress_bar_disappears(self, timeout=10_000):
         if self.progress_bar.is_visible(timeout=timeout):
             self.progress_bar.wait_for(timeout=timeout, state='hidden')
 

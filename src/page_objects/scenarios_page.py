@@ -75,10 +75,10 @@ class ScenariosPage(BasePage):
         self.next.click()
         if clone_mode:
             self.page.get_by_role('button', name='New Body').click()
-            self.page.wait_for_load_state(timeout=5)
+            self.wait_for_progress_bar_disappears()
         self.html_content.fill(scenario.html_content)
         self.save.click()
-        self.page.wait_for_load_state(timeout=5)
+        self.wait_for_progress_bar_disappears(timeout=15_000)
 
     def get_visible_results(self):
         return self.scenarios_list.get_by_role('button').all()

@@ -86,3 +86,22 @@ def test_restore_employee(
     inactive: bool,
 ):
     employee_directory_page.restore_employee(email=get_employee.email)
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user,inactive',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(), True, marks=pytest.mark.test_id('C31668')
+        )
+    ],
+)
+def test_delete_employee(
+    get_employee,
+    employee_directory_page: EmployeeDirectoryPage,
+    user: UserModel,
+    inactive: bool,
+):
+    employee_directory_page.delete_employee(email=get_employee.email)
