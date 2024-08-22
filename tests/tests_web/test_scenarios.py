@@ -113,10 +113,8 @@ def test_clone_scenario(
 
     scenario_element = scenarios_page.find_scenario(scenario.name)
     scenario_element.click()
-    scenario_element.page.wait_for_load_state(timeout=5)
 
     scenarios_page.page.get_by_role('button', name='Clone').click()
-    scenario_element.page.wait_for_load_state(timeout=5)
 
     scenario.name = fake.sentence()
     scenario.html_content = '{{attack_url}} ' + fake.sentence()

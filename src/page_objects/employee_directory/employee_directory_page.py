@@ -10,6 +10,7 @@ from src.page_objects.data_types.filter import Filter
 from src.page_objects.data_types.table_element import Table
 from src.page_objects.employee_directory import (
     deactivated_employees_success_message,
+    employees_deleted_message,
     employees_restored_message,
 )
 from src.page_objects.employee_directory.edit_employee_page import EditEmployeePage
@@ -35,6 +36,7 @@ class EmployeeDirectoryPage(BasePage):
         self.deactivate_button = self.page.get_by_role('button', name='Deactivate')
         self.edit_button = self.page.get_by_label('Edit')
         self.restore_button = self.page.get_by_role('button', name='Restore')
+        self.delete_button = self.page.get_by_role('button', name='Delete')
         self.show_filters_button = self.page.get_by_label('Show filters')
         self.filter = Filter(
             self.page.locator('//button[contains(text(),"Filters")]'),
@@ -55,6 +57,9 @@ class EmployeeDirectoryPage(BasePage):
         )
         self.deactivate_employees_component = DeactivateEmployeesComponent(
             self.page.get_by_role(role='dialog', name='Deactivate Employees')
+        )
+        self.delete_employees_component = DeleteEmployeesComponent(
+            self.page.get_by_role(role='dialog', name='Delete Employees')
         )
 
         self.rejected_upload_component = RejectedUploadItemComponent(
@@ -142,6 +147,15 @@ class EmployeeDirectoryPage(BasePage):
         self.restore_button.click()
         expect(self.alert_message).to_have_text(employees_restored_message)
 
+    @allure.step('EmployeeDirectoryPage: delete employee by {email} email')
+    def delete_employee(self, email: str):
+        self.inactive_tab.click()
+        self.filter_employee_by_email(email)
+        self.employee_checkbox.check()
+        self.delete_button.click()
+        self.delete_employees_component.ok_button.click()
+        expect(self.alert_message).to_have_text(employees_deleted_message)
+
 
 class EmployeesTableComponent:
     def __init__(self, locator: Locator):
@@ -185,3 +199,12 @@ class DeactivateEmployeesComponent:
         self.title = self.locator.get_by_role('heading', level=2)
         self.ok_button = self.locator.get_by_role('button', name='OK')
         self.cancel_button = self.locator.get_by_role('button', name='Cancel')
+
+
+class DeleteEmployeesComponent:
+    def __init__(self, locator: Locator):
+        self.locator = locator
+        self.title = self.locator.get_by_role('heading', level=2)
+        self.ok_button = self.locator.get_by_role('button', name='OK')
+        self.cancel_button = self.locator.get_by_role('button', name='Cancel')
+        self.description = self.locator.locator('//div/p')

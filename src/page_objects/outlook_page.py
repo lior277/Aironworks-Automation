@@ -19,6 +19,8 @@ class OutlookPage:
         self.report_incident_button = self.app_frame.get_by_role(
             'button', name='Report an Incident'
         )
+        self.login_button = self.app_frame.get_by_role('button', name='Login')
+        self.allow_button = self.app_frame.get_by_role('button', name='Allow')
 
     @allure.step('OutlookPage: login to outlook')
     def login(self):
@@ -44,6 +46,13 @@ class OutlookPage:
         expect(self.apps_locator).to_be_visible()
         self.apps_locator.click()
         self.page.get_by_label(AppConfigs.ADDIN_NAME, exact=True).click()
+        self.login_addin()
+
+    @allure.step('OutlookPage: perform assessment')
+    def login_addin(self):
+        self.login_button.click()
+        self.allow_button.click()
+        self.perform_assessment_button.wait_for()
 
     @allure.step('OutlookPage: perform assessment')
     def perform_assessment(self):
