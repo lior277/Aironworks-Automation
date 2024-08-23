@@ -1,3 +1,5 @@
+from time import sleep
+
 import allure
 from playwright.sync_api import Page, expect
 
@@ -21,6 +23,9 @@ class OutlookPage:
         )
         self.login_button = self.app_frame.get_by_role('button', name='Login')
         self.allow_button = self.app_frame.get_by_role('button', name='Allow')
+        self.addin_name_button = self.page.get_by_label(
+            AppConfigs.ADDIN_NAME, exact=True
+        )
 
     @allure.step('OutlookPage: login to outlook')
     def login(self):
@@ -45,7 +50,9 @@ class OutlookPage:
         self.apps_locator.wait_for(timeout=10000)
         expect(self.apps_locator).to_be_visible()
         self.apps_locator.click()
-        self.page.get_by_label(AppConfigs.ADDIN_NAME, exact=True).click()
+        sleep(2)  # just to make sure all apps were displayed
+        self.addin_name_button.wait_for()
+        self.addin_name_button.click()
         self.login_addin()
 
     @allure.step('OutlookPage: perform assessment')

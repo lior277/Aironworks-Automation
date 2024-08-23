@@ -34,8 +34,10 @@ class BasePage:
 
     @allure.step('BasePage: wait for progress bar disappears')
     def wait_for_progress_bar_disappears(self, timeout=10_000):
-        if self.progress_bar.is_visible(timeout=timeout):
-            self.progress_bar.wait_for(timeout=timeout, state='hidden')
+        if self.progress_bar.first.is_visible(timeout=timeout):
+            for progress_bar in self.progress_bar.all():
+                if progress_bar.is_visible():
+                    progress_bar.wait_for(timeout=timeout, state='hidden')
 
     @allure.step('BasePage: set default {default_url} url')
     def set_default_url(self, default_url: str):
