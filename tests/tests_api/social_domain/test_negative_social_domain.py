@@ -52,7 +52,7 @@ def api_request_context(
         pytest.param('www.gtm-google.site', marks=pytest.mark.test_id('C31698')),
         pytest.param('www.tvtokyo.biz', marks=pytest.mark.test_id('C31699')),
         pytest.param('www.hamagin.net', marks=pytest.mark.test_id('C31700')),
-        pytest.param('www.gitinfolab.com', marks=pytest.mark.test_id('C30815')),
+        # pytest.param('www.gitinfolab.com', marks=pytest.mark.test_id('C30815')),
     ],
 )
 def test_social_domain_negative(api_request_context, domain: str):

@@ -117,6 +117,7 @@ class EmployeeDirectoryPage(BasePage):
     @allure.step('EmployeeDirectoryPage: filter employee by {email} email')
     def filter_employee_by_email(self, email: str):
         self.filter.filter_by('Email', email)
+        self.wait_for_loading_state(timeout=5_000)
 
     @allure.step('EmployeeDirectoryPage: edit employee to {expected_employee} values')
     def edit_employee(self, expected_employee: EmployeeItemModel):

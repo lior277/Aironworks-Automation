@@ -11,5 +11,5 @@ class CloneEducationContentModelFactory:
             level=item.level,
             parts=item.parts,
             title=item.title,
-            topic_name=item.topic.name,
+            topic_name=item.topic.name if item.topic else None,
         )

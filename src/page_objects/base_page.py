@@ -26,7 +26,7 @@ class BasePage:
     @allure.step('BasePage: wait for loading state')
     def wait_for_loading_state(self, timeout=10000):
         try:
-            self.loading.wait_for(timeout=timeout, state='visible')
+            self.loading.wait_for(timeout=timeout)
             self.loading.wait_for(timeout=timeout, state='hidden')
         except Exception as error:
             Log.info(f'{error=}')
