@@ -34,9 +34,9 @@ class NavigationBar:
     @allure.step('NavigationBar: Navigate to scenarios')
     def navigate_scenarios(self):
         self.scenarios_button.click()
-        self.page.wait_for_load_state(timeout=5)
-
-        return ScenariosPage(self.page)
+        scenario_page = ScenariosPage(self.page)
+        scenario_page.wait_for_progress_bar_disappears()
+        return scenario_page
 
     @allure.step('NavigationBar: Navigate to settings')
     def navigate_settings(self):
