@@ -25,7 +25,7 @@ class OutlookPage:
         self.allow_button = self.app_frame.get_by_role('button', name='Allow')
         self.addin_name_button = self.page.get_by_label(
             AppConfigs.ADDIN_NAME, exact=True
-        )
+        ).first
 
     @allure.step('OutlookPage: login to outlook')
     def login(self):
