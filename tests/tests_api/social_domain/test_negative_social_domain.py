@@ -53,6 +53,15 @@ def api_request_context(
         pytest.param('www.tvtokyo.biz', marks=pytest.mark.test_id('C31699')),
         pytest.param('www.hamagin.net', marks=pytest.mark.test_id('C31700')),
         # pytest.param('www.gitinfolab.com', marks=pytest.mark.test_id('C30815')),
+        pytest.param('www.windwyse.com'),
+        pytest.param('www.techify.biz'),
+        pytest.param('www.cyblogg.com'),
+        pytest.param('www.schedulespal.com'),
+        pytest.param('www.techcrunchweb.com'),
+        pytest.param('www.snaky.live'),
+        pytest.param('www.expresstoday.net'),
+        pytest.param('www.gmailsecurity.net'),
+        pytest.param('www.gov-info.org'),
     ],
 )
 def test_social_domain_negative(api_request_context, domain: str):
