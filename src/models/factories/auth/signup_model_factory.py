@@ -1,6 +1,7 @@
 import faker
 
 from src.models.auth.signup_model import EmailSignupModel
+from src.utils.randomizer import get_random_email
 
 fake = faker.Faker()
 
@@ -9,7 +10,7 @@ class SignupModelFactory:
     @classmethod
     def random_customer(cls, referral=None):
         return EmailSignupModel(
-            email=fake.email(),
+            email=get_random_email(),
             password=fake.password(),
             language='en',
             first_name=fake.first_name(),
