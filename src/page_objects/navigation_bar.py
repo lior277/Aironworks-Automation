@@ -10,6 +10,7 @@ from src.page_objects.employee_directory.employee_directory_page import (
     EmployeeDirectoryPage,
 )
 from src.page_objects.employee_reports_page import EmployeeReportsPage
+from src.page_objects.groups.groups_page import GroupsPage
 from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.settings_page import SettingsPage
 
@@ -30,6 +31,7 @@ class NavigationBar:
         self.education_campaigns_button = page.get_by_role(
             'link', name='Education Campaigns', exact=True
         )
+        self.groups_button = page.get_by_role('link', name='Groups', exact=True)
 
     @allure.step('NavigationBar: Navigate to scenarios')
     def navigate_scenarios(self):
@@ -78,3 +80,10 @@ class NavigationBar:
         education_page = EducationCampaignPage(self.page)
         education_page.wait_for_loading_state()
         return education_page
+
+    @allure.step('NavigationBar: Navigate to groups page')
+    def navigate_groups_page(self) -> GroupsPage:
+        self.groups_button.click()
+        groups_page = GroupsPage(self.page)
+        groups_page.wait_for_progress_bar_disappears()
+        return groups_page

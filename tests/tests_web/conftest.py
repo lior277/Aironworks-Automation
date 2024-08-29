@@ -25,6 +25,7 @@ from src.page_objects.employee_directory.employee_directory_page import (
 )
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
+from src.page_objects.groups.groups_page import GroupsPage
 from src.page_objects.login_page import SignInPage
 from src.page_objects.outlook_page import OutlookPage
 from src.page_objects.scenarios_page import ScenariosPage
@@ -177,7 +178,12 @@ def customers_page(dashboard_page: DashboardPage) -> CustomersPage:
 
 
 @pytest.fixture
-def campaign_details_page(dashboard_page) -> CampaignDetailsPage:
+def campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
     return CampaignDetailsPage(dashboard_page.page).open(
         campaign_id=AppConfigs.SAMPLE_CAMPAIGN
     )
+
+
+@pytest.fixture
+def groups_page(dashboard_page: DashboardPage) -> GroupsPage:
+    return dashboard_page.navigation_bar.navigate_groups_page()
