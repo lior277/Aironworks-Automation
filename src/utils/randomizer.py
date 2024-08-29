@@ -12,3 +12,7 @@ def get_random_email() -> str:
         + '@'
         + fake.domain_name()
     )
+
+
+def ger_random_world() -> str:
+    return fake.word()
