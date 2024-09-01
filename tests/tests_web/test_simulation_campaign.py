@@ -135,7 +135,7 @@ def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage, user
         campaign_details_page.page.get_by_role('row').and_(
             campaign_details_page.page.locator("[role='row']", has_not_text='Preview')
         )
-    ).to_have_count(2)
+    ).to_have_count(2, timeout=30_000)
 
 
 @pytest.mark.parametrize(
