@@ -5,6 +5,7 @@ from src.apis.assessment import AssessmentService
 from src.apis.company import CompanyService
 from src.apis.customer import CustomerService
 from src.apis.education import EducationService
+from src.apis.group_service import GroupService
 from src.apis.login import LoginService
 from src.apis.public import PublicService
 from src.apis.scenario import ScenarioService
@@ -52,6 +53,10 @@ class ServiceFactory:
     @staticmethod
     def survey(request_context: APIRequestContext) -> SurveyService:
         return SurveyService(request_context)
+
+    @staticmethod
+    def group(request_context: APIRequestContext) -> GroupService:
+        return GroupService(request_context)
 
 
 api = ServiceFactory()

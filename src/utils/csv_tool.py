@@ -35,14 +35,19 @@ class CSVTool:
         return file_path
 
 
-def _validate_data(data) -> dict:
-    data_to_write = {}
-    if not isinstance(data, dict):
-        if isinstance(data, list):
-            if getattr(data[0], 'to_csv_file', None) and callable(data[0].to_csv_file):
-                data_to_write = [row.to_csv_file() for row in data]
-            else:
-                data_to_write = [row.get_body() for row in data]
-        else:
-            data_to_write = data.get_body()
-    return data_to_write
+def _validate_data(data) -> dict | list[dict]:
+    if isinstance(data, dict):
+        return data
+    if isinstance(data, list):
+        return [
+            row.to_csv_file()
+            if callable(getattr(row, 'to_csv_file', None))
+            else row.get_body()
+            for row in data
+        ]
+
+    return (
+        [data.to_csv_file()]
+        if callable(getattr(data, 'to_csv_file', None))
+        else [data.get_body()]
+    )

@@ -7,6 +7,7 @@ from playwright.sync_api import Page, expect
 from src.models.scenario_model import ScenarioModel
 from src.page_objects import created_new_scenario_text, marked_attack_non_draft_message
 from src.page_objects.base_page import BasePage
+from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.execute_campaign_page import ExecuteCampaignPage
 
 
@@ -29,11 +30,23 @@ class ScenariosPage(BasePage):
         self.next = self.page.get_by_role('button', name='Next')
         self.html_content = self.page.get_by_label('Editor editing area: main')
         self.save = self.page.get_by_role('button', name='Save')
+        self.sender_domain_dropdown = DropDown(
+            link_locator=self.page.locator(
+                '//h6[text()="Source Details"]/..'
+            ).get_by_role('button', name='Domain'),
+            option_list_locator=self.page.locator('[role="option"]'),
+        )
+        self.link_domain_dropdown = DropDown(
+            link_locator=self.page.locator(
+                '//h6[text()="Base Attack URL"]/..'
+            ).get_by_role('button', name='Domain'),
+            option_list_locator=self.page.locator('[role="option"]'),
+        )
 
     @allure.step('ScenariosPage: navigate to create scenario')
     def navigate_create_scenario(self):
         self.create_scenario_button.click()
-        self.page.wait_for_load_state(timeout=5)
+        self.scenario_name.wait_for()
 
     @allure.step('ScenariosPage: filter by name')
     def filter_by_name(self, name):
@@ -44,32 +57,22 @@ class ScenariosPage(BasePage):
         self.page.get_by_label('Language', exact=True).click()
         self.page.get_by_label(language).click()
 
-    @allure.step('ScenariosPage: wait for filters to sync')
-    def wait_sync_filters(self):
-        self.wait_for_progress_bar_disappears()
-
     @allure.step('ScenariosPage: finish draft')
     def finish_draft(self):
         self.page.get_by_role('button', name='Finish Draft').click()
         self.page.get_by_role('button', name='OK').click()
-        expect(self.alert_message).to_contain_text(marked_attack_non_draft_message)
+        expect(self.alert_message.first).to_contain_text(
+            marked_attack_non_draft_message
+        )
 
     @allure.step('ScenariosPage: submit create scenario form')
     def submit_create_scenario_form(self, scenario: ScenarioModel, clone_mode=False):
         self.scenario_name.fill(scenario.name)
         self.sender_address.fill(scenario.sender_address)
-
-        domain_buttons = self.page.get_by_role('button', name='Domain').all()
-        sender_domain = domain_buttons[0]
-        link_domain = domain_buttons[1]
-
-        sender_domain.click()
-        self.page.get_by_role('option', name=scenario.sender_domain).click()
-
+        self.sender_domain_dropdown.select_item_by_text(scenario.sender_domain)
         self.sender_name.fill(scenario.sender_name)
         self.subject.fill(scenario.subject)
-        link_domain.click()
-        self.page.get_by_role('option', name=scenario.link_domain).click()
+        self.link_domain_dropdown.select_item_by_text(scenario.link_domain)
         self.url_suffix.fill(scenario.url_suffix)
 
         self.next.click()
@@ -93,7 +96,7 @@ class ScenariosPage(BasePage):
     def find_scenario(self, scenario_name: str):
         self.filter_by_name(scenario_name)
         self.filter_by_language('All')
-        self.wait_sync_filters()
+        self.wait_for_progress_bar_disappears()
         scenario = (
             self.page.get_by_role('button')
             .filter(has_text=re.compile(scenario_name))

@@ -50,5 +50,9 @@ class PSApi(Enum):
     ADMIN_EDUCATION_ASSIGNMENTS = '/admin/education_assignments/{campaign_id}'
     ADMIN_CAMPAIGN_ATTACK_URLS = '/admin/campaign/{campaign_id}/attack_urls'
 
+    # Groups
+    GROUPS_LIST = '/groups/list_groups'
+    DELETE_GROUP = '/groups/delete_group'
+
     def get_endpoint(self):
         return self.API_VERSION.value + self.value
