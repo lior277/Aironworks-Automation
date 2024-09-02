@@ -31,6 +31,7 @@ class DropDown:
             if option.text_content() == text:
                 option.click()
                 selected = True
+                self.options_list.first.wait_for(state='hidden')
                 break
 
         assert selected, f'Item {text} was not found in {option_text}'
