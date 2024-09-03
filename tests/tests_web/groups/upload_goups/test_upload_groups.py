@@ -77,3 +77,21 @@ class TestUploadGroups:
     ):
         groups_page.upload_file(generate_groups_file)
         expect(groups_page.alert_message).to_contain_text(update_succeeded_text)
+
+    @pytest.mark.smoke
+    @pytest.mark.web
+    @pytest.mark.parametrize(
+        'user,file',
+        [
+            pytest.param(
+                UserModelFactory.customer_admin(),
+                'sample.txt',
+                marks=pytest.mark.test_id('C31713'),
+            )
+        ],
+    )
+    def test_upload_group_unsupported_files_extension(
+        self, groups_page: GroupsPage, user: UserModel, file: str
+    ):
+        file_path = os.path.join(AppFolders.RESOURCES_PATH, file)
+        groups_page.upload_file(file_path)

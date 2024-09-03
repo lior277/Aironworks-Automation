@@ -14,5 +14,5 @@ def get_random_email() -> str:
     )
 
 
-def ger_random_world() -> str:
-    return fake.word()
+def generate_string(length: int = 8) -> str:
+    return ''.join(random.choices(string.ascii_lowercase, k=length))
