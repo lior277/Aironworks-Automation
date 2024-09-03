@@ -81,7 +81,7 @@ class ScenariosPage(BasePage):
             self.wait_for_progress_bar_disappears()
         self.html_content.fill(scenario.html_content)
         self.save.click()
-        self.wait_for_progress_bar_disappears(timeout=15_000)
+        self.wait_for_progress_bar_disappears(timeout=30_000)
 
     def get_visible_results(self):
         return self.scenarios_list.get_by_role('button').all()
@@ -96,7 +96,7 @@ class ScenariosPage(BasePage):
     def find_scenario(self, scenario_name: str):
         self.filter_by_name(scenario_name)
         self.filter_by_language('All')
-        self.wait_for_progress_bar_disappears()
+        self.wait_for_progress_bar_disappears(timeout=30_000)
         scenario = (
             self.page.get_by_role('button')
             .filter(has_text=re.compile(scenario_name))
