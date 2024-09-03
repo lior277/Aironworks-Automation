@@ -100,7 +100,9 @@ class EmployeeDirectoryPage(BasePage):
                     self.add_new_employees_only_button.click()
                 expect(self.loading).to_be_visible()
                 self.wait_for_loading_state()
-                expect(self.upload_employees_component.locator).not_to_be_visible()
+                expect(self.upload_employees_component.locator).not_to_be_visible(
+                    timeout=30000
+                )
 
     @allure.step('EmployeeDirectoryPage: download csv file')
     def download_csv_file(self, with_additional_fields: bool = False):

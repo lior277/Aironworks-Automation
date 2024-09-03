@@ -18,3 +18,4 @@ locust -f tests/tests_perf/education_content_perf.py --headless -u 1000 -r 100 -
 * --csv=FILENAME_PREFIX: Saves the results to CSV files with the specified prefix.
 * --logfile=FILENAME: Saves log output to the specified file.
 * --run-time=TIME: Specifies how long the test should run (e.g., 1h for 1 hour).
+
