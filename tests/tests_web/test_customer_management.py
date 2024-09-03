@@ -111,6 +111,7 @@ def test_new_customers_count(
     expect(company_counts).to_be_ok()
 
     new_count = company_counts.json()['new']
+    expect(customers_page.tabs['new']).not_to_contain_text('New Customers (0)')
     content = customers_page.tabs['new'].text_content()
 
     match = re.compile(r'New Customers\s+\(?([0-9]+)\)?', re.IGNORECASE).match(content)
