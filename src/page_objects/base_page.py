@@ -15,6 +15,7 @@ class BasePage:
         self.loading = self.page.get_by_text('Loading')
         self.progress_bar = self.page.get_by_role('progressbar')
         self.alert_message = self.page.locator("[id='notistack-snackbar']")
+        self.back_home_button = self.page.get_by_text('Back to Home')
         import src.page_objects.navigation_bar
 
         self.navigation_bar = src.page_objects.navigation_bar.NavigationBar(page)
@@ -25,12 +26,10 @@ class BasePage:
 
     @allure.step('BasePage: wait for loading state')
     def wait_for_loading_state(self, timeout=10000):
-        try:
-            self.loading.wait_for(timeout=timeout)
-            self.loading.wait_for(timeout=timeout, state='hidden')
-        except Exception as error:
-            Log.info(f'{error=}')
-            pass
+        if self.loading.first.is_visible(timeout=timeout):
+            for load in self.loading.all():
+                if load.is_visible():
+                    load.wait_for(timeout=timeout, state='hidden')
 
     @allure.step('BasePage: wait for progress bar disappears')
     def wait_for_progress_bar_disappears(self, timeout=10_000):

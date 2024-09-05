@@ -35,6 +35,7 @@ class SignInPage(BasePage):
                 selector="//div[text()='Scenarios']"
             ).wait_for_element_state('visible')
         else:
+            self.wait_for_progress_bar_disappears()
             self.wait_for_loading_state()
 
     @allure.step('SignInPage: fill sing in form with {user} credentials')

@@ -24,8 +24,9 @@ class CampaignDetailsPage(BasePage):
     )
     def open(self, campaign_id: str):
         self.page.goto(self.url + campaign_id)
-        self.wait_for_loading_state()
         expect(self.export_csv_button).to_be_visible()
+        self.export_csv_button.scroll_into_view_if_needed()
+        self.wait_for_progress_bar_disappears()
         return self
 
     @allure.step('CampaignDetailsPage: export csv')
