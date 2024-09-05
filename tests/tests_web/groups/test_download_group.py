@@ -18,7 +18,7 @@ class TestDownloadExampleCSVFile:
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 'example3.csv',
-                marks=pytest.mark.test_id('C3171'),
+                marks=pytest.mark.test_id('C31714'),
             )
         ],
     )
