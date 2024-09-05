@@ -5,11 +5,13 @@ from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects import file_type_must_be_csv_xlsx, get_file_size_error_message
 from src.page_objects.base_page import BasePage
+from src.page_objects.data_types.table_element import Table
 from src.page_objects.employee_directory.employee_directory_page import (
     RejectedUploadItemComponent,
 )
 from src.page_objects.groups import group_created_text
 from src.page_objects.groups.create_group_page import CreateGroupPage
+from src.page_objects.groups.group_details_page import GroupDetailsPage
 from src.utils.log import Log
 
 
@@ -26,6 +28,12 @@ class GroupsPage(BasePage):
         )
         self.rejected_upload_component = RejectedUploadItemComponent(
             self.page.get_by_label('rejected-upload-item')
+        )
+
+        self.search_input = self.page.get_by_role('textbox')
+
+        self.groups_table = Table(
+            self.page.locator('.MuiGrid-item'), GroupTableComponent
         )
 
     @allure.step('GroupsPage: create {group_name} group')
@@ -71,6 +79,17 @@ class GroupsPage(BasePage):
         Log.info(f'{path=}')
         return path
 
+    @allure.step('GroupsPage: search group by {group_name} name ')
+    def search_group(self, group_name: str):
+        self.search_input.fill(group_name)
+
+    @allure.step('GroupsPage: open group details by {group_name} name ')
+    def open_group_details(self, group_name: str):
+        self.search_group(group_name)
+        group = self.groups_table.get_row_by_column_value('name', group_name)
+        group.name.click()
+        return GroupDetailsPage(self.page)
+
 
 class UploadGroupsComponent:
     def __init__(self, locator: Locator):
@@ -82,3 +101,12 @@ class UploadGroupsComponent:
         self.download_required_button = self.locator.get_by_text(
             'Download Required Fields CSV'
         )
+
+
+class GroupTableComponent:
+    def __init__(self, locator: Locator):
+        self.group_icon = locator.locator('[data-testid="GroupIcon"]')
+        self.name = locator.get_by_role('heading', level=6)
+        self.date_created = locator.locator('//h6/../span')
+        self.managers = locator.locator("//p[contains(text(),'Managers')]/..")
+        self.members = locator.locator("//p[contains(text(),'Members')]/..")

@@ -6,6 +6,9 @@ from src.apis.steps.common_steps import create_employees_wait
 from src.models.company.employee_count_model import EmployeeCountModel
 from src.models.company.employee_list_model import EmployeeListModel
 from src.models.factories.company.employee_model_factory import EmployeeModelFactory
+from src.models.group.add_group import AddGroupModel
+from src.models.group.group_list import GroupDetailsModel
+from src.utils.randomizer import generate_string
 
 
 @pytest.fixture(scope='function')
@@ -34,3 +37,20 @@ def get_group_managers_and_employees(api_request_context_customer_admin):
     )
 
     return manager_item, employee_item
+
+
+@pytest.fixture(scope='function')
+def create_group(api_request_context_customer_admin, get_group_managers_and_employees):
+    manager = get_group_managers_and_employees[0]
+    employee = get_group_managers_and_employees[1]
+    add_group_model = AddGroupModel(
+        name=generate_string(), employee_ids=[employee.id], manager_ids=[manager.id]
+    )
+    group_service = api.group(api_request_context_customer_admin)
+    response = group_service.add_group(add_group_model)
+    expect(response).to_be_ok()
+    group_id = response.json()['id']
+    response = group_service.get_group(group_id)
+    expect(response).to_be_ok()
+    group = GroupDetailsModel.from_dict(response.json())
+    return group
