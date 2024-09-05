@@ -51,6 +51,8 @@ class PSApi(Enum):
     ADMIN_CAMPAIGN_ATTACK_URLS = '/admin/campaign/{campaign_id}/attack_urls'
 
     # Groups
+    ADD_GROUP = '/groups/add_group'
+    GET_GROUP = '/groups/get_group'
     GROUPS_LIST = '/groups/list_groups'
     DELETE_GROUP = '/groups/delete_group'
 

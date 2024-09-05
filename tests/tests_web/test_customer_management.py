@@ -106,6 +106,7 @@ def test_new_customers_count(
     request_context = get_request_context_for_page(
         playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
     )
+    customers_page.wait_for_loading_state()
     admin_service = api.admin(request_context)
     company_counts = admin_service.company_count()
     expect(company_counts).to_be_ok()

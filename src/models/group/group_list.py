@@ -19,3 +19,8 @@ class Group(BaseDataClass):
 @dataclass
 class GroupListModel(BaseDataClass):
     groups: list[Group]
+
+
+@dataclass
+class GroupDetailsModel(BaseDataClass):
+    group: Group
