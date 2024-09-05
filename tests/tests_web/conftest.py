@@ -174,9 +174,7 @@ def employee_directory_page(dashboard_page: DashboardPage) -> EmployeeDirectoryP
 
 @pytest.fixture(scope='function')
 def customers_page(dashboard_page: DashboardPage) -> CustomersPage:
-    customers_page = CustomersPage(dashboard_page.page)
-    customers_page.wait_for_progress_bar_disappears()
-    return customers_page
+    return CustomersPage(dashboard_page.page)
 
 
 @pytest.fixture
