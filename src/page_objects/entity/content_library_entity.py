@@ -27,7 +27,7 @@ class QuestionEntity:
         self.answers = answers
 
 
-class AssessmentEntity:
+class QuizEntity:
     def __init__(self, questions: list[QuestionEntity]):
         self.questions = questions
 
@@ -41,7 +41,7 @@ class ContentLibraryEntity:
         topic: str,
         url: str = None,
         pdf_file_path: str = None,
-        assessment: AssessmentEntity = None,
+        quiz: QuizEntity = None,
     ):
         self.content_type = content_type
         self.title = title
@@ -49,7 +49,7 @@ class ContentLibraryEntity:
         self.topic = topic
         self.url = url
         self.pdf_file_path = pdf_file_path
-        self.assessment = assessment
+        self.quiz = quiz
 
 
 class ContentLibraryEntityFactory:
@@ -84,13 +84,13 @@ class ContentLibraryEntityFactory:
         )
 
     @staticmethod
-    def get_assessment_content() -> ContentLibraryEntity:
+    def get_quiz_content() -> ContentLibraryEntity:
         return ContentLibraryEntity(
-            ContentType.ASSESSMENT,
+            ContentType.QUIZ,
             title=get_random_title(),
             sensitive_information=False,
-            topic='e2e Admin Topic - Assessment',
-            assessment=AssessmentEntity(
+            topic='e2e Admin Topic - Quiz',
+            quiz=QuizEntity(
                 questions=[
                     QuestionEntity(
                         'Question 1',

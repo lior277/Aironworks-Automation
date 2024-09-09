@@ -9,7 +9,7 @@ class GroupDetailsPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.title = self.page.get_by_role('heading', level=4)
-        self.back_button = self.page.get_by_role('button', name='Back')
+        self.back_button = self.page.get_by_role('button', name='Back', exact=True)
         self.delete_group_button = self.page.get_by_role('button', name='Delete Group')
         self.edit_group_button = self.page.get_by_role('button', name='Edit Group')
         self.delete_group_component = DeleteGroupComponent(
