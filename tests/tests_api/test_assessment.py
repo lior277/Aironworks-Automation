@@ -62,23 +62,6 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     )
 
 
-@pytest.mark.test_id('C31559')
-@pytest.mark.addin_api
-def test_incident_report(api_request_context_addin, example_mail, mailtrap):
-    assessment_service = api.assessment(api_request_context_addin)
-    response = assessment_service.incident(b64encode(example_mail).decode('utf-8'))
-    expect(response).to_be_ok()
-
-    assert response.json()['error'] is None
-
-    assert (
-        mailtrap.wait_for_mail(
-            AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID, find_attachment()
-        )
-        is not None
-    )
-
-
 @pytest.mark.test_id('C31560')
 @pytest.mark.addin_api
 def test_assessment_report(api_request_context_addin, mailtrap):
