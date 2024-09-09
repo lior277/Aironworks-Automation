@@ -2,11 +2,11 @@ import allure
 from playwright.sync_api import Page, expect
 
 from src.page_objects.base_page import BasePage
-from src.page_objects.content_library import assessment_attached_text
-from src.page_objects.entity.content_library_entity import AssessmentEntity
+from src.page_objects.content_library import quiz_attached_text
+from src.page_objects.entity.content_library_entity import QuizEntity
 
 
-class AddAssessmentPage(BasePage):
+class AddQuizPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.question_input = page.get_by_role('textbox', name='Untitled Question')
@@ -17,13 +17,13 @@ class AddAssessmentPage(BasePage):
         self.apply_button = page.get_by_text('Apply')
         self.cancel_button = page.get_by_text('Cancel')
 
-    @allure.step('AddAssessmentPage: apply assessment {assessment}')
-    def apply_assessment(self, assessment: AssessmentEntity):
-        if len(assessment.questions) > 1:
+    @allure.step('AddQuizPage: apply quiz {quiz}')
+    def apply_quiz(self, quiz: QuizEntity):
+        if len(quiz.questions) > 1:
             raise ValueError('Fix this method')
         else:
-            self.question_input.fill(assessment.questions[0].question)
-            self.answer_one_input.fill(assessment.questions[0].answers[0].answer)
-            self.answer_two_input.fill(assessment.questions[0].answers[1].answer)
+            self.question_input.fill(quiz.questions[0].question)
+            self.answer_one_input.fill(quiz.questions[0].answers[0].answer)
+            self.answer_two_input.fill(quiz.questions[0].answers[1].answer)
             self.apply_button.click()
-            expect(self.alert_message).to_have_text(assessment_attached_text)
+            expect(self.alert_message).to_have_text(quiz_attached_text)

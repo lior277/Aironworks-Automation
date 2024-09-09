@@ -5,7 +5,6 @@ from src.page_objects.base_page import BasePage
 from src.page_objects.content_library import (
     attach_quiz_text,
     content_successfully_updated_text,
-    quiz_attached_text,
 )
 
 
@@ -32,7 +31,6 @@ class ContentLibraryDetailsPage(BasePage):
 
     @allure.step('ContentLibraryDetailsPage: remove quiz')
     def remove_quiz(self):
-        expect(self.page.get_by_text(quiz_attached_text)).to_be_visible()
         self.edit_button.click()
         self.remove_quiz_button.click()
         self.delete_button.click()

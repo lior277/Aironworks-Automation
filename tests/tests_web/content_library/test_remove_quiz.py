@@ -42,7 +42,7 @@ def cloned_education_content(
         for item in content.items
         if item.title != 'Test Content for QA'
         for part in item.parts
-        if 'QUESTION' in part.kind
+        if 'QUESTION' in part.kind and 'SINGLE' in part.question_type
     ]
 
     response = education.get_education_content_details(out[0].id)

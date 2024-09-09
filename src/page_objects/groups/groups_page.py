@@ -11,6 +11,7 @@ from src.page_objects.employee_directory.employee_directory_page import (
 )
 from src.page_objects.groups import group_created_text
 from src.page_objects.groups.create_group_page import CreateGroupPage
+from src.page_objects.groups.edit_group_page import EditGroupPage
 from src.page_objects.groups.group_details_page import GroupDetailsPage
 from src.utils.log import Log
 
@@ -88,7 +89,17 @@ class GroupsPage(BasePage):
         self.search_group(group_name)
         group = self.groups_table.get_row_by_column_value('name', group_name)
         group.name.click()
+        self.wait_for_progress_bar_disappears()
         return GroupDetailsPage(self.page)
+
+    @allure.step('GroupsPage: open group details by {group_name} name ')
+    def open_edit_group_page(self, group_name: str):
+        group_details_page = self.open_group_details(group_name)
+        group_details_page.edit_group_button.click()
+        edit_group_page = EditGroupPage(self.page)
+        edit_group_page.save_button.wait_for()
+        group_details_page.wait_for_progress_bar_disappears()
+        return edit_group_page
 
 
 class UploadGroupsComponent:

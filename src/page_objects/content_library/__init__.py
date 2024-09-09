@@ -1,9 +1,9 @@
 from enum import Enum
 
 attach_quiz_text = 'Attach Quiz to this content to evaluate learning even more.'
-quiz_attached_text = 'Quiz Attached'
+quiz_attached_text = 'Quiz Attached.'
 pdf_file_attached_text = 'PDF Uploaded.'
-assessment_attached_text = 'Assessment Attached.'
+
 
 content_successfully_updated_text = 'Content successfully updated.'
 new_content_successfully_published_text = 'New Content successfully published.'
@@ -16,4 +16,4 @@ class ContentType(Enum):
     VIDEO = 'VIDEO'
     PDF = 'PDF'
     SLIDES = 'LINK'
-    ASSESSMENT = 'ASSESSMENT'
+    QUIZ = 'QUIZ'

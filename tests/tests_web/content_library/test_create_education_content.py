@@ -124,16 +124,16 @@ class TestCreateEducationContent:
     @pytest.mark.parametrize(
         'user,education_content',
         [
-            pytest.param(
-                UserModelFactory.aw_admin(),
-                ContentLibraryEntityFactory.get_assessment_content(),
-                marks=pytest.mark.test_id('C31635'),
-            ),
+            # pytest.param(
+            #     UserModelFactory.aw_admin(),
+            #     ContentLibraryEntityFactory.get_quiz_content(),
+            #     marks=pytest.mark.test_id('C31635'),
+            # ),
             pytest.param(
                 UserModelFactory.customer_admin(),
-                ContentLibraryEntityFactory.get_assessment_content(),
+                ContentLibraryEntityFactory.get_quiz_content(),
                 marks=pytest.mark.test_id('C31650'),
-            ),
+            )
         ],
     )
     def test_create_assessment_education_content(

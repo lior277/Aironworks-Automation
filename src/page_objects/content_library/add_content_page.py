@@ -9,7 +9,7 @@ from src.page_objects.content_library import (
     pdf_file_attached_text,
     sensitive_information_description_text,
 )
-from src.page_objects.content_library.attach_assessment_page import AddAssessmentPage
+from src.page_objects.content_library.attach_quiz_page import AddQuizPage
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 
@@ -31,9 +31,7 @@ class AddContentPage(BasePage):
             self.page.get_by_label('Content visibility')
         )
         self.quiz = QuizComponent(self.page.get_by_label('Quiz'))
-        self.assessment_form = AssessmentFormComponent(
-            self.page.get_by_label('Assessment Form')
-        )
+        self.quiz_form = QuizFormComponent(self.page.get_by_label('Quiz Form'))
         self.save_and_publish_button = self.page.get_by_text('Save and Publish')
 
     @allure.step('AddContentPage: create education content {education_content}')
@@ -52,8 +50,8 @@ class AddContentPage(BasePage):
         self.general_information.fill_data(education_content)
         if education_content.content_type == ContentType.PDF:
             self.upload_pdf_file(education_content)
-        elif education_content.content_type == ContentType.ASSESSMENT:
-            self.add_assessment(education_content)
+        elif education_content.content_type == ContentType.QUIZ:
+            self.add_quiz(education_content)
         self.save_and_publish_button.click()
         expect(self.alert_message).to_contain_text(
             new_content_successfully_published_text
@@ -68,10 +66,10 @@ class AddContentPage(BasePage):
             pdf_file_attached_text, timeout=20_000
         )
 
-    @allure.step('AddContentPage: add assessment {education_content}')
-    def add_assessment(self, education_content: ContentLibraryEntity):
-        self.assessment_form.attach_assessment_button.click()
-        AddAssessmentPage(self.page).apply_assessment(education_content.assessment)
+    @allure.step('AddContentPage: add quiz {education_content}')
+    def add_quiz(self, education_content: ContentLibraryEntity):
+        self.quiz_form.attach_quiz_button.click()
+        AddQuizPage(self.page).apply_quiz(education_content.quiz)
 
 
 class GeneralInformationComponent:
@@ -149,7 +147,7 @@ class QuizComponent:
         self.attach_quiz_button = self.locator.get_by_role('button')
 
 
-class AssessmentFormComponent:
+class QuizFormComponent:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.attach_assessment_button = self.locator.get_by_role('button')
+        self.attach_quiz_button = self.locator.get_by_role('button')
