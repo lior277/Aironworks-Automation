@@ -71,6 +71,7 @@ class NavigationBar:
     def navigate_employee_directory(self) -> EmployeeDirectoryPage:
         self.employee_directory_button.click()
         employee_directory_page = EmployeeDirectoryPage(self.page)
+        employee_directory_page.deactivate_button.wait_for()
         employee_directory_page.wait_for_loading_state()
         return employee_directory_page
 
