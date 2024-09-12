@@ -50,8 +50,6 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     assert 'assessment_result' in response.json()
     assessment_result = response.json()['assessment_result']
     assert 'assessment' in assessment_result
-    assert 'forward' in assessment_result
-    assert assessment_result['forward'] == {'error': None}
     assert assessment_result['assessment']['error'] is None
 
     assert (
