@@ -56,5 +56,8 @@ class PSApi(Enum):
     GROUPS_LIST = '/groups/list_groups'
     DELETE_GROUP = '/groups/delete_group'
 
+    # Token
+    REFRESH_TOKEN = '/auth/refresh'
+
     def get_endpoint(self):
         return self.API_VERSION.value + self.value

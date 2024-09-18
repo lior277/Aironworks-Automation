@@ -1,8 +1,13 @@
 import json
+import logging
 from functools import wraps
 
 import allure
 from playwright.sync_api import APIRequestContext, APIResponse
+
+from .psapi import PSApi
+
+LOGGER = logging.getLogger(__name__)
 
 
 def allure_attach(func):
@@ -51,10 +56,17 @@ class BaseService:
         self._request = request_context
         self._request.on('response', allure_attach)
 
+    def _refresh_token(self) -> APIResponse:
+        response = self.__requestWithRetry(
+            method='POST', url_or_request=PSApi.REFRESH_TOKEN.get_endpoint()
+        )
+        if response.status != 200:
+            raise Exception('Failed to refresh token')
+
     def _post(
         self, url, data=None, params=None, timeout=None, multipart=None
     ) -> APIResponse:
-        return self.__request(
+        return self.__requestWithRetry(
             method='POST',
             url_or_request=url,
             data=data,
@@ -64,14 +76,14 @@ class BaseService:
         )
 
     def _get(self, url, data=None, params=None, timeout=None) -> APIResponse:
-        return self.__request(
+        return self.__requestWithRetry(
             method='GET', url_or_request=url, data=data, params=params, timeout=timeout
         )
 
     def _patch(
         self, url, data=None, params=None, timeout=None, multipart=None
     ) -> APIResponse:
-        return self.__request(
+        return self.__requestWithRetry(
             method='PATCH',
             url_or_request=url,
             data=data,
@@ -81,13 +93,21 @@ class BaseService:
         )
 
     def _delete(self, url, data=None, params=None, timeout=None) -> APIResponse:
-        return self.__request(
+        return self.__requestWithRetry(
             method='DELETE',
             url_or_request=url,
             data=data,
             params=params,
             timeout=timeout,
         )
+
+    @allure_attach
+    def __requestWithRetry(self, **kwargs) -> APIResponse:
+        response = self.__request(**kwargs)
+        if response.status == 401:
+            self._refresh_token()
+            response = self.__request(**kwargs)
+        return response
 
     @allure_attach
     def __request(self, **kwargs) -> APIResponse:
