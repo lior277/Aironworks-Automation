@@ -35,6 +35,8 @@ class EmployeeDirectoryPage(BasePage):
         self.upload_employees_button = self.page.get_by_role(
             'button', name='Upload Employees', exact=True
         )
+        self.upload_csv_button = self.page.get_by_label('Upload a CSV')
+        self.upload_azure_ad_button = self.page.get_by_label('Upload via Azure AD')
         self.export_csv_button = self.page.get_by_role('button', name='Export CSV')
         self.deactivate_button = self.page.get_by_role('button', name='Deactivate')
         self.edit_button = self.page.get_by_label('Edit')
@@ -82,6 +84,8 @@ class EmployeeDirectoryPage(BasePage):
     def upload_file(self, file_path: str, override: bool = False):
         if self.upload_employees_button.is_visible():
             self.upload_employees_button.click()
+        if self.upload_csv_button.is_visible():
+            self.upload_csv_button.click()
         expect(self.upload_employees_component.locator).to_be_visible()
         with self.page.expect_file_chooser() as fc:
             self.upload_employees_component.upload_button.click()
@@ -107,6 +111,7 @@ class EmployeeDirectoryPage(BasePage):
     @allure.step('EmployeeDirectoryPage: download csv file')
     def download_csv_file(self, with_additional_fields: bool = False):
         self.upload_employees_button.click()
+        self.upload_csv_button.click()
         expect(self.upload_employees_component.locator).to_be_visible()
         path = tempfile.mktemp(suffix='.csv')
         with self.page.expect_download() as download_info:
