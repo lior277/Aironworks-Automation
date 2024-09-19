@@ -7,7 +7,7 @@ from playwright.sync_api import expect
 from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.page_objects.campaign_detalis_page import CampaignDetailsPage
+from src.page_objects.campaign_details_page import CampaignDetailsPage
 from src.page_objects.entity.campaign_attacks_summary_entity import (
     CampaignAttacksSummaryFactory,
 )
@@ -78,7 +78,7 @@ def test_create_simulation_campaign(
 def test_campaigns_page_has_data(user, campaigns_page):
     tables = campaigns_page.page.get_by_test_id('executions-table')
     expect(tables).to_have_count(2)
-    expect(campaigns_page.page.get_by_role('progressbar')).to_have_count(0)
+    campaigns_page.wait_for_tables_load()
     tables = tables.all()
     assert tables[0].get_by_role('row').count() >= 2
     assert tables[1].get_by_role('row').count() >= 2

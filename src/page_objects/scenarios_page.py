@@ -17,7 +17,7 @@ class ScenariosPage(BasePage):
         self.create_scenario_button = page.get_by_role('button', name='Create Scenario')
         self.visible_tab = page.get_by_role('tab', name='Visible')
         self.hide_scenario = page.get_by_role('button', name='Hide', exact=True)
-        self.execute = page.get_by_role('button', name='Execute')
+        self.execute = page.get_by_role('button', name='Create Campaign')
         self.search = self.page.get_by_placeholder('Search by Name')
         self.scenarios_list = self.page.locator('.MuiGrid-root > .MuiBox-root')
 
