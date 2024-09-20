@@ -69,6 +69,7 @@ class AddContentComponent:
         self.slides_button = self.locator.get_by_text('Slides', exact=True)
         self.pdf_button = self.locator.get_by_text('PDF', exact=True)
         self.quiz_button = self.locator.get_by_text('Quiz', exact=True)
+        self.survey_button = self.locator.get_by_text('Survey', exact=True)
 
     @allure.step('AddContentComponent: add {content_type} content type')
     def add_content(self, content_type: ContentType):
@@ -81,4 +82,6 @@ class AddContentComponent:
                 self.pdf_button.click()
             case ContentType.QUIZ:
                 self.quiz_button.click()
+            case ContentType.SURVEY:
+                self.survey_button.click()
         self.locator.wait_for(state='hidden')

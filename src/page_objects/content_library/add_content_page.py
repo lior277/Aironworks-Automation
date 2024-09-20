@@ -10,6 +10,7 @@ from src.page_objects.content_library import (
     sensitive_information_description_text,
 )
 from src.page_objects.content_library.attach_quiz_page import AddQuizPage
+from src.page_objects.content_library.attach_survey_page import AddSurveyPage
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 
@@ -32,6 +33,8 @@ class AddContentPage(BasePage):
         )
         self.quiz = QuizComponent(self.page.get_by_label('Quiz'))
         self.quiz_form = QuizFormComponent(self.page.get_by_label('Quiz Form'))
+        self.survey = SurveyComponent(self.page.get_by_label('Survey'))
+        self.survey_form = SurveyFormComponent(self.page.get_by_label('Poll'))
         self.save_and_publish_button = self.page.get_by_text('Save and Publish')
 
     @allure.step('AddContentPage: create education content {education_content}')
@@ -52,6 +55,8 @@ class AddContentPage(BasePage):
             self.upload_pdf_file(education_content)
         elif education_content.content_type == ContentType.QUIZ:
             self.add_quiz(education_content)
+        elif education_content.content_type == ContentType.SURVEY:
+            self.add_survey(education_content)
         self.save_and_publish_button.click()
         expect(self.alert_message).to_contain_text(
             new_content_successfully_published_text
@@ -71,6 +76,11 @@ class AddContentPage(BasePage):
         self.quiz_form.attach_quiz_button.click()
         AddQuizPage(self.page).apply_quiz(education_content.quiz)
 
+    @allure.step('AddContentPage: add survey {education_content}')
+    def add_survey(self, education_content: ContentLibraryEntity):
+        self.survey_form.attach_survey_button.click()
+        AddSurveyPage(self.page).apply_survey(education_content.survey)
+
 
 class GeneralInformationComponent:
     def __init__(self, locator: Locator):
@@ -85,6 +95,8 @@ class GeneralInformationComponent:
     def fill_data(self, education_content: ContentLibraryEntity):
         if education_content.title:
             self.title.fill(education_content.title)
+        if education_content.description:
+            self.description.fill(education_content.description)
         if education_content.url:
             self.link.fill(education_content.url)
 
@@ -151,3 +163,15 @@ class QuizFormComponent:
     def __init__(self, locator: Locator):
         self.locator = locator
         self.attach_quiz_button = self.locator.get_by_role('button')
+
+
+class SurveyComponent:
+    def __init__(self, locator: Locator):
+        self.locator = locator
+        self.attach_survey_button = self.locator.get_by_role('button')
+
+
+class SurveyFormComponent:
+    def __init__(self, locator: Locator):
+        self.locator = locator
+        self.attach_survey_button = self.locator.get_by_role('button')
