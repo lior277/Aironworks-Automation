@@ -4,9 +4,14 @@ from playwright.sync_api import expect
 from src.apis.api_factory import api
 from src.models.auth.user_model import UserModel
 from src.models.education.education_content_model import EducationContentModel, Item
+from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario.clone_education_content_model_factory import (
     CloneEducationContentModelFactory,
 )
+from src.page_objects.content_library.content_library_details_page import (
+    ContentLibraryDetailsPage,
+)
+from src.page_objects.dashboard_page import DashboardPage
 
 
 @pytest.fixture(scope='function')
@@ -36,6 +41,8 @@ def cloned_education_content(
         item
         for item in content.items
         if item.title != 'Test Content for QA'
+        and len(item.parts) > 1
+        and 'QUESTION' != item.parts[0].kind
         for part in item.parts
         if 'QUESTION' in part.kind and 'SINGLE' in part.question_type
     ]
@@ -54,26 +61,26 @@ def cloned_education_content(
     return cloned_content
 
 
-# @pytest.mark.parametrize(
-#     'user',
-#     [
-#         pytest.param(
-#             UserModelFactory.aw_admin(),
-#             id='AW Admin',
-#             marks=pytest.mark.test_id('C31632'),
-#         ),
-#         pytest.param(
-#             UserModelFactory.customer_admin(),
-#             id='Customer Admin',
-#             marks=pytest.mark.test_id('C31633'),
-#         ),
-#     ],
-# )
-# @pytest.mark.smoke
-# def test_remove_quiz(
-#     user: UserModel, cloned_education_content: Item, dashboard_page: DashboardPage
-# ):
-#     content_library_details_page = ContentLibraryDetailsPage(dashboard_page.page).open(
-#         cloned_education_content.id
-#     )
-#     content_library_details_page.remove_quiz()
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            id='AW Admin',
+            marks=pytest.mark.test_id('C31632'),
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            id='Customer Admin',
+            marks=pytest.mark.test_id('C31633'),
+        ),
+    ],
+)
+@pytest.mark.smoke
+def test_remove_quiz(
+    user: UserModel, cloned_education_content: Item, dashboard_page: DashboardPage
+):
+    content_library_details_page = ContentLibraryDetailsPage(dashboard_page.page).open(
+        cloned_education_content.id
+    )
+    content_library_details_page.remove_quiz()

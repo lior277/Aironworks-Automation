@@ -9,7 +9,7 @@ from playwright.sync_api import APIRequestContext, Playwright, expect
 
 from src.apis.api_factory import api
 from src.apis.steps.common_steps import create_employee
-from src.configs.config_loader import AppConfigs
+from src.configs.config_loader import AppConfigs, AppFolders
 from src.models.company.employee_delete_model import EmployeeDeleteModel
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.company.employee_model import EmployeeModel
@@ -41,7 +41,7 @@ def mailtrap(playwright):
 
 @pytest.fixture(scope='session')
 def example_mail():
-    with open('tests/resources/example_mail.eml', 'rb') as f:
+    with open(f'{AppFolders.RESOURCES_PATH}/example_mail.eml', 'rb') as f:
         return f.read().replace(
             b'RANDOM_TEXT', str(random.randint(100000000, 999999999)).encode('utf-8')
         )
