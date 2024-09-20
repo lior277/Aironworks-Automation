@@ -32,24 +32,39 @@ class QuizEntity:
         self.questions = questions
 
 
+class SurveyQuestionEntity:
+    def __init__(self, question: str, answers: list[str]):
+        self.question = question
+        self.answers = answers
+
+
+class SurveyEntity:
+    def __init__(self, questions: list[SurveyQuestionEntity]):
+        self.questions = questions
+
+
 class ContentLibraryEntity:
     def __init__(
         self,
         content_type: ContentType,
         title: str,
+        description: str,
         sensitive_information: bool,
         topic: str,
         url: str = None,
         pdf_file_path: str = None,
         quiz: QuizEntity = None,
+        survey: SurveyEntity = None,
     ):
         self.content_type = content_type
         self.title = title
+        self.description = description
         self.sensitive_information = sensitive_information
         self.topic = topic
         self.url = url
         self.pdf_file_path = pdf_file_path
         self.quiz = quiz
+        self.survey = survey
 
 
 class ContentLibraryEntityFactory:
@@ -58,6 +73,7 @@ class ContentLibraryEntityFactory:
         return ContentLibraryEntity(
             ContentType.VIDEO,
             title=get_random_title(),
+            description='This is description',
             sensitive_information=False,
             url='https://www.youtube.com/watch?v=nDZbgmSmJBg',
             topic='e2e Admin Topic - Video',
@@ -68,6 +84,7 @@ class ContentLibraryEntityFactory:
         return ContentLibraryEntity(
             ContentType.PDF,
             title=get_random_title(),
+            description='This is description',
             sensitive_information=False,
             pdf_file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.pdf'),
             topic='e2e Admin Topic - PDF',
@@ -78,6 +95,7 @@ class ContentLibraryEntityFactory:
         return ContentLibraryEntity(
             ContentType.SLIDES,
             title=get_random_title(),
+            description='This is description',
             sensitive_information=False,
             url='https://docs.google.com/presentation/d/1MXg2I9fVtFhFJaRwI857VN8McO5PhsNZaQnsBgY3uH0/edit?usp=sharing',
             topic='e2e Admin Topic - Slides',
@@ -88,6 +106,7 @@ class ContentLibraryEntityFactory:
         return ContentLibraryEntity(
             ContentType.QUIZ,
             title=get_random_title(),
+            description='This is description',
             sensitive_information=False,
             topic='e2e Admin Topic - Quiz',
             quiz=QuizEntity(
@@ -100,6 +119,21 @@ class ContentLibraryEntityFactory:
                             AnswerEntity(answer='Answer 2'),
                         ],
                     )
+                ]
+            ),
+        )
+
+    @staticmethod
+    def get_survey_content() -> ContentLibraryEntity:
+        return ContentLibraryEntity(
+            ContentType.SURVEY,
+            title=get_random_title(),
+            description='This is description',
+            sensitive_information=False,
+            topic='e2e Admin Topic - Survey',
+            survey=SurveyEntity(
+                questions=[
+                    SurveyQuestionEntity('Question 1', answers=['Answer 1', 'Answer 2'])
                 ]
             ),
         )

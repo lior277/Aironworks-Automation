@@ -3,7 +3,7 @@ from enum import Enum
 attach_quiz_text = 'Attach Quiz to this content to evaluate learning even more.'
 quiz_attached_text = 'Quiz Attached.'
 pdf_file_attached_text = 'PDF Uploaded.'
-
+survey_attached_text = 'Survey attached.'
 
 content_successfully_updated_text = 'Content successfully updated.'
 new_content_successfully_published_text = 'New Content successfully published.'
@@ -17,3 +17,4 @@ class ContentType(Enum):
     PDF = 'PDF'
     SLIDES = 'LINK'
     QUIZ = 'QUIZ'
+    SURVEY = 'SURVEY'
