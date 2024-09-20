@@ -30,6 +30,7 @@ from src.page_objects.login_page import SignInPage
 from src.page_objects.outlook_page import OutlookPage
 from src.page_objects.scenarios_page import ScenariosPage
 from src.utils.log import Log
+from src.utils.waiter import wait_for
 
 
 def safe_title(page: Page) -> str:
@@ -102,36 +103,32 @@ def sign_in_page(playwright_config) -> SignInPage:
 
 @pytest.fixture(scope='function')
 def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
-    # remember_token = f'{user.email}_remember_token'
-    # session = f'{user.email}_session'
-    # if os.getenv(remember_token):
-    #     sign_in_page.page.context.set_extra_http_headers(
-    #         {
-    #             'Cookie': f'remember_token={os.environ[remember_token]}; session={os.environ[session]}'
-    #         }
-    #     )
-    #     sign_in_page.navigate(admin=user.is_admin)
-
-    #     def wait_for_cookies():
-    #         return sign_in_page.page.context.storage_state()['cookies']
-
-    #     wait_for(wait_for_cookies, timeout=10)
-    #     Log.info(f"{sign_in_page.page.context.storage_state()["cookies"]=}")
-
-    # else:
-    #     sign_in_page.navigate(admin=user.is_admin)
-    #     sign_in_page.submit_sign_in_form(user)
-    #     cookies = sign_in_page.page.context.cookies()
-    #     os.environ[remember_token] = cookies[0]['value']
-    #     os.environ[session] = cookies[1]['value']
-
-    remember_token = f'{user.email}_remember_token'
+    refresh_token = f'{user.email}_refresh_token'
     session = f'{user.email}_session'
-    sign_in_page.navigate(admin=user.is_admin)
-    sign_in_page.submit_sign_in_form(user)
-    cookies = sign_in_page.page.context.cookies()
-    os.environ[remember_token] = cookies[0]['value']
-    os.environ[session] = cookies[1]['value']
+    token = f'{user.email}_token'
+    if os.getenv(refresh_token):
+        sign_in_page.page.set_extra_http_headers(
+            {
+                'Cookie': f'refresh_token={os.environ[refresh_token]}; session={os.environ[session]};token={os.environ[token]}'
+            }
+        )
+        response = sign_in_page.navigate(admin=user.is_admin)
+        sign_in_page.wait_for_page_loaded(user.is_admin)
+        assert response.ok, f'{response.status_text=}'
+
+        def wait_for_cookies():
+            return sign_in_page.page.context.storage_state()['cookies']
+
+        wait_for(wait_for_cookies, timeout=10)
+        Log.info(f"{sign_in_page.page.context.storage_state()["cookies"]=}")
+
+    else:
+        sign_in_page.navigate(admin=user.is_admin)
+        sign_in_page.submit_sign_in_form(user)
+        cookies = sign_in_page.page.context.cookies()
+        os.environ[refresh_token] = cookies[0]['value']
+        os.environ[session] = cookies[1]['value']
+        os.environ[token] = cookies[2]['value']
     return DashboardPage(sign_in_page.page)
 
 

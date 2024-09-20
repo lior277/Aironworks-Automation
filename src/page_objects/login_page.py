@@ -2,7 +2,7 @@ import re
 
 import allure
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page, Response
 
 from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
@@ -20,23 +20,17 @@ class SignInPage(BasePage):
         )
 
     @allure.step('SignInPage: open page')
-    def navigate(self, admin=False):
+    def navigate(self, admin=False) -> Response:
         if AppConfigs.ENV.startswith('production') and admin:
             pytest.skip('Admin login is not available in production')
         self.set_default_url(self.adminBaseUrl if admin else self.customerBaseUrl)
         result = self.page.goto(self.default_url)
-        result.request.response()
+        return result.request.response()
 
     @allure.step('SignInPage: submit sing in form with {user} credentials')
     def submit_sign_in_form(self, user: UserModel):
         self.fill_sign_in_form(user)
-        if not user.is_admin:
-            self.page.wait_for_selector(
-                selector="//div[text()='Scenarios']"
-            ).wait_for_element_state('visible')
-        else:
-            self.wait_for_progress_bar_disappears()
-            self.wait_for_loading_state()
+        self.wait_for_page_loaded(user.is_admin)
 
     @allure.step('SignInPage: fill sing in form with {user} credentials')
     def fill_sign_in_form(self, user: UserModel):
@@ -46,3 +40,12 @@ class SignInPage(BasePage):
         self.input_email.fill(user.email)
         self.input_password.fill(user.password)
         self.button_sign_in.click()
+
+    def wait_for_page_loaded(self, is_admin: bool):
+        if is_admin:
+            self.wait_for_progress_bar_disappears()
+            self.wait_for_loading_state()
+        else:
+            self.page.wait_for_selector(
+                selector="//div[text()='Scenarios']"
+            ).wait_for_element_state('visible')
