@@ -41,3 +41,7 @@ class BasePage:
     @allure.step('BasePage: set default {default_url} url')
     def set_default_url(self, default_url: str):
         self.default_url = default_url
+
+    @allure.step('BasePage: wait for alert message')
+    def wait_for_alert_message(self, timeout=5000):
+        self.alert_message.wait_for(timeout=timeout, state='visible')
