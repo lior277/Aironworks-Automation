@@ -79,7 +79,6 @@ class NavigationBar:
     def navigate_education_campaigns_page(self):
         self.education_campaigns_button.click()
         education_page = EducationCampaignPage(self.page)
-        education_page.title.wait_for()
         education_page.wait_for_loading_state()
         return education_page
 

@@ -26,7 +26,7 @@ class ContentLibraryDetailsPage(BasePage):
     )
     def open(self, content_library_id: str):
         self.page.goto(self.url + content_library_id)
-        self.create_education_campaign_button.wait_for()
+        self.create_education_campaign_button.wait_for(timeout=5000, state='visible')
         return self
 
     @allure.step('ContentLibraryDetailsPage: remove quiz')
