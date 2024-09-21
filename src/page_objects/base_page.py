@@ -20,9 +20,9 @@ class BasePage:
 
         self.navigation_bar = src.page_objects.navigation_bar.NavigationBar(page)
         self.default_url = None
-        if not page.url.startswith('about'):
+        if page.url:
             self.set_default_url('/'.join(page.url.split('/', 3)[:3]) + '/')
-            Log.info(f'page URL = {self.page.url}\n page Title = {self.page.title()}')
+        Log.info(f'page URL = {self.page.url}\n page Title = {self.page.title()}')
 
     @allure.step('BasePage: wait for loading state')
     def wait_for_loading_state(self, timeout=10000):
