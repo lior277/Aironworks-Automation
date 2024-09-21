@@ -11,6 +11,7 @@ from src.utils.assertions import is_selected
 class CustomersPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
+        self.header = self.page.get_by_role('heading', level=2, name='Customers')
         self.tabs = {
             'active': page.get_by_role('tab', name=re.compile('Active customers.*')),
             'new': page.get_by_role('tab', name=re.compile('New customers.*')),
