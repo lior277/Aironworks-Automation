@@ -48,7 +48,7 @@ class SignInPage(BasePage):
             customer_page = CustomersPage(self.page)
             customer_page.header.wait_for()
             customer_page.wait_for_progress_bar_disappears()
-            customer_page.wait_for_loading_state()
+            customer_page.wait_for_loading_state(timeout=20_000)
         else:
             dashboard_page = DashboardPage(self.page)
             dashboard_page.header.wait_for()
