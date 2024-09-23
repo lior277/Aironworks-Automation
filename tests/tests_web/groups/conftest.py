@@ -3,7 +3,6 @@ from playwright.sync_api import expect
 
 from src.apis.api_factory import api
 from src.apis.steps.common_steps import create_employees_wait
-from src.models.company.employee_count_model import EmployeeCountModel
 from src.models.company.employee_list_model import EmployeeListModel
 from src.models.factories.company.employee_model_factory import EmployeeModelFactory
 from src.models.group.add_group import AddGroupModel
@@ -19,10 +18,22 @@ def get_group_managers_and_employees(api_request_context_customer_admin):
     create_employees_wait(
         api_request_context_customer_admin, employees, overwrite=False
     )
-    response = company_service.employee_count()
-    expect(response).to_be_ok()
-    employee_count_model = EmployeeCountModel.from_dict(response.json())
-    response = company_service.get_employee_list(employee_count_model.employee_role)
+    response = company_service.get_employee_list(
+        1,
+        filters={
+            'items': [
+                {
+                    'columnField': 'email',
+                    'operatorValue': 'contains',
+                    'id': 0,
+                    'value': employees[0].email.lower(),
+                }
+            ],
+            'linkOperator': 'and',
+            'quickFilterValues': [],
+            'quickFilterLogicOperator': 'and',
+        },
+    )
     expect(response).to_be_ok()
     employee_list = EmployeeListModel.from_dict(response.json())
     employee_item = next(
@@ -30,6 +41,24 @@ def get_group_managers_and_employees(api_request_context_customer_admin):
         for item in employee_list.items
         if item.email.lower() == employees[0].email.lower()
     )
+    response = company_service.get_employee_list(
+        1,
+        filters={
+            'items': [
+                {
+                    'columnField': 'email',
+                    'operatorValue': 'contains',
+                    'id': 0,
+                    'value': employees[1].email.lower(),
+                }
+            ],
+            'linkOperator': 'and',
+            'quickFilterValues': [],
+            'quickFilterLogicOperator': 'and',
+        },
+    )
+    expect(response).to_be_ok()
+    employee_list = EmployeeListModel.from_dict(response.json())
     manager_item = next(
         item
         for item in employee_list.items

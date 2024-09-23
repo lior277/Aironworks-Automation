@@ -78,10 +78,10 @@ class CompanyService(BaseService):
         return data['items'][0]
 
     @allure.step('CompanyService: get employee list')
-    def get_employee_list(self, total: int = 15) -> APIResponse:
+    def get_employee_list(self, total: int = 15, filters=None) -> APIResponse:
         payload = {
             'employee_role': True,
-            'filters': None,
+            'filters': filters,
             'limit': total,
             'offset': 0,
             'sorting': [],
