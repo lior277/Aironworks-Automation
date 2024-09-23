@@ -137,7 +137,7 @@ class MailTrap:
 
     @print_execution_time
     def wait_for_mails(
-        self, inbox_id: str = AppConfigs.PERF_EMPLOYEE_INBOX_ID, timeout: int = 120
+        self, inbox_id: str = AppConfigs.PERF_EMPLOYEE_INBOX_ID, timeout: int = 600
     ):
         start_time = datetime.now()
         while True:
