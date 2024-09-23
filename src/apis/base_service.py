@@ -57,7 +57,7 @@ class BaseService:
         self._request.on('response', allure_attach)
 
     def _refresh_token(self):
-        response = self.__request_with_retry(
+        response = self.__request(
             method='POST', url_or_request=PSApi.REFRESH_TOKEN.get_endpoint()
         )
         if response.status != 200:
