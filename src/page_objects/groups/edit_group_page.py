@@ -1,3 +1,5 @@
+import tempfile
+
 import allure
 from playwright.sync_api import Page, expect
 
@@ -41,6 +43,8 @@ class EditGroupPage(BasePage):
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
         )
+        self.export_button = self.page.locator('[aria-label="Export"]')
+        self.download_csv_button = self.page.get_by_text('Download as CSV')
 
     @allure.step('EditGroupPage: edit group')
     def edit_group(
@@ -72,3 +76,13 @@ class EditGroupPage(BasePage):
         self.select_all_employees_checkbox.check()
         self.remove_button.click()
         expect(self.page.get_by_text('This group is empty')).to_be_visible()
+
+    @allure.step('EditGroupPage: export employees as csv')
+    def export_as_csv(self):
+        path = tempfile.mktemp(suffix='.csv')
+        with self.page.expect_download() as download_info:
+            self.export_button.click()
+            self.download_csv_button.click()
+        download_event = download_info.value
+        download_event.save_as(path)
+        return path
