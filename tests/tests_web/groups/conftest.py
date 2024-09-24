@@ -83,3 +83,15 @@ def create_group(api_request_context_customer_admin, get_group_managers_and_empl
     expect(response).to_be_ok()
     group = GroupDetailsModel.from_dict(response.json())
     return group
+
+
+@pytest.fixture(scope='function')
+def delete_group(request, api_request_context_customer_admin, create_group):
+    group_service = api.group(api_request_context_customer_admin)
+
+    def finalizer():
+        response = group_service.delete_group(create_group.group.id)
+        expect(response).to_be_ok()
+
+    request.addfinalizer(finalizer)
+    return create_group

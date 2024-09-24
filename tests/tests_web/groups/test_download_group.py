@@ -29,3 +29,32 @@ class TestDownloadExampleCSVFile:
         file_path = groups_page.download_csv_file()
         df1 = pd.read_csv(file_path)
         assert df1.equals(df2), f'{df1.items=}\n\n{df2.items=}'
+
+
+class TestDownloadAsCSV:
+    @pytest.mark.smoke
+    @pytest.mark.web
+    @pytest.mark.parametrize(
+        'user',
+        [
+            pytest.param(
+                UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C31770')
+            )
+        ],
+    )
+    def test_download_as_csv_file(
+        self,
+        delete_group,
+        get_group_managers_and_employees,
+        groups_page: GroupsPage,
+        user: UserModel,
+    ):
+        group_employee = get_group_managers_and_employees[1]
+        edit_group_page = groups_page.open_edit_group_page(delete_group.group.name)
+        file = edit_group_page.export_as_csv()
+        file_content = pd.read_csv(file)
+        expected_row = [group_employee.email, group_employee.full_name]
+        assert (
+            list(file_content.values[0]) == expected_row
+        ), f'{list(file_content.values[0])=}\n\n{expected_row=}'
+        assert len(file_content) == 1, f'{len(file_content)=}'
