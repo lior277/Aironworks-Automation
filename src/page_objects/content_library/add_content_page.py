@@ -126,7 +126,7 @@ class SensitiveInformationComponent:
         self.not_contains_button = self.locator.locator('[aria-label="Not Contains"]')
         self.contains_button = self.locator.locator('[aria-label="Contains"]')
         self.title = self.locator.locator('//div/p').first
-        self.description = self.locator.locator('//div/p').last
+        self.description = self.locator.locator('//div[2]/p[2]')
 
     @allure.step(
         'SensitiveInformationComponent: apply sensitive information {is_contains_sensitive_information}'
