@@ -28,6 +28,20 @@ fake = faker.Faker()
             id='test clone scenario with editing aw admin',
             marks=pytest.mark.test_id('C31491'),
         ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            ScenarioModelFactory.scenario(),
+            ScenarioCloneMode.COPY_CONTENT,
+            id='test clone scenario via copy content customer admin',
+            marks=pytest.mark.test_id('C31777'),
+        ),
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            ScenarioModelFactory.scenario(),
+            ScenarioCloneMode.COPY_CONTENT,
+            id='test clone scenario via copy content aw admin',
+            marks=pytest.mark.test_id('C31778'),
+        ),
     ],
 )
 @pytest.mark.smoke
@@ -45,6 +59,7 @@ def test_clone_scenario(
     scenarios_page.page.get_by_role('button', name='Clone').click()
 
     scenario.name = fake.sentence()
-    scenario.html_content = '{{attack_url}} ' + fake.sentence()
+    if clone_mode == ScenarioCloneMode.NEW_BODY:
+        scenario.html_content = '{{attack_url}} ' + fake.sentence()
 
     scenarios_page.submit_create_scenario_form(scenario, clone_mode=clone_mode)
