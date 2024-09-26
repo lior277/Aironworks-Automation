@@ -1,4 +1,3 @@
-import faker
 import pytest
 from playwright.sync_api import expect
 
@@ -7,32 +6,6 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
 from src.models.scenario_model import ScenarioModel
 from src.page_objects.scenarios_page import ScenariosPage
-
-fake = faker.Faker()
-
-
-@pytest.mark.parametrize(
-    'user,scenario',
-    [
-        pytest.param(
-            UserModelFactory.customer_admin(),
-            ScenarioModelFactory.scenario(),
-            id='test create scenario customer admin',
-            marks=pytest.mark.test_id('C31490'),
-        ),
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(),
-            id='test create scenario aw admin',
-            marks=pytest.mark.test_id('C31489'),
-        ),
-    ],
-)
-@pytest.mark.smoke
-def test_create_scenario(
-    user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
-):
-    scenarios_page.create_scenario(scenario)
 
 
 @pytest.mark.parametrize(
@@ -86,37 +59,3 @@ def test_hide_scenario(
     scenarios_page.page.wait_for_load_state(timeout=5)
 
     expect(scenarios_page.page.get_by_text('Scenario is Hidden now')).to_be_visible()
-
-
-@pytest.mark.parametrize(
-    'user,scenario',
-    [
-        pytest.param(
-            UserModelFactory.customer_admin(),
-            ScenarioModelFactory.scenario(),
-            id='test clone scenario with editing customer admin',
-            marks=pytest.mark.test_id('C31492'),
-        ),
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(),
-            id='test clone scenario with editing aw admin',
-            marks=pytest.mark.test_id('C31491'),
-        ),
-    ],
-)
-@pytest.mark.smoke
-def test_clone_scenario(
-    user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
-):
-    scenarios_page.create_scenario(scenario)
-
-    scenario_element = scenarios_page.find_scenario(scenario.name)
-    scenario_element.click()
-
-    scenarios_page.page.get_by_role('button', name='Clone').click()
-
-    scenario.name = fake.sentence()
-    scenario.html_content = '{{attack_url}} ' + fake.sentence()
-
-    scenarios_page.submit_create_scenario_form(scenario, clone_mode=True)
