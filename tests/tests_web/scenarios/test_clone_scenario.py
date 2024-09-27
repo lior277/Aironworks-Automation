@@ -57,7 +57,7 @@ def test_clone_scenario(
     scenario_element.click()
 
     scenarios_page.page.get_by_role('button', name='Clone').click()
-
+    scenarios_page.verify_cloned_scenario_form(scenario)
     scenario.name = fake.sentence()
     if clone_mode == ScenarioCloneMode.NEW_BODY:
         scenario.html_content = '{{attack_url}} ' + fake.sentence()
