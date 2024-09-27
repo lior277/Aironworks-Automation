@@ -93,6 +93,7 @@ class ScenariosPage(BasePage):
             self.choose_edit_mode_window.select_clone_mode(clone_mode)
             self.wait_for_progress_bar_disappears()
         if not clone_mode or clone_mode == ScenarioCloneMode.NEW_BODY:
+            expect(self.html_content).to_be_empty()
             self.html_content.fill(scenario.html_content)
         self.save.click()
         self.wait_for_progress_bar_disappears(timeout=30_000)
@@ -141,6 +142,29 @@ class ScenariosPage(BasePage):
                 # implement logic with attachment
             case _:
                 self.phishing_link_button.check()
+
+    @allure.step('ScenariosPage: verify cloned {scenario} scenario form')
+    def verify_cloned_scenario_form(self, scenario: ScenarioModel):
+        expect(self.scenario_name).to_have_attribute(name='value', value=scenario.name)
+        expect(self.sender_address).to_have_attribute(
+            name='value', value=scenario.sender_address
+        )
+        expect(self.sender_domain_dropdown.locator).to_have_text(scenario.sender_domain)
+        expect(self.sender_name).to_have_attribute(
+            name='value', value=scenario.sender_name
+        )
+        expect(self.subject).to_have_attribute(name='value', value=scenario.subject)
+        expect(self.link_domain_dropdown.locator).to_have_text(scenario.link_domain)
+        expect(self.url_suffix).to_have_attribute(
+            name='value', value=scenario.url_suffix
+        )
+        match scenario.campaign_type:
+            case CampaignType.PHISHING_LINK:
+                expect(self.phishing_link_button).to_be_checked()
+            case CampaignType.ATTACHMENT:
+                expect(self.attachment_button).to_be_checked()
+            case _:
+                expect(self.data_entry_button).to_be_checked()
 
 
 class ChooseEditModeComponent:
