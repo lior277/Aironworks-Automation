@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from src.configs.config_loader import AppConfigs
-from src.models.scenario import CampaignType
+from src.models.scenario import CampaignType, TargetDetails
 
 
 @dataclass
@@ -15,4 +15,5 @@ class ScenarioModel:
     sender_domain: str = AppConfigs.SENDER_DOMAIN
     link_domain: str = AppConfigs.LINKS_DOMAIN
     campaign_type: CampaignType = CampaignType.PHISHING_LINK
+    target_details: TargetDetails = None
     file_path: str = None

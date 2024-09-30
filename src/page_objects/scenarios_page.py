@@ -4,7 +4,7 @@ from typing import Literal
 import allure
 from playwright.sync_api import Locator, Page, expect
 
-from src.models.scenario import CampaignType, ScenarioCloneMode
+from src.models.scenario import CampaignType, ScenarioCloneMode, TargetType
 from src.models.scenario_model import ScenarioModel
 from src.page_objects import created_new_scenario_text, marked_attack_non_draft_message
 from src.page_objects.base_page import BasePage
@@ -30,7 +30,22 @@ class ScenariosPage(BasePage):
         self.sender_address = self.page.get_by_role('textbox', name='Sender Address')
         self.sender_name = self.page.get_by_role('textbox', name='Sender Name')
         self.subject = self.page.get_by_role('textbox', name='Subject')
+
+        # target details(Only for AW Admin)
+        self.employee_attack = self.page.get_by_role('button', name='Employee Attack')
+        self.company_attack = self.page.get_by_role('button', name='Company Attack')
+        self.general = self.page.get_by_role('button', name='General')
+        self.targeted = self.page.get_by_role('button', name='Targeted')
+        self.target_company_dropdown = DropDown(
+            link_locator=self.page.locator(
+                '//h6[text()="Target Details"]/..'
+            ).get_by_role('combobox', name='Target Company'),
+            option_list_locator=self.page.locator('[role="option"]'),
+        )
+        # self.target_company = self.page.get_by_role('combobox', name='Target Company')
+
         self.url_suffix = self.page.get_by_role('textbox', name='URL Suffix')
+
         self.next = self.page.get_by_role('button', name='Next')
         self.html_content = self.page.get_by_label('Editor editing area: main')
         self.save = self.page.get_by_role('button', name='Save')
@@ -76,6 +91,19 @@ class ScenariosPage(BasePage):
             marked_attack_non_draft_message
         )
 
+    @allure.step('ScenariosPage: select target details')
+    def select_target_details(self, scenario: ScenarioModel):
+        match scenario.target_details.target_type:
+            case TargetType.EMPLOYEE:
+                self.employee_attack.click()
+            case TargetType.COMPANY:
+                self.company_attack.click()
+        if scenario.target_details.target_company:
+            self.targeted.click()
+            self.target_company_dropdown.select_item_by_text(
+                scenario.target_details.target_company
+            )
+
     @allure.step('ScenariosPage: submit create {scenario} scenario form')
     def submit_create_scenario_form(
         self, scenario: ScenarioModel, clone_mode: ScenarioCloneMode = None
@@ -85,6 +113,9 @@ class ScenariosPage(BasePage):
         self.sender_domain_dropdown.select_item_by_text(scenario.sender_domain)
         self.sender_name.fill(scenario.sender_name)
         self.subject.fill(scenario.subject)
+        if scenario.target_details:
+            self.select_target_details(scenario)
+
         self.link_domain_dropdown.select_item_by_text(scenario.link_domain)
         self.url_suffix.fill(scenario.url_suffix)
         self.select_content_type(scenario)
