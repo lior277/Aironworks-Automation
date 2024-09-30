@@ -1,6 +1,8 @@
+import os
+
 import pytest
 
-from src.configs.config_loader import AppConfigs
+from src.configs.config_loader import AppConfigs, AppFolders
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
@@ -112,6 +114,38 @@ def test_create_scenario(
 )
 @pytest.mark.smoke
 def test_create_data_entry_scenario(
+    user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
+):
+    scenarios_page.create_scenario(scenario)
+
+
+@pytest.mark.parametrize(
+    'user,scenario',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            ScenarioModelFactory.scenario(
+                html_content=None,
+                campaign_type=CampaignType.ATTACHMENT,
+                file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.pdf'),
+            ),
+            id='test create attachment scenario customer admin',
+            marks=pytest.mark.test_id('C31783'),
+        ),
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            ScenarioModelFactory.scenario(
+                html_content=None,
+                campaign_type=CampaignType.ATTACHMENT,
+                file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.pdf'),
+            ),
+            id='test create attachment scenario aw admin',
+            marks=pytest.mark.test_id('C31782'),
+        ),
+    ],
+)
+@pytest.mark.smoke
+def test_create_attachment_scenario(
     user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
 ):
     scenarios_page.create_scenario(scenario)

@@ -11,6 +11,8 @@ class ScenarioModelFactory:
     def scenario(
         campaign_type: CampaignType = CampaignType.PHISHING_LINK,
         target_details: TargetDetails = None,
+        file_path: str = None,
+        html_content='{{attack_url}}',
     ) -> ScenarioModel:
         return ScenarioModel(
             name='QA Test Scenario ' + fake.name(),
@@ -20,4 +22,6 @@ class ScenarioModelFactory:
             url_suffix=fake.pystr().lower(),
             campaign_type=campaign_type,
             target_details=target_details,
+            file_path=file_path,
+            html_content=html_content,
         )

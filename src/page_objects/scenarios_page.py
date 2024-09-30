@@ -6,7 +6,11 @@ from playwright.sync_api import Locator, Page, expect
 
 from src.models.scenario import CampaignType, ScenarioCloneMode, TargetType
 from src.models.scenario_model import ScenarioModel
-from src.page_objects import created_new_scenario_text, marked_attack_non_draft_message
+from src.page_objects import (
+    created_new_scenario_text,
+    marked_attack_non_draft_message,
+    scenario_file_name_helper_text,
+)
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.execute_campaign_page import ExecuteCampaignPage
@@ -64,6 +68,14 @@ class ScenariosPage(BasePage):
         self.phishing_link_button = self.page.locator('[value="LINK"]')
         self.data_entry_button = self.page.locator('[value="DATAENTRY"]')
         self.attachment_button = self.page.locator('[value="ATTACHMENT"]')
+        self.upload_pdf_file_button = self.page.get_by_role(
+            'button', name='Upload a PDF file'
+        )
+        self.delete_file_button = self.page.get_by_label('delete-file')
+        self.file_name_input = self.page.locator(
+            '[aria-describedby="file-name-helper-text"]'
+        )
+        self.file_name_helper_text = self.page.locator('[id="file-name-helper-text"]')
         self.data_entry_dropdown = DropDown(
             self.page.locator('[id="data_entry_kind"]'),
             option_list_locator=self.page.locator('[role="option"]'),
@@ -123,7 +135,11 @@ class ScenariosPage(BasePage):
         if clone_mode:
             self.choose_edit_mode_window.select_clone_mode(clone_mode)
             self.wait_for_progress_bar_disappears()
-        if not clone_mode or clone_mode == ScenarioCloneMode.NEW_BODY:
+        if (
+            scenario.html_content
+            and not clone_mode
+            or clone_mode == ScenarioCloneMode.NEW_BODY
+        ):
             expect(self.html_content).to_be_empty()
             self.html_content.fill(scenario.html_content)
         self.save.click()
@@ -170,7 +186,14 @@ class ScenariosPage(BasePage):
                 )
             case CampaignType.ATTACHMENT:
                 self.attachment_button.check()
-                # implement logic with attachment
+                with self.page.expect_file_chooser() as fc:
+                    self.upload_pdf_file_button.click()
+                    fc.value.set_files(scenario.file_path)
+                    self.wait_for_progress_bar_disappears()
+                    expect(self.delete_file_button).to_be_visible()
+                    expect(self.file_name_helper_text).to_have_text(
+                        scenario_file_name_helper_text
+                    )
             case _:
                 self.phishing_link_button.check()
 
