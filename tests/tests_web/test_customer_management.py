@@ -67,7 +67,9 @@ def test_active_customer_spectate(user, customers_page):
     columns = row.get_by_role('cell').all()
     company_name = columns[0].text_content()
 
-    row.get_by_role('cell', name='Spectate').click()
+    spectate_button = row.get_by_role('cell', name='Spectate')
+    spectate_button.click()
+    spectate_button.wait_for(state='hidden')
     customers_page.page.wait_for_load_state(timeout=5)
 
     try:

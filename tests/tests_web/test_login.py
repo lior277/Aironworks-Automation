@@ -1,3 +1,4 @@
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -15,7 +16,7 @@ from src.page_objects.login_page import SignInPage
             UserModelFactory.user(),
             'Invalid Email address or password',
             id='login invalid user',
-            marks=pytest.mark.test_id('C29654'),
+            marks=allure.testcase('29654'),
         )
     ],
 )
