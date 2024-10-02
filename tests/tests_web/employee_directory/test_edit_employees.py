@@ -1,3 +1,4 @@
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -23,7 +24,7 @@ from src.page_objects.entity.employee_entity import EmployeeEntityFactory
             UserModelFactory.customer_admin(),
             EmployeeItemModelFactory.get_random_employee(),
             False,
-            marks=pytest.mark.test_id('C31666'),
+            marks=allure.testcase('31666'),
         )
     ],
 )
@@ -54,9 +55,7 @@ def test_edit_employee_all_fields(
     'user,inactive',
     [
         pytest.param(
-            UserModelFactory.customer_admin(),
-            False,
-            marks=pytest.mark.test_id('C31667'),
+            UserModelFactory.customer_admin(), False, marks=allure.testcase('31667')
         )
     ],
 )
@@ -75,7 +74,7 @@ def test_deactivate_employee(
     'user,inactive',
     [
         pytest.param(
-            UserModelFactory.customer_admin(), True, marks=pytest.mark.test_id('C30815')
+            UserModelFactory.customer_admin(), True, marks=allure.testcase('30815')
         )
     ],
 )
@@ -94,7 +93,7 @@ def test_restore_employee(
     'user,inactive',
     [
         pytest.param(
-            UserModelFactory.customer_admin(), True, marks=pytest.mark.test_id('C31668')
+            UserModelFactory.customer_admin(), True, marks=allure.testcase('31668')
         )
     ],
 )

@@ -1,3 +1,4 @@
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -14,12 +15,12 @@ from src.page_objects.scenarios_page import ScenariosPage
         pytest.param(
             UserModelFactory.aw_admin(),
             id='filter scenario aw admin',
-            marks=pytest.mark.test_id('C31494'),
+            marks=allure.testcase('31494'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='filter scenario customer admin',
-            marks=pytest.mark.test_id('C31496'),
+            marks=allure.testcase('31496'),
         ),
     ],
 )
@@ -40,7 +41,7 @@ def test_filter_scenario_by_name(user: UserModel, scenarios_page: ScenariosPage)
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(),
             id='hide scenario',
-            marks=pytest.mark.test_id('C31497'),
+            marks=allure.testcase('31497'),
         )
     ],
 )

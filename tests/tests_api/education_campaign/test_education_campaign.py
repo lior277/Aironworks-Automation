@@ -2,6 +2,7 @@ import re
 from email import message_from_bytes
 from email.message import Message
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -12,7 +13,7 @@ from src.utils import markers
 from src.utils.links import get_text_links
 
 
-@pytest.mark.test_id('C31564')
+@allure.testcase('31564')
 @pytest.mark.api
 @pytest.mark.smoke
 def test_education_campaign(api_request_context_customer_admin, employee, mailtrap):
@@ -25,7 +26,7 @@ def test_education_campaign(api_request_context_customer_admin, employee, mailtr
     assert len(links) == 1
 
 
-@pytest.mark.test_id('C31513')
+@allure.testcase('31513')
 @markers.common_resource(name='settings')
 @pytest.mark.api
 @pytest.mark.smoke

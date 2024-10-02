@@ -56,7 +56,7 @@ def run_campaign_on_employee(
     assert wait_for(validate_campaign_status, 60)
 
 
-@pytest.mark.test_id('C31562')
+@allure.testcase('31562')
 @pytest.mark.api
 @pytest.mark.smoke
 def test_attack_campaign(
@@ -67,7 +67,7 @@ def test_attack_campaign(
     )
 
 
-@pytest.mark.test_id('C31511')
+@allure.testcase('31511')
 @markers.common_resource(name='settings')
 @pytest.mark.api
 @pytest.mark.smoke

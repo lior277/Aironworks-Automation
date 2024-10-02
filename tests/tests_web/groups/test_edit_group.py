@@ -1,3 +1,4 @@
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -11,11 +12,7 @@ from src.utils.randomizer import generate_string
 @pytest.mark.web
 @pytest.mark.parametrize(
     'user',
-    [
-        pytest.param(
-            UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C31731')
-        )
-    ],
+    [pytest.param(UserModelFactory.customer_admin(), marks=allure.testcase('31731'))],
 )
 def test_edit_group(create_group, groups_page: GroupsPage, user: UserModel):
     new_group_name = generate_string()

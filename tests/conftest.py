@@ -56,8 +56,8 @@ def pytest_collection_modifyitems(session, config, items):
                 item.add_marker(pytest.mark.timeout(3 * 60))
 
     for item in items:
-        for marker in item.iter_markers(name='test_id'):
-            test_id = marker.args[0]
+        for marker in item.iter_markers(name='allure_link'):
+            test_id = 'C' + marker.args[0].split('/')[-1]
             item.user_properties.append(('test_id', test_id))
 
 

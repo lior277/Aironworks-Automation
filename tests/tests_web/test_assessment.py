@@ -1,6 +1,7 @@
 import random
 import re
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -12,7 +13,7 @@ from src.utils.waiter import wait_for_lro
 
 @pytest.mark.parametrize('user', [UserModelFactory.customer_admin()])
 @pytest.mark.smoke
-@pytest.mark.test_id('C31554')
+@allure.testcase('31554')
 def test_report_can_be_resolved(user, api_request_context_addin, employee_reports_page):
     message = 'Test Mail E2E Test ' + str(random.randint(100000000, 999999999))
     assessment_service = api.assessment(api_request_context_addin)
@@ -44,7 +45,7 @@ def test_report_can_be_resolved(user, api_request_context_addin, employee_report
     expect(reported_message).to_have_count(0)
 
 
-@pytest.mark.test_id('C5846')
+@allure.testcase('5846')
 @pytest.mark.smoke
 def test_assessment_outlook(outlook_page):
     # goto specific message

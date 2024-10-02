@@ -1,3 +1,4 @@
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -49,12 +50,12 @@ class TestCreateEducationContent:
             pytest.param(
                 UserModelFactory.aw_admin(),
                 ContentLibraryEntityFactory.get_video_content(),
-                marks=pytest.mark.test_id('C31638'),
+                marks=allure.testcase('31638'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin(),
                 ContentLibraryEntityFactory.get_video_content(),
-                marks=pytest.mark.test_id('C31647'),
+                marks=allure.testcase('31647'),
             ),
         ],
     )
@@ -75,12 +76,12 @@ class TestCreateEducationContent:
             pytest.param(
                 UserModelFactory.aw_admin(),
                 ContentLibraryEntityFactory.get_pdf_content(),
-                marks=pytest.mark.test_id('C31642'),
+                marks=allure.testcase('31642'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin(),
                 ContentLibraryEntityFactory.get_pdf_content(),
-                marks=pytest.mark.test_id('C31649'),
+                marks=allure.testcase('31649'),
             ),
         ],
     )
@@ -101,12 +102,12 @@ class TestCreateEducationContent:
             pytest.param(
                 UserModelFactory.aw_admin(),
                 ContentLibraryEntityFactory.get_slides_content(),
-                marks=pytest.mark.test_id('C31640'),
+                marks=allure.testcase('31640'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin(),
                 ContentLibraryEntityFactory.get_slides_content(),
-                marks=pytest.mark.test_id('C31648'),
+                marks=allure.testcase('31648'),
             ),
         ],
     )
@@ -127,12 +128,12 @@ class TestCreateEducationContent:
             # pytest.param(
             #     UserModelFactory.aw_admin(),
             #     ContentLibraryEntityFactory.get_quiz_content(),
-            #     marks=pytest.mark.test_id('C31635'),
+            #     marks=allure.testcase('31635'),
             # ),
             pytest.param(
                 UserModelFactory.customer_admin(),
                 ContentLibraryEntityFactory.get_quiz_content(),
-                marks=pytest.mark.test_id('C31650'),
+                marks=allure.testcase('31650'),
             )
         ],
     )
@@ -153,12 +154,12 @@ class TestCreateEducationContent:
             pytest.param(
                 UserModelFactory.aw_admin(),
                 ContentLibraryEntityFactory.get_survey_content(),
-                marks=pytest.mark.test_id('C31764'),
+                marks=allure.testcase('31764'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin(),
                 ContentLibraryEntityFactory.get_survey_content(),
-                marks=pytest.mark.test_id('C31765'),
+                marks=allure.testcase('31765'),
             ),
         ],
     )

@@ -1,3 +1,4 @@
+import allure
 import pytest
 
 from src.models.auth.user_model import UserModel
@@ -14,11 +15,9 @@ class TestDeleteEducationCampaign:
     @pytest.mark.parametrize(
         'user',
         [
+            pytest.param(UserModelFactory.aw_admin(), marks=allure.testcase('31628')),
             pytest.param(
-                UserModelFactory.aw_admin(), marks=pytest.mark.test_id('C31628')
-            ),
-            pytest.param(
-                UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C31625')
+                UserModelFactory.customer_admin(), marks=allure.testcase('31625')
             ),
         ],
     )

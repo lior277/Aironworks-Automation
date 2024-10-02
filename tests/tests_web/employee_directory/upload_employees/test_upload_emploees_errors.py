@@ -2,6 +2,7 @@ import os
 import random
 import string
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -25,12 +26,12 @@ class TestUploadEmployeesErrors:
             pytest.param(
                 UserModelFactory.customer_admin(),
                 'sample.pdf',
-                marks=pytest.mark.test_id('C31651'),
+                marks=allure.testcase('31651'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin(),
                 'sample.txt',
-                marks=pytest.mark.test_id('C31655'),
+                marks=allure.testcase('31655'),
             ),
         ],
     )
@@ -72,7 +73,7 @@ class TestUploadEmployeesUnsupportedColumns:
             pytest.param(
                 UserModelFactory.customer_admin(),
                 ['unsupported field 1', 'unsupported field 2', 'unsupported field 3'],
-                marks=pytest.mark.test_id('C31657'),
+                marks=allure.testcase('31657'),
             )
         ],
     )

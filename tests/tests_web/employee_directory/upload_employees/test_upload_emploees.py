@@ -2,6 +2,7 @@ import os
 import random
 import string
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -46,25 +47,25 @@ class TestUploadEmployees:
                 UserModelFactory.customer_admin_upload(),
                 True,
                 True,
-                marks=pytest.mark.test_id('C31539'),
+                marks=allure.testcase('31539'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 False,
                 True,
-                marks=pytest.mark.test_id('C31656'),
+                marks=allure.testcase('31656'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 True,
                 False,
-                marks=pytest.mark.test_id('C31660'),
+                marks=allure.testcase('31660'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 False,
                 False,
-                marks=pytest.mark.test_id('C31661'),
+                marks=allure.testcase('31661'),
             ),
         ],
     )
@@ -89,12 +90,12 @@ class TestUploadEmployees:
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 True,
-                marks=pytest.mark.test_id('C31665'),
+                marks=allure.testcase('31665'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 False,
-                marks=pytest.mark.test_id('C31662'),
+                marks=allure.testcase('31662'),
             ),
         ],
     )

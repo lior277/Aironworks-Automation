@@ -1,3 +1,4 @@
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -65,14 +66,12 @@ def cloned_education_content(
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(),
-            id='AW Admin',
-            marks=pytest.mark.test_id('C31632'),
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31632')
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=pytest.mark.test_id('C31633'),
+            marks=allure.testcase('31633'),
         ),
     ],
 )
