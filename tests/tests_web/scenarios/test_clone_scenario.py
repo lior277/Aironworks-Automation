@@ -1,3 +1,4 @@
+import allure
 import faker
 import pytest
 
@@ -19,28 +20,28 @@ fake = faker.Faker()
             ScenarioModelFactory.scenario(),
             ScenarioCloneMode.NEW_BODY,
             id='test clone scenario with editing customer admin',
-            marks=pytest.mark.test_id('C31492'),
+            marks=allure.testcase('31492'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(),
             ScenarioCloneMode.NEW_BODY,
             id='test clone scenario with editing aw admin',
-            marks=pytest.mark.test_id('C31491'),
+            marks=allure.testcase('31491'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             ScenarioModelFactory.scenario(),
             ScenarioCloneMode.COPY_CONTENT,
             id='test clone scenario via copy content customer admin',
-            marks=pytest.mark.test_id('C31777'),
+            marks=allure.testcase('31777'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(),
             ScenarioCloneMode.COPY_CONTENT,
             id='test clone scenario via copy content aw admin',
-            marks=pytest.mark.test_id('C31778'),
+            marks=allure.testcase('31778'),
         ),
     ],
 )

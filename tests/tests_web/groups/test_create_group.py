@@ -1,3 +1,4 @@
+import allure
 import pytest
 
 from src.models.auth.user_model import UserModel
@@ -13,7 +14,7 @@ class TestCreateGroup:
         'user',
         [
             pytest.param(
-                UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C29343')
+                UserModelFactory.customer_admin(), marks=allure.testcase('29343')
             )
         ],
     )
@@ -28,7 +29,7 @@ class TestCreateGroup:
         'user',
         [
             pytest.param(
-                UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C29345')
+                UserModelFactory.customer_admin(), marks=allure.testcase('29345')
             )
         ],
     )

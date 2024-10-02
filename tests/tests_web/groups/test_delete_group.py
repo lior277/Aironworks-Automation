@@ -1,3 +1,4 @@
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -10,11 +11,7 @@ from src.page_objects.groups.groups_page import GroupsPage
 @pytest.mark.web
 @pytest.mark.parametrize(
     'user',
-    [
-        pytest.param(
-            UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C31730')
-        )
-    ],
+    [pytest.param(UserModelFactory.customer_admin(), marks=allure.testcase('31730'))],
 )
 def test_delete_group(create_group, groups_page: GroupsPage, user: UserModel):
     group_details_page = groups_page.open_group_details(create_group.group.name)

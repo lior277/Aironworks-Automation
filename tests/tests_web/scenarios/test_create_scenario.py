@@ -1,5 +1,6 @@
 import os
 
+import allure
 import pytest
 
 from src.configs.config_loader import AppConfigs, AppFolders
@@ -18,7 +19,7 @@ from src.page_objects.scenarios_page import ScenariosPage
             UserModelFactory.customer_admin(),
             ScenarioModelFactory.scenario(),
             id='test create scenario customer admin',
-            marks=pytest.mark.test_id('C31490'),
+            marks=allure.testcase('31490'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -26,7 +27,7 @@ from src.page_objects.scenarios_page import ScenariosPage
                 target_details=TargetDetails(target_type=TargetType.EMPLOYEE)
             ),
             id='test create scenario aw admin attack employee general',
-            marks=pytest.mark.test_id('C31780'),
+            marks=allure.testcase('31780'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -34,7 +35,7 @@ from src.page_objects.scenarios_page import ScenariosPage
                 target_details=TargetDetails(target_type=TargetType.COMPANY)
             ),
             id='test create scenario aw admin attack company general',
-            marks=pytest.mark.test_id('C31779'),
+            marks=allure.testcase('31779'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -45,7 +46,7 @@ from src.page_objects.scenarios_page import ScenariosPage
                 )
             ),
             id='test create scenario aw admin attack company targeted',
-            marks=pytest.mark.test_id('C31781'),
+            marks=allure.testcase('31781'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -56,7 +57,7 @@ from src.page_objects.scenarios_page import ScenariosPage
                 )
             ),
             id='test create scenario aw admin attack employee targeted',
-            marks=pytest.mark.test_id('C5991'),
+            marks=allure.testcase('5991'),
         ),
     ],
 )
@@ -74,25 +75,25 @@ def test_create_scenario(
             UserModelFactory.customer_admin(),
             ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_APPLE),
             id='test create Apple data entry scenario customer admin',
-            marks=pytest.mark.test_id('C31772'),
+            marks=allure.testcase('31772'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_APPLE),
             id='test create Apple data entry scenario aw admin',
-            marks=pytest.mark.test_id('C31775'),
+            marks=allure.testcase('31775'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_GOOGLE),
             id='test create Google data entry scenario customer admin',
-            marks=pytest.mark.test_id('C31771'),
+            marks=allure.testcase('31771'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_GOOGLE),
             id='test create Google data entry scenario aw admin',
-            marks=pytest.mark.test_id('C31774'),
+            marks=allure.testcase('31774'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
@@ -100,7 +101,7 @@ def test_create_scenario(
                 campaign_type=CampaignType.DATA_ENTRY_MICROSOFT
             ),
             id='test create Microsoft data entry scenario customer admin',
-            marks=pytest.mark.test_id('C31773'),
+            marks=allure.testcase('31773'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -108,7 +109,7 @@ def test_create_scenario(
                 campaign_type=CampaignType.DATA_ENTRY_MICROSOFT
             ),
             id='test create Microsoft data entry scenario aw admin',
-            marks=pytest.mark.test_id('C31776'),
+            marks=allure.testcase('31776'),
         ),
     ],
 )
@@ -130,7 +131,7 @@ def test_create_data_entry_scenario(
                 file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.pdf'),
             ),
             id='test create attachment scenario customer admin',
-            marks=pytest.mark.test_id('C31783'),
+            marks=allure.testcase('31783'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -140,7 +141,7 @@ def test_create_data_entry_scenario(
                 file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.pdf'),
             ),
             id='test create attachment scenario aw admin',
-            marks=pytest.mark.test_id('C31782'),
+            marks=allure.testcase('31782'),
         ),
     ],
 )

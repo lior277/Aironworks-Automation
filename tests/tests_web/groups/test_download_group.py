@@ -1,5 +1,6 @@
 import os
 
+import allure
 import pandas as pd
 import pytest
 
@@ -18,7 +19,7 @@ class TestDownloadExampleCSVFile:
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 'example3.csv',
-                marks=pytest.mark.test_id('C31714'),
+                marks=allure.testcase('31714'),
             )
         ],
     )
@@ -38,7 +39,7 @@ class TestDownloadAsCSV:
         'user',
         [
             pytest.param(
-                UserModelFactory.customer_admin(), marks=pytest.mark.test_id('C31770')
+                UserModelFactory.customer_admin(), marks=allure.testcase('31770')
             )
         ],
     )

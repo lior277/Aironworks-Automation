@@ -1,5 +1,6 @@
 import re
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -9,7 +10,7 @@ from src.page_objects.content_library.content_library_page import ContentLibrary
 
 
 @pytest.mark.parametrize('user', [UserModelFactory.aw_admin()])
-@pytest.mark.test_id('C31520')
+@allure.testcase('31520')
 @pytest.mark.smoke
 def test_filter_company_by_visibility(user, content_library_page: ContentLibraryPage):
     content_library_page.set_visibility_filter('QA Accounts')
@@ -21,14 +22,12 @@ def test_filter_company_by_visibility(user, content_library_page: ContentLibrary
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(),
-            id='AW Admin',
-            marks=pytest.mark.test_id('C31518'),
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31518')
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=pytest.mark.test_id('C31519'),
+            marks=allure.testcase('31519'),
         ),
     ],
 )
@@ -46,14 +45,12 @@ def test_filter_company_by_name(
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(),
-            id='AW Admin',
-            marks=pytest.mark.test_id('C31516'),
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31516')
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=pytest.mark.test_id('C31517'),
+            marks=allure.testcase('31517'),
         ),
     ],
 )

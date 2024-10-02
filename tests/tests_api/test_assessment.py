@@ -1,6 +1,7 @@
 import random
 from base64 import b64encode
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -15,7 +16,7 @@ from src.utils.mailtrap import find_attachment
 from src.utils.waiter import wait_for_lro
 
 
-@pytest.mark.test_id('C31557')
+@allure.testcase('31557')
 @pytest.mark.addin_api
 def test_credentials_should_be_correct(api_request_context_addin):
     expected_assessment_info = AssessmentInfoModelFactory.get_default_info(
@@ -32,7 +33,7 @@ def test_credentials_should_be_correct(api_request_context_addin):
     ), f'{expected_assessment_info=}\n\n{actual_assessment_info=}'
 
 
-@pytest.mark.test_id('C31558')
+@allure.testcase('31558')
 @pytest.mark.addin_api
 def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     assessment_service = api.assessment(api_request_context_addin)
@@ -60,7 +61,7 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     )
 
 
-@pytest.mark.test_id('C31560')
+@allure.testcase('31560')
 @pytest.mark.addin_api
 def test_assessment_report(api_request_context_addin, mailtrap):
     message = 'Test Mail E2E Test ' + str(random.randint(100000000, 999999999))

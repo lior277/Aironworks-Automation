@@ -1,6 +1,7 @@
 import csv
 import re
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -19,14 +20,12 @@ from src.utils.mailtrap import find_email
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(),
-            id='AW Admin',
-            marks=pytest.mark.test_id('C31544'),
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31544')
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=pytest.mark.test_id('C31545'),
+            marks=allure.testcase('31545'),
         ),
     ],
 )
@@ -63,14 +62,12 @@ def test_create_simulation_campaign(
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(),
-            id='AW Admin',
-            marks=pytest.mark.test_id('C31547'),
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31547')
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=pytest.mark.test_id('C31546'),
+            marks=allure.testcase('31546'),
         ),
     ],
 )
@@ -88,14 +85,12 @@ def test_campaigns_page_has_data(user, campaigns_page):
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(),
-            id='AW Admin',
-            marks=pytest.mark.test_id('C31547'),
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31547')
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=pytest.mark.test_id('C31546'),
+            marks=allure.testcase('31546'),
         ),
     ],
 )
@@ -118,14 +113,12 @@ def test_campaign_summary_page(campaign_details_page, user):
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(),
-            id='AW Admin',
-            marks=pytest.mark.test_id('C31549'),
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31549')
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=pytest.mark.test_id('C31552'),
+            marks=allure.testcase('31552'),
         ),
     ],
 )
@@ -142,14 +135,12 @@ def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage, user
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(),
-            id='AW Admin',
-            marks=pytest.mark.test_id('C31550'),
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31550')
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=pytest.mark.test_id('C31553'),
+            marks=allure.testcase('31553'),
         ),
     ],
 )

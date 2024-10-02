@@ -22,6 +22,7 @@ from src.page_objects.login_page import SignInPage
 )
 @pytest.mark.web
 @pytest.mark.smoke
+@pytest.mark.dev
 def test_login_error_message(sign_in_page: SignInPage, user: UserModel, error_message):
     sign_in_page.navigate()
     sign_in_page.fill_sign_in_form(user)
@@ -36,7 +37,7 @@ def test_login_error_message(sign_in_page: SignInPage, user: UserModel, error_me
         pytest.param(
             UserModelFactory.customer_admin(),
             id='login success',
-            marks=pytest.mark.test_id('C17077'),
+            marks=allure.testcase('17077'),
         )
     ],
 )

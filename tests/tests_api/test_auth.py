@@ -1,7 +1,8 @@
+import allure
 import pytest
 
 
-@pytest.mark.test_id('C31126')
+@allure.testcase('31126')
 @pytest.mark.api
 @pytest.mark.smoke
 def test_login(api_request_context_customer_admin):

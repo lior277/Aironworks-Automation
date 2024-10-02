@@ -1,3 +1,4 @@
+import allure
 import pytest
 from faker import Faker
 from playwright.sync_api import expect
@@ -9,7 +10,7 @@ from src.models.factories.company.employee_model_factory import EmployeeModelFac
 fake = Faker()
 
 
-@pytest.mark.test_id('C31563')
+@allure.testcase('31563')
 @pytest.mark.api
 @pytest.mark.smoke
 def test_upload_employees(api_request_context_customer_admin):

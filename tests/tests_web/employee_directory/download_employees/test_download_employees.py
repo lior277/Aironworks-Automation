@@ -1,5 +1,6 @@
 import os
 
+import allure
 import pandas as pd
 import pytest
 
@@ -21,13 +22,13 @@ class TestDownloadExampleCSVFiles:
                 UserModelFactory.customer_admin_upload(),
                 'example1.csv',
                 True,
-                marks=pytest.mark.test_id('C31659'),
+                marks=allure.testcase('31659'),
             ),
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 'example2.csv',
                 False,
-                marks=pytest.mark.test_id('C31658'),
+                marks=allure.testcase('31658'),
             ),
         ],
     )

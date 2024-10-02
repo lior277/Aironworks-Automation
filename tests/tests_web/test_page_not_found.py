@@ -1,5 +1,6 @@
 import uuid
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -20,91 +21,91 @@ from tests.tests_web import (
             UserModelFactory.customer_admin(),
             'dashboard/groups/edit/id',
             id='Groups edit',
-            marks=pytest.mark.test_id('C31715'),
+            marks=allure.testcase('31715'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             'dashboard/groups/view/id',
             id='Groups view',
-            marks=pytest.mark.test_id('C31716'),
+            marks=allure.testcase('31716'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             'dashboard/company/employees/active/edit/id',
             id='Employee edit',
-            marks=pytest.mark.test_id('C31717'),
+            marks=allure.testcase('31717'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             'dashboard/company/employees/admins/edit/id',
             id='Admin edit',
-            marks=pytest.mark.test_id('C31718'),
+            marks=allure.testcase('31718'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             'dashboard/company/employees/group-admins/edit/id',
             id='Group admin edit',
-            marks=pytest.mark.test_id('C31719'),
+            marks=allure.testcase('31719'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             'admin/dashboard/customers/edit/id',
             id='Customers edit as AW admin',
-            marks=pytest.mark.test_id('C31720'),
+            marks=allure.testcase('31720'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             'admin/dashboard/resellers/id',
             id='Resellers view',
-            marks=pytest.mark.test_id('C31721'),
+            marks=allure.testcase('31721'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             'admin/dashboard/scenario-requests/view/id',
             id='Scenario requests view as AW admin',
-            marks=pytest.mark.test_id('C31722'),
+            marks=allure.testcase('31722'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             'admin/dashboard/content-library/id',
             id='Content library view',
-            marks=pytest.mark.test_id('C31723'),
+            marks=allure.testcase('31723'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             'admin/dashboard/content-library/id',
             id='Content library view as AW admin',
-            marks=pytest.mark.test_id('C31724'),
+            marks=allure.testcase('31724'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             'admin/dashboard/education-campaigns/view/id',
             id='Education campaigns view',
-            marks=pytest.mark.test_id('C31725'),
+            marks=allure.testcase('31725'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             'admin/dashboard/education-campaigns/view/id',
             id='Education campaigns view as AW admin',
-            marks=pytest.mark.test_id('C31726'),
+            marks=allure.testcase('31726'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             'admin/dashboard/attacks/scenario-requests/view/id',
             id='Scenario requests view',
-            marks=pytest.mark.test_id('C31727'),
+            marks=allure.testcase('31727'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             'admin/dashboard/attacks/executions/id',
             id='Executions view',
-            marks=pytest.mark.test_id('C31728'),
+            marks=allure.testcase('31728'),
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
             'admin/dashboard/attacks/executions/id',
             id='Executions view as AW admin',
-            marks=pytest.mark.test_id('C31729'),
+            marks=allure.testcase('31729'),
         ),
     ],
 )

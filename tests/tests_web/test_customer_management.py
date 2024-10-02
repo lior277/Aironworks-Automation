@@ -1,6 +1,7 @@
 import re
 import time
 
+import allure
 import pytest
 from playwright.sync_api import Playwright, TimeoutError, expect
 
@@ -19,12 +20,12 @@ from src.page_objects.customers_page import CustomersPage
         pytest.param(
             UserModelFactory.aw_admin(),
             id='active customers visible',
-            marks=pytest.mark.test_id('C31499'),
+            marks=allure.testcase('31499'),
         ),
         pytest.param(
             UserModelFactory.reseller_admin(),
             id='active customers visible for reseller admin',
-            marks=pytest.mark.test_id('C31500'),
+            marks=allure.testcase('31500'),
         ),
     ],
 )
@@ -49,12 +50,12 @@ def test_active_customers_visible(user, customers_page):
         pytest.param(
             UserModelFactory.aw_admin(),
             id='customer can be spectated',
-            marks=pytest.mark.test_id('C31502'),
+            marks=allure.testcase('31502'),
         ),
         pytest.param(
             UserModelFactory.reseller_admin(),
             id='customer can be spectated as reseller admin',
-            marks=pytest.mark.test_id('C31501'),
+            marks=allure.testcase('31501'),
         ),
     ],
 )
@@ -92,12 +93,12 @@ def test_active_customer_spectate(user, customers_page):
         pytest.param(
             UserModelFactory.aw_admin(),
             id='new customer count is correct for aw admin',
-            marks=pytest.mark.test_id('C31503'),
+            marks=allure.testcase('31503'),
         ),
         pytest.param(
             UserModelFactory.reseller_admin(),
             id='new customer count is correct for reseller admin',
-            marks=pytest.mark.test_id('C31504'),
+            marks=allure.testcase('31504'),
         ),
     ],
 )
@@ -129,12 +130,12 @@ def test_new_customers_count(
         pytest.param(
             UserModelFactory.aw_admin(),
             id='aw admin can approve new customer',
-            marks=pytest.mark.test_id('C31505'),
+            marks=allure.testcase('31505'),
         ),
         pytest.param(
             UserModelFactory.reseller_admin(),
             id='reseller admin can approve new customer',
-            marks=pytest.mark.test_id('C31506'),
+            marks=allure.testcase('31506'),
         ),
     ],
 )
@@ -190,7 +191,7 @@ def test_approve_new_customer(
         pytest.param(
             UserModelFactory.reseller_admin(),
             id='reseller admin can approve new customer',
-            marks=pytest.mark.test_id('C31507'),
+            marks=allure.testcase('31507'),
         )
     ],
 )
