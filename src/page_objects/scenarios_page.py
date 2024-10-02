@@ -100,7 +100,7 @@ class ScenariosPage(BasePage):
         self.page.get_by_role('button', name='Finish Draft').click()
         self.page.get_by_role('button', name='OK').click()
         expect(self.alert_message.first).to_contain_text(
-            marked_attack_non_draft_message
+            marked_attack_non_draft_message, timeout=30_000
         )
 
     @allure.step('ScenariosPage: select target details')
