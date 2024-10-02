@@ -1,8 +1,10 @@
+import os
 import random
 import sys
 from dataclasses import replace
 from typing import Generator
 
+import allure
 import pytest
 from faker import Faker
 from playwright.sync_api import APIRequestContext, Playwright, expect
@@ -209,3 +211,26 @@ def set_up_perf_survey(api_request_context_customer_admin) -> Survey:
     if not survey.always_sent:
         survey_service.set_default_survey(survey.id)
     return survey
+
+
+@pytest.fixture(scope='session', autouse=True)
+@allure.title('Populate allure environment')
+def fx_ss_add_environment(request):
+    def finalizer():
+        if request.config.getoption('--alluredir', None):
+            f = open(
+                os.path.join(
+                    request.config.getoption('--alluredir', None),
+                    'environment.properties',
+                ),
+                'w+',
+            )
+            f.write(f'ENV={AppConfigs.ENV}\n')
+            f.write(f'BASE_URL={AppConfigs.BASE_URL}\n')
+            f.write(f'ADMIN_BASE_URL={AppConfigs.ADMIN_BASE_URL}\n')
+            f.write(f'ADDIN_BASE_URL={AppConfigs.ADDIN_BASE_URL}\n')
+            f.write(f'BROWSER_NAME={os.getenv('BROWSER_NAME')}\n')
+            f.write(f'BROWSER_VERSION={os.getenv('BROWSER_VERSION')}\n')
+            f.close()
+
+    request.addfinalizer(finalizer)

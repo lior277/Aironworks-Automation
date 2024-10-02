@@ -48,6 +48,9 @@ def playwright_config(request, launch_browser, browser_type):
     if browser_type.name == 'chromium':
         args = ['--single-process']
     browser: Browser = launch_browser(args=args)
+    if not os.getenv('BROWSER_NAME'):
+        os.environ['BROWSER_NAME'] = browser.browser_type.name
+        os.environ['BROWSER_VERSION'] = browser.version
     Log.info(f'Browser version = {browser.version}')
     context = browser.new_context(
         viewport={'width': 1440, 'height': 900},
