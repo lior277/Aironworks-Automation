@@ -125,19 +125,19 @@ class TestCreateEducationContent:
     @pytest.mark.parametrize(
         'user,education_content',
         [
-            # pytest.param(
-            #     UserModelFactory.aw_admin(),
-            #     ContentLibraryEntityFactory.get_quiz_content(),
-            #     marks=allure.testcase('31635'),
-            # ),
+            pytest.param(
+                UserModelFactory.aw_admin(),
+                ContentLibraryEntityFactory.get_quiz_content(),
+                marks=allure.testcase('31635'),
+            ),
             pytest.param(
                 UserModelFactory.customer_admin(),
                 ContentLibraryEntityFactory.get_quiz_content(),
                 marks=allure.testcase('31650'),
-            )
+            ),
         ],
     )
-    def test_create_assessment_education_content(
+    def test_create_quiz_education_content(
         self,
         add_content_page: AddContentPage,
         user: UserModel,

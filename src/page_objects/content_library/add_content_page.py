@@ -36,6 +36,10 @@ class AddContentPage(BasePage):
         self.survey = SurveyComponent(self.page.get_by_label('Survey'))
         self.survey_form = SurveyFormComponent(self.page.get_by_label('Poll'))
         self.save_and_publish_button = self.page.get_by_text('Save and Publish')
+        self.language_dropdown = DropDown(
+            link_locator=self.page.locator('[aria-labelledby="language-label"]'),
+            option_list_locator=self.page.locator('[role="option"]'),
+        )
 
     @allure.step('AddContentPage: create education content {education_content}')
     def create_content(self, education_content: ContentLibraryEntity, user: UserModel):
@@ -51,6 +55,7 @@ class AddContentPage(BasePage):
         else:
             expect(self.content_visibility.locator).not_to_be_visible()
         self.general_information.fill_data(education_content)
+        self.language_dropdown.select_item_by_text(education_content.language)
         if education_content.content_type == ContentType.PDF:
             self.upload_pdf_file(education_content)
         elif education_content.content_type == ContentType.QUIZ:
