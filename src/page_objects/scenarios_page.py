@@ -8,6 +8,7 @@ from src.models.scenario import CampaignType, ScenarioCloneMode, TargetType
 from src.models.scenario_model import ScenarioModel
 from src.page_objects import (
     created_new_scenario_text,
+    invalid_file_type_text,
     marked_attack_non_draft_message,
     scenario_file_name_helper_text,
 )
@@ -190,10 +191,14 @@ class ScenariosPage(BasePage):
                     self.upload_pdf_file_button.click()
                     fc.value.set_files(scenario.file_path)
                     self.wait_for_progress_bar_disappears()
-                    expect(self.delete_file_button).to_be_visible()
-                    expect(self.file_name_helper_text).to_have_text(
-                        scenario_file_name_helper_text
-                    )
+                    if scenario.file_path.endswith('.pdf'):
+                        expect(self.delete_file_button).to_be_visible()
+                        expect(self.file_name_helper_text).to_have_text(
+                            scenario_file_name_helper_text
+                        )
+                    else:
+                        expect(self.alert_message).to_have_text(invalid_file_type_text)
+                        expect(self.delete_file_button).not_to_be_visible()
             case _:
                 self.phishing_link_button.check()
 

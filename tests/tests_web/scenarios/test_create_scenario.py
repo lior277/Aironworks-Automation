@@ -150,3 +150,34 @@ def test_create_attachment_scenario(
     user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
 ):
     scenarios_page.create_scenario(scenario)
+
+
+@pytest.mark.parametrize(
+    'user,scenario',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            ScenarioModelFactory.scenario(
+                campaign_type=CampaignType.ATTACHMENT,
+                file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.txt'),
+            ),
+            id='test create attachment scenario customer admin',
+            marks=allure.testcase('31784'),
+        ),
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            ScenarioModelFactory.scenario(
+                campaign_type=CampaignType.ATTACHMENT,
+                file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.txt'),
+            ),
+            id='test create attachment scenario aw admin',
+            marks=allure.testcase('31785'),
+        ),
+    ],
+)
+@pytest.mark.smoke
+def test_create_attachment_scenario_with_unsupported_file_extension(
+    user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
+):
+    scenarios_page.navigate_create_scenario()
+    scenarios_page.select_content_type(scenario)

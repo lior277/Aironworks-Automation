@@ -22,7 +22,6 @@ from src.page_objects.login_page import SignInPage
 )
 @pytest.mark.web
 @pytest.mark.smoke
-@pytest.mark.dev
 def test_login_error_message(sign_in_page: SignInPage, user: UserModel, error_message):
     sign_in_page.navigate()
     sign_in_page.fill_sign_in_form(user)
