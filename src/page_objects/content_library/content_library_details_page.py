@@ -6,6 +6,7 @@ from src.page_objects.content_library import (
     attach_quiz_text,
     content_successfully_updated_text,
 )
+from src.page_objects.data_types.drop_down_element import DropDown
 
 
 class ContentLibraryDetailsPage(BasePage):
@@ -20,6 +21,10 @@ class ContentLibraryDetailsPage(BasePage):
             text='Create Education Campaign'
         )
         self.delete_button = self.page.get_by_text(text='Yes, Delete')
+        self.language_dropdown = DropDown(
+            link_locator=self.page.locator('[aria-labelledby="language-label"]'),
+            option_list_locator=self.page.locator('[role="option"]'),
+        )
 
     @allure.step(
         'ContentLibraryDetailsPage: open details page for {content_library_id} content library'
@@ -34,6 +39,8 @@ class ContentLibraryDetailsPage(BasePage):
         self.edit_button.click()
         self.remove_quiz_button.click()
         self.delete_button.click()
+        if not self.language_dropdown.locator.text_content() == '':
+            self.language_dropdown.select_item_by_text('English')
         self.save_button.click()
         expect(self.alert_message.first).to_contain_text(
             content_successfully_updated_text
