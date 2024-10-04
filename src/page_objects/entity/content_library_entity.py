@@ -51,6 +51,7 @@ class ContentLibraryEntity:
         description: str,
         sensitive_information: bool,
         topic: str,
+        language: str = 'English',
         url: str = None,
         pdf_file_path: str = None,
         quiz: QuizEntity = None,
@@ -65,6 +66,7 @@ class ContentLibraryEntity:
         self.pdf_file_path = pdf_file_path
         self.quiz = quiz
         self.survey = survey
+        self.language = language
 
 
 class ContentLibraryEntityFactory:
