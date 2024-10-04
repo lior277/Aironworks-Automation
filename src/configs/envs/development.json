@@ -8,9 +8,9 @@
   "mailtrap_account_id": "1311290",
   "example_scenario": "e2ced54e064a4adea24adb5a913aea83",
   "example_scenario_name": "General Scenario - English",
-  "example_education_content": "113876b9e7ee492aac8eff99ac4ca915",
+  "example_education_content": "2d934656627748208eb2fc79ec46d066",
   "links_domain": "localhost:3001",
   "sender_domain": "moondev.tokyo",
-  "sample_campaign": "44df5ffa4fc4456595563d9ba7869169",
+  "sample_campaign": "c8ee0ddd54374d4699dd55f0dc35c244",
   "sample_campaign_name": "Scenario - Test AW Admin"
 }
