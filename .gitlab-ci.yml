@@ -2,6 +2,14 @@ variables:
   SERVER_DOCKER_FILE: ./Dockerfile
   SERVER_TAG: $CI_REGISTRY_IMAGE:main
   EPHEMERAL_BRANCHES_PATH: preview # subpath to ephemeral branches content for preview
+  ENV:
+    value: staging
+    description: "Environment name"
+    options:
+      - development
+      - staging
+      - production
+      - production-eu
 
 workflow:
   rules:
