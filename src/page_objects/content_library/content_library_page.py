@@ -66,10 +66,10 @@ class ContentLibraryPage(BasePage):
         return AddContentPage(self.page, content_type)
 
     @allure.step('ContentLibraryPage: open first education content')
-    def open_first_content(self):
+    def open_second_education_content(self):
         all_content = self.table_cards.get_content()
-        assert len(all_content) > 0, 'no available education content'
-        all_content[0].title.click()
+        assert len(all_content) > 1, 'no available education content'
+        all_content[1].title.click()
         page = ContentLibraryDetailsPage(self.page)
         page.create_education_campaign_button.wait_for()
         return page
