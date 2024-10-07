@@ -82,17 +82,17 @@ def test_email_notification_match_setting(
     run_campaign_on_employee(
         api_request_context_customer_admin, api_request_context, mailtrap, employee
     )
-
+    en_config = next(
+        (config for config in company_config['data'] if config.get('language') == 'en'),
+        None,
+    )
     Log.info(
-        f"waiting for email with title: {company_config['data'][0]['custom_attack_notification_subject']}"
+        f"waiting for email with title: {en_config['custom_attack_notification_subject']}"
     )
 
     mail = mailtrap.wait_for_mail(
         AppConfigs.EMPLOYEE_INBOX_ID,
-        find_email(
-            employee.email,
-            company_config['data'][0]['custom_attack_notification_subject'],
-        ),
+        find_email(employee.email, en_config['custom_attack_notification_subject']),
     )
     Log.info(f'employee email: {employee.email}')
 
@@ -105,7 +105,7 @@ def test_email_notification_match_setting(
     Log.info('payload: \n' + payload)
 
     regex_string = (
-        company_config['data'][0]['custom_attack_notification']
+        en_config['custom_attack_notification']
         .replace('{{employee.name}}', '(?P<employee_name>[a-zA-Z]+)')
         .replace(
             '{{portal_url}}',

@@ -11,6 +11,7 @@ from src.apis.steps.common_steps import run_education_campaign_on_employee
 from src.configs.config_loader import AppConfigs
 from src.utils import markers
 from src.utils.links import get_text_links
+from src.utils.log import Log
 
 
 @allure.testcase('31564')
@@ -37,8 +38,11 @@ def test_education_campaign_notification_match_settings(
     config_result = company.localized_config()
     expect(config_result).to_be_ok()
     company_config = config_result.json()
-    print(company_config)
-
+    Log.info(company_config)
+    en_config = next(
+        (config for config in company_config['data'] if config.get('language') == 'en'),
+        None,
+    )
     mail = run_education_campaign_on_employee(
         api_request_context_customer_admin, mailtrap, employee
     )
@@ -49,7 +53,7 @@ def test_education_campaign_notification_match_settings(
     payload = message.get_payload()
 
     regex_string = (
-        company_config['data'][0]['education_content_publication_email']
+        en_config['education_content_publication_email']
         .replace('{{employee.name}}', '(?P<employee_name>[a-zA-Z]+)')
         .replace(
             '{{portal_url}}',

@@ -3,10 +3,18 @@ from playwright.sync_api import Page, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.content_library import (
+    ContentType,
     attach_quiz_text,
     content_successfully_updated_text,
+    education_content_cloned_text,
+)
+from src.page_objects.content_library.add_content_page import (
+    AdditionalInformationComponent,
+    ContentVisibilityComponent,
+    GeneralInformationComponent,
 )
 from src.page_objects.data_types.drop_down_element import DropDown
+from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 
 
 class ContentLibraryDetailsPage(BasePage):
@@ -16,6 +24,8 @@ class ContentLibraryDetailsPage(BasePage):
         self.edit_button = self.page.locator(
             selector="[data-testid='EditOutlinedIcon']"
         )
+        self.clone_button = self.page.get_by_role('button', name='Clone')
+
         self.remove_quiz_button = self.page.get_by_text(text='Delete Quiz')
         self.create_education_campaign_button = self.page.get_by_text(
             text='Create Education Campaign'
@@ -24,6 +34,16 @@ class ContentLibraryDetailsPage(BasePage):
         self.language_dropdown = DropDown(
             link_locator=self.page.locator('[aria-labelledby="language-label"]'),
             option_list_locator=self.page.locator('[role="option"]'),
+        )
+        self.general_information = GeneralInformationComponent(
+            self.page.get_by_label('General information')
+        )
+        self.additional_information = AdditionalInformationComponent(
+            self.page.get_by_label('Additional information')
+        )
+
+        self.content_visibility = ContentVisibilityComponent(
+            self.page.get_by_label('Content visibility')
         )
 
     @allure.step(
@@ -47,3 +67,47 @@ class ContentLibraryDetailsPage(BasePage):
         )
         expect(self.page.get_by_text(attach_quiz_text)).to_be_visible()
         return self
+
+    @allure.step('ContentLibraryDetailsPage: clone content')
+    def clone_content(self):
+        expected_title = 'Clone - ' + self.general_information.title.get_attribute(
+            'value'
+        )
+        self.clone_button.click()
+        expect(self.alert_message).to_have_text(education_content_cloned_text)
+        expect(self.general_information.title).to_have_attribute(
+            name='value', value=expected_title
+        )
+
+    @allure.step('ContentLibraryDetailsPage: get content library entity')
+    def get_content_library_entity(
+        self, content_type: ContentType
+    ) -> ContentLibraryEntity:
+        return ContentLibraryEntity(
+            title=self.general_information.title.get_attribute('value'),
+            description=self.general_information.description.text_content(),
+            language=self.language_dropdown.locator.text_content(),
+            topic=self.additional_information.topic.get_attribute('value'),
+            difficulty=self.additional_information.difficulty.locator.text_content(),
+            industry=self.additional_information.industry.locator.get_attribute(
+                'value'
+            ),
+            sensitive_information=self.get_sensitive_information(),
+            content_type=content_type,
+            url=self.general_information.link.get_attribute('value'),
+        )
+
+    @allure.step('ContentLibraryDetailsPage: get sensitive information')
+    def get_sensitive_information(self) -> bool:
+        if self.content_visibility.for_all_button.is_visible():
+            return eval(
+                self.content_visibility.for_all_button.get_attribute(
+                    'aria-pressed'
+                ).title()
+            )
+        else:
+            return False
+
+    @allure.step('ContentLibraryDetailsPage: get content id')
+    def get_content_id(self) -> str:
+        return self.page.url.split('/')[-1]

@@ -51,6 +51,8 @@ class ContentLibraryEntity:
         description: str,
         sensitive_information: bool,
         topic: str,
+        difficulty: str = None,
+        industry: str = None,
         language: str = 'English',
         url: str = None,
         pdf_file_path: str = None,
@@ -62,11 +64,37 @@ class ContentLibraryEntity:
         self.description = description
         self.sensitive_information = sensitive_information
         self.topic = topic
+        self.difficulty = difficulty
+        self.industry = industry
         self.url = url
         self.pdf_file_path = pdf_file_path
         self.quiz = quiz
         self.survey = survey
         self.language = language
+
+    def __eq__(self, other):
+        if isinstance(other, ContentLibraryEntity):
+            return (
+                self.content_type == other.content_type
+                and self.title == other.title
+                and self.description == other.description
+                and self.language == other.language
+                and self.sensitive_information == other.sensitive_information
+                and self.topic == other.topic
+                and self.difficulty == other.difficulty
+                and self.industry == other.industry
+                and self.url == other.url
+                and self.pdf_file_path == other.pdf_file_path
+                and self.quiz == other.quiz
+                and self.survey == other.survey
+            )
+        return False
+
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return str(self.__dict__)
 
 
 class ContentLibraryEntityFactory:
