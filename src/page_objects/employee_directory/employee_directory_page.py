@@ -162,6 +162,8 @@ class EmployeeDirectoryPage(BasePage):
     @allure.step('EmployeeDirectoryPage: delete employee by {email} email')
     def delete_employee(self, email: str):
         self.inactive_tab.click()
+        self.delete_button.wait_for()
+        self.wait_for_loading_state()
         self.filter_employee_by_email(email)
         self.employee_checkbox.check()
         self.delete_button.click()

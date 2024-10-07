@@ -14,7 +14,9 @@ class DropDown:
         self.options_list = option_list_locator
         self.extent_list_by_click_on_field = extent_list_by_click_on_field
 
-    def select_item_by_text(self, text: str, search: bool = False):
+    def select_item_by_text(
+        self, text: str, search: bool = False, wait_for_hidden: bool = True
+    ):
         Log.info(f'Selecting {text}')
         selected = False
         if (
@@ -31,7 +33,8 @@ class DropDown:
             if option.text_content() == text:
                 option.click()
                 selected = True
-                self.options_list.first.wait_for(state='hidden')
+                if wait_for_hidden:
+                    self.options_list.first.wait_for(state='hidden')
                 break
 
         assert selected, f'Item {text} was not found in {option_text}'
