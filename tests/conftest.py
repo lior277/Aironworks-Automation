@@ -23,6 +23,7 @@ from src.models.factories.company.patch_localized_configs_model import (
 )
 from src.models.factories.survey.add_survey_modal_factory import AddSurveyModelFactory
 from src.models.survey.surveys_model import Survey, SurveysModel
+from src.utils.allure import CategoryFactory
 from src.utils.list import divide_list_into_chunks
 from src.utils.mailtrap import MailTrap
 from src.utils.service_account_utils import generate_jwt
@@ -234,3 +235,21 @@ def fx_ss_add_environment(request):
             f.close()
 
     request.addfinalizer(finalizer)
+
+
+@pytest.fixture(scope='session', autouse=True)
+@allure.title('Add categories to allure report')
+def fx_ss_write_allure_categories(request):
+    allure_dir = request.config.getoption('--alluredir', None)
+    if allure_dir:
+        list_categories = (CategoryFactory.create_find_email_category().__dict__,)
+        import json
+
+        with open(os.path.join(allure_dir, 'categories.json'), 'w+') as f:
+            json.dump(
+                list_categories,
+                f,
+                ensure_ascii=False,
+                separators=(', ', ' : '),
+                indent=2,
+            )

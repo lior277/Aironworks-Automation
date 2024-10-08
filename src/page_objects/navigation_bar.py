@@ -57,7 +57,9 @@ class NavigationBar:
     @allure.step('NavigationBar: Navigate to content library')
     def navigate_content_library(self):
         self.content_library_button.click()
-        self.page.wait_for_load_state(timeout=5)
+        content_library_page = ContentLibraryPage(self.page)
+        content_library_page.add_content_button.wait_for()
+        content_library_page.wait_for_progress_bar_disappears()
         return ContentLibraryPage(self.page)
 
     @allure.step('NavigationBar: Navigate to campaigns')
