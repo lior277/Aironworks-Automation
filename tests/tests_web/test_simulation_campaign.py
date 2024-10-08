@@ -55,7 +55,9 @@ def test_create_simulation_campaign(
         AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email), timeout=240
     )
 
-    assert mail is not None
+    assert (
+        mail is not None
+    ), f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
 
 
 @pytest.mark.parametrize(

@@ -15,7 +15,11 @@ class DropDown:
         self.extent_list_by_click_on_field = extent_list_by_click_on_field
 
     def select_item_by_text(
-        self, text: str, search: bool = False, wait_for_hidden: bool = True
+        self,
+        text: str,
+        search: bool = False,
+        wait_for_hidden: bool = True,
+        loading_text: str = None,
     ):
         Log.info(f'Selecting {text}')
         selected = False
@@ -28,6 +32,8 @@ class DropDown:
             self.locator.fill(text)
         option_text = []
         expect(self.options_list.first).to_be_visible(timeout=10_000)
+        if loading_text and loading_text in self.options_list.first.text_content():
+            expect(self.options_list.first).not_to_have_text(loading_text)
         for option in self.options_list.all():
             option_text.append(option.text_content())
             if option.text_content() == text:

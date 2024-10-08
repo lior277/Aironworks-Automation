@@ -123,13 +123,17 @@ class ScenariosPage(BasePage):
     ):
         self.scenario_name.fill(scenario.name)
         self.sender_address.fill(scenario.sender_address)
-        self.sender_domain_dropdown.select_item_by_text(scenario.sender_domain)
+        self.sender_domain_dropdown.select_item_by_text(
+            scenario.sender_domain, loading_text='Loading...'
+        )
         self.sender_name.fill(scenario.sender_name)
         self.subject.fill(scenario.subject)
         if scenario.target_details:
             self.select_target_details(scenario)
 
-        self.link_domain_dropdown.select_item_by_text(scenario.link_domain)
+        self.link_domain_dropdown.select_item_by_text(
+            scenario.link_domain, loading_text='Loading...'
+        )
         self.url_suffix.fill(scenario.url_suffix)
         self.select_content_type(scenario)
         self.next.click()

@@ -8,7 +8,7 @@ from src.page_objects.content_library import ContentType
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
 
 
-class TestCreateEducationContent:
+class TestCloneEducationContent:
     @pytest.mark.smoke
     @pytest.mark.web
     @pytest.mark.parametrize(
