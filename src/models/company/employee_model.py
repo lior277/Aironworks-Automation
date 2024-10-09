@@ -9,6 +9,7 @@ class EmployeeModel(BaseDataClass):
     email: str
     first_name: str
     last_name: str
+    language: str
     employee_id: Optional[int] = None
 
     def to_csv_file(self):

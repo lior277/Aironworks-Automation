@@ -20,6 +20,7 @@ from src.page_objects.education_campaign.education_campaign_details_page import 
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
+from src.page_objects.employee_directory.add_admin_page import AddAdminPage
 from src.page_objects.employee_directory.employee_directory_page import (
     EmployeeDirectoryPage,
 )
@@ -179,6 +180,11 @@ def campaigns_page(dashboard_page: DashboardPage) -> CampaignsPage:
 @pytest.fixture(scope='function')
 def employee_directory_page(dashboard_page: DashboardPage) -> EmployeeDirectoryPage:
     return dashboard_page.navigation_bar.navigate_employee_directory()
+
+
+@pytest.fixture(scope='function')
+def add_admin_page(employee_directory_page: EmployeeDirectoryPage) -> AddAdminPage:
+    return employee_directory_page.go_to_add_admin_page()
 
 
 @pytest.fixture(scope='function')
