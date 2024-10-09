@@ -3,6 +3,7 @@ import string
 
 import faker
 
+from src.configs.config_loader import AppConfigs
 from src.models.company.employee_model import EmployeeModel
 
 fake = faker.Faker()
@@ -15,6 +16,16 @@ class EmployeeModelFactory:
             first_name=fake.first_name(),
             last_name=fake.last_name(),
             email=email if email else fake.email(),
+            language=random.choice(['English', 'Japanese', 'Chinese']),
+        )
+
+    @staticmethod
+    def get_random_employee_with_accessible_email() -> EmployeeModel:
+        return EmployeeModel(
+            first_name=fake.first_name(),
+            last_name=fake.last_name(),
+            email=AppConfigs.EMPLOYEE_INBOX % fake.pystr().lower(),
+            language=random.choice(['English', 'Japanese', 'Chinese']),
         )
 
     @staticmethod

@@ -13,6 +13,7 @@ from src.page_objects.employee_directory import (
     employees_deleted_message,
     employees_restored_message,
 )
+from src.page_objects.employee_directory.add_admin_page import AddAdminPage
 from src.page_objects.employee_directory.edit_employee_page import EditEmployeePage
 from src.page_objects.entity.employee_entity import (
     EmployeeEntity,
@@ -30,11 +31,15 @@ class EmployeeDirectoryPage(BasePage):
         self.company_employees_tab = self.page.get_by_role(
             'tab', name='Company Employees'
         )
-        self.admins_tab = self.page.get_by_role('tab', name='Admins')
+        # contain name
+        self.admins_tab = self.page.locator(
+            '//button[@role="tab" and contains(@id,"/admins")]'
+        )
         self.inactive_tab = self.page.get_by_role('tab', name='Inactive')
         self.upload_employees_button = self.page.get_by_role(
             'button', name='Upload Employees', exact=True
         )
+        self.add_admin_button = self.page.get_by_role('button', name='Add Admin')
         self.upload_csv_button = self.page.get_by_label('Upload a CSV')
         self.upload_azure_ad_button = self.page.get_by_label('Upload via Azure AD')
         self.export_csv_button = self.page.get_by_role('button', name='Export CSV')
@@ -169,6 +174,14 @@ class EmployeeDirectoryPage(BasePage):
         self.delete_button.click()
         self.delete_employees_component.ok_button.click()
         expect(self.alert_message).to_have_text(employees_deleted_message)
+
+    @allure.step('EmployeeDirectoryPage: go to add admin page')
+    def go_to_add_admin_page(self):
+        self.admins_tab.click()
+        self.add_admin_button.click()
+        add_admin_page = AddAdminPage(self.page)
+        add_admin_page.wait_for_loading_state()
+        return add_admin_page
 
 
 class EmployeesTableComponent:

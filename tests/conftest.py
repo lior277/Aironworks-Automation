@@ -123,7 +123,11 @@ def employee(api_request_context_customer_admin):
 
     company = api.company(api_request_context_customer_admin)
     employee = EmployeeModel(
-        email, fake.first_name(), fake.last_name(), employee_id=None
+        email,
+        fake.first_name(),
+        fake.last_name(),
+        language=random.choice(['English', 'Japanese', 'Chinese']),
+        employee_id=None,
     )
     response = create_employee(api_request_context_customer_admin, employee)
     expect(response).to_be_ok()
