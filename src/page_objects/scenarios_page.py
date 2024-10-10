@@ -124,7 +124,7 @@ class ScenariosPage(BasePage):
         self.scenario_name.fill(scenario.name)
         self.sender_address.fill(scenario.sender_address)
         self.sender_domain_dropdown.select_item_by_text(
-            scenario.sender_domain, loading_text='Loading...'
+            scenario.sender_domain, loading_text='Loading...', timeout=15_000
         )
         self.sender_name.fill(scenario.sender_name)
         self.subject.fill(scenario.subject)
@@ -132,7 +132,7 @@ class ScenariosPage(BasePage):
             self.select_target_details(scenario)
 
         self.link_domain_dropdown.select_item_by_text(
-            scenario.link_domain, loading_text='Loading...'
+            scenario.link_domain, loading_text='Loading...', timeout=15_000
         )
         self.url_suffix.fill(scenario.url_suffix)
         self.select_content_type(scenario)

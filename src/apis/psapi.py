@@ -24,11 +24,13 @@ class PSApi(Enum):
 
     CAMPAIGN = '/admin/campaign'
     LIST_ATTACK_INFOS = '/admin/list_attack_infos'
-    GET_ATTACK_INFO = 'admin/get_attack_info'
+    GET_ATTACK_INFO = '/admin/get_attack_info'
     GET_ATTACK_EXECUTION = '/admin/get_attack_execution'
     COMPANY_COUNT = '/admin/company_count'
     DEACTIVATE_COMPANY = '/admin/company/{company_id}/deactivate'
     COMPANIES_LIST = '/admin/company'
+    LIST_DOMAINS = '/admin/list_domains'
+    GET_ATTACK_TAGS = '/admin/get_attack_tags'
 
     EDUCATION_CAMPAIGN = '/education/campaign'
     EDUCATION_CAMPAIGN_DETAILS = '/education/campaign/{campaign_id}'

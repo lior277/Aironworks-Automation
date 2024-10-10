@@ -1,3 +1,5 @@
+import typing
+
 from playwright.sync_api import Locator, expect
 
 from src.utils.log import Log
@@ -20,6 +22,7 @@ class DropDown:
         search: bool = False,
         wait_for_hidden: bool = True,
         loading_text: str = None,
+        timeout: typing.Optional[float] = 10_000,
     ):
         Log.info(f'Selecting {text}')
         selected = False
@@ -31,9 +34,11 @@ class DropDown:
         if search:
             self.locator.fill(text)
         option_text = []
-        expect(self.options_list.first).to_be_visible(timeout=10_000)
+        expect(self.options_list.first).to_be_visible(timeout=timeout)
         if loading_text and loading_text in self.options_list.first.text_content():
-            expect(self.options_list.first).not_to_have_text(loading_text)
+            expect(self.options_list.first).not_to_have_text(
+                loading_text, timeout=timeout
+            )
         for option in self.options_list.all():
             option_text.append(option.text_content())
             if option.text_content() == text:
