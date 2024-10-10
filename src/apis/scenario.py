@@ -29,6 +29,15 @@ class ScenarioService(BaseService):
             PSApi.GET_ATTACK_INFO.get_endpoint(), params={'id': f'{scenario_id}'}
         )
 
+    @allure.step('ScenarioService: get list domains')
+    def get_list_domains(self, include_all: bool) -> APIResponse:
+        params = {'include_all': f'{include_all}'}
+        return self._get(PSApi.LIST_DOMAINS.get_endpoint(), params=params)
+
+    @allure.step('ScenarioService: get attack tags')
+    def get_attack_tags(self) -> APIResponse:
+        return self._get(PSApi.GET_ATTACK_TAGS.get_endpoint())
+
     @allure.step(
         'ScenarioService: aw admin get campaign urls {campaign_id} campaign_id'
     )
