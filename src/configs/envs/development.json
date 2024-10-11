@@ -6,11 +6,11 @@
   "mailtrap_assessment_inbox_id": "2802760",
   "mailtrap_assessment_inbox_mail": "68fa80bce3-28fbb0@inbox.mailtrap.io",
   "mailtrap_account_id": "1311290",
-  "example_scenario": "ec59f2d12dbe48ce85a27e556c25d6bd",
+  "example_scenario": "5dfe9a9976ee490181c4ba3c182dfbfa",
   "example_scenario_name": "General Scenario - English",
-  "example_education_content": "2d934656627748208eb2fc79ec46d066",
+  "example_education_content": "adfa12a7956d41b68f0debb61c354d7c",
   "links_domain": "localhost:3001",
   "sender_domain": "moondev.tokyo",
-  "sample_campaign": "c8ee0ddd54374d4699dd55f0dc35c244",
+  "sample_campaign": "1a45ab2f154341b4890635ae24087f42",
   "sample_campaign_name": "Scenario - Test AW Admin"
 }

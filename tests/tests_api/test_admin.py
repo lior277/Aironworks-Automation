@@ -64,6 +64,8 @@ def run_campaign_on_employee(
 def test_attack_campaign(
     api_request_context_customer_admin, api_request_context, employee, mailtrap
 ):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     run_campaign_on_employee(
         api_request_context_customer_admin, api_request_context, mailtrap, employee
     )
@@ -76,6 +78,8 @@ def test_attack_campaign(
 def test_email_notification_match_setting(
     api_request_context_customer_admin, api_request_context, mailtrap, employee
 ):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     company = api.company(api_request_context_customer_admin)
     config_result = company.localized_config()
     expect(config_result).to_be_ok()

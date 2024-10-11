@@ -55,9 +55,13 @@ class CampaignAttacksSummaryFactory:
         return CampaignAttacksSummaryEntity(
             status=row['Status'].title(),
             opened=bool_to_yes_no(row['Email Opened']),
-            date_clicked=datetime.strptime(row['Failure Date'], '%Y-%m-%d %H:%M:%S')
-            .strftime('%-m/%-d/%Y %-I:%M %p')
-            .lower(),
+            date_clicked=(
+                datetime.strptime(row['Failure Date'], '%Y-%m-%d %H:%M:%S')
+                .strftime('%-m/%-d/%Y %-I:%M %p')
+                .lower()
+                if row['Failure Date']
+                else ''
+            ),
             first_name=row['First Name'],
             last_name=row['Last Name'],
             email=row['Email'],
