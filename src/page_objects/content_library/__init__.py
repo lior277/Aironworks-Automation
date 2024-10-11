@@ -16,6 +16,6 @@ sensitive_information_description_text = "Please indicate whether this content c
 class ContentType(Enum):
     VIDEO = 'Video'
     PDF = 'PDF'
-    SLIDES = 'Link'
+    SLIDES = 'Slides'
     QUIZ = 'Quiz'
     SURVEY = 'Survey'

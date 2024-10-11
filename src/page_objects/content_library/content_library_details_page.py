@@ -88,13 +88,15 @@ class ContentLibraryDetailsPage(BasePage):
             description=self.general_information.description.text_content(),
             language=self.language_dropdown.locator.text_content(),
             topic=self.additional_information.topic.get_attribute('value'),
-            difficulty=self.additional_information.difficulty.locator.text_content(),
+            difficulty=self.get_difficulty(content_type),
             industry=self.additional_information.industry.locator.get_attribute(
                 'value'
             ),
-            sensitive_information=self.get_sensitive_information(),
+            sensitive_information=False,
             content_type=content_type,
-            url=self.general_information.link.get_attribute('value'),
+            url=self.general_information.link.get_attribute('value')
+            if content_type == ContentType.VIDEO
+            else None,
         )
 
     @allure.step('ContentLibraryDetailsPage: get sensitive information')
@@ -107,6 +109,14 @@ class ContentLibraryDetailsPage(BasePage):
             )
         else:
             return False
+
+    @allure.step('ContentLibraryDetailsPage: difficulty')
+    def get_difficulty(self, content_type: ContentType):
+        match content_type:
+            case ContentType.QUIZ | ContentType.SURVEY:
+                return None
+            case _:
+                return self.additional_information.difficulty.locator.text_content()
 
     @allure.step('ContentLibraryDetailsPage: get content id')
     def get_content_id(self) -> str:
