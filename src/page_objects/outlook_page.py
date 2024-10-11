@@ -1,6 +1,7 @@
 from time import sleep
 
 import allure
+import pyotp
 from playwright.sync_api import Page, expect
 
 from src.configs.config_loader import AppConfigs
@@ -36,9 +37,18 @@ class OutlookPage:
         self.page.fill('input[type="password"]', AppConfigs.MSLIVE_PWD)
         self.page.locator('[data-report-event="Signin_Submit"]').click()
         self.page.locator('[type="submit"]').click()
+        if self.page.locator('input[type="tel"]').is_visible(timeout=10000):
+            self.verify_login()
         self.page.locator(
             '[aria-labelledby="favoritesRoot"] [data-folder-name="inbox"]'
         ).click()
+
+    def verify_login(self):
+        totp = pyotp.TOTP(AppConfigs.MSLIVE_TOTP)
+        self.page.fill('input[type="tel"]', totp.now())
+        self.page.click('[type="submit"]')
+        if self.page.locator('[name="Yes"]').is_visible(timeout=10000):
+            self.page.locator('[name="Yes"]').click()
 
     @allure.step('OutlookPage: goto message id')
     def goto_message(self, message_id: str):
