@@ -18,7 +18,7 @@ from src.utils.date_util import timestamp_to_time
 class ContentLibraryPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-
+        self.title = page.get_by_role('heading', level=2)
         self.visibility_filter = self.page.get_by_label('Visibility')
         self.name_filter = self.page.get_by_placeholder('Search by Content Name')
         self.cards = self.page.get_by_label('content-card')
@@ -46,6 +46,8 @@ class ContentLibraryPage(BasePage):
         self.content_type_dropdown.select_item_by_text(
             content_type.value, wait_for_hidden=False
         )
+        self.title.click()
+        self.progress_bar.wait_for()
         self.wait_for_progress_bar_disappears()
 
     @allure.step('ContentLibraryPage: open content library details page')
