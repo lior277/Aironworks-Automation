@@ -7,6 +7,7 @@ from src.apis.customer import CustomerService
 from src.apis.education import EducationService
 from src.apis.group_service import GroupService
 from src.apis.login import LoginService
+from src.apis.phish_detect_ai_service import PhishDetectUI
 from src.apis.public import PublicService
 from src.apis.scenario import ScenarioService
 from src.apis.survey_service import SurveyService
@@ -57,6 +58,10 @@ class ServiceFactory:
     @staticmethod
     def group(request_context: APIRequestContext) -> GroupService:
         return GroupService(request_context)
+
+    @staticmethod
+    def phish_detect_ui_settings(request_context: APIRequestContext) -> PhishDetectUI:
+        return PhishDetectUI(request_context)
 
 
 api = ServiceFactory()

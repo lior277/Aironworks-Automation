@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 from src.page_objects.campaigns_page import CampaignsPage
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
@@ -11,6 +11,13 @@ from src.page_objects.employee_directory.employee_directory_page import (
 )
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.groups.groups_page import GroupsPage
+from src.page_objects.phish_detect_ai_settings import phishing_assessment_title
+from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_general_page import (
+    PhishDetectAISettingsGeneral,
+)
+from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_ui_page import (
+    PhishDetectAISettingsUIConfiguration,
+)
 from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.settings_page import SettingsPage
 
@@ -32,6 +39,9 @@ class NavigationBar:
             'link', name='Education Campaigns', exact=True
         )
         self.groups_button = page.get_by_role('link', name='Groups', exact=True)
+        self.phish_detect_ai_settings_button = page.get_by_role(
+            'link', name='PhishDetectAI Settings', exact=True
+        )
 
     @allure.step('NavigationBar: Navigate to scenarios')
     def navigate_scenarios(self):
@@ -91,3 +101,26 @@ class NavigationBar:
         groups_page = GroupsPage(self.page)
         groups_page.wait_for_progress_bar_disappears()
         return groups_page
+
+    @allure.step('NavigationBar: Navigate to groups page')
+    def navigate_phish_detect_ai_settings_general_page(
+        self,
+    ) -> PhishDetectAISettingsGeneral:
+        self.phish_detect_ai_settings_button.click()
+        phish_detect_ai_settings_page = PhishDetectAISettingsGeneral(self.page)
+        phish_detect_ai_settings_page.email_input.wait_for()
+        expect(phish_detect_ai_settings_page.title).to_contain_text(
+            phishing_assessment_title
+        )
+        phish_detect_ai_settings_page.wait_for_progress_bar_disappears()
+        return phish_detect_ai_settings_page
+
+    @allure.step('NavigationBar: Navigate to groups page')
+    def navigate_phish_detect_ai_settings_ui_page(
+        self,
+    ) -> PhishDetectAISettingsUIConfiguration:
+        self.navigate_phish_detect_ai_settings_general_page()
+        ui_configuration_page = PhishDetectAISettingsUIConfiguration(self.page)
+        ui_configuration_page.ui_configuration_tab.click()
+        ui_configuration_page.show_preview_button.wait_for()
+        return ui_configuration_page

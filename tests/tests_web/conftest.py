@@ -29,6 +29,12 @@ from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 from src.page_objects.groups.groups_page import GroupsPage
 from src.page_objects.login_page import SignInPage
 from src.page_objects.outlook_page import OutlookPage
+from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_general_page import (
+    PhishDetectAISettingsGeneral,
+)
+from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_ui_page import (
+    PhishDetectAISettingsUIConfiguration,
+)
 from src.page_objects.scenarios_page import ScenariosPage
 from src.utils.log import Log
 from src.utils.waiter import wait_for
@@ -202,3 +208,19 @@ def campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
 @pytest.fixture
 def groups_page(dashboard_page: DashboardPage) -> GroupsPage:
     return dashboard_page.navigation_bar.navigate_groups_page()
+
+
+@pytest.fixture
+def phish_detect_ai_settings_general_page(
+    dashboard_page: DashboardPage,
+) -> PhishDetectAISettingsGeneral:
+    return (
+        dashboard_page.navigation_bar.navigate_phish_detect_ai_settings_general_page()
+    )
+
+
+@pytest.fixture
+def phish_detect_ai_settings_ui_page(
+    dashboard_page: DashboardPage,
+) -> PhishDetectAISettingsUIConfiguration:
+    return dashboard_page.navigation_bar.navigate_phish_detect_ai_settings_ui_page()

@@ -60,6 +60,9 @@ class PSApi(Enum):
 
     # Token
     REFRESH_TOKEN = '/auth/refresh'
+    # Phish detect AI
+    OUTLOOK_LOCALIZED_CONFIG = '/company/outlook-localized-config'
+    OUTLOOK_LOCALIZED_CONFIG_LANGUAGE = '/company/outlook-localized-config/{language}'
 
     def get_endpoint(self):
         return self.API_VERSION.value + self.value
