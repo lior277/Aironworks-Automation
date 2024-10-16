@@ -42,7 +42,7 @@ class Log:
                 + '.log',
             )
             if not os.path.exists(os.path.dirname(cls.filename)):
-                os.makedirs(os.path.dirname(cls.filename))
+                os.makedirs(os.path.dirname(cls.filename), exist_ok=True)
             fh = logging.FileHandler(cls.filename)
             fh.setLevel(logging.DEBUG)
             formatter = logging.Formatter(
