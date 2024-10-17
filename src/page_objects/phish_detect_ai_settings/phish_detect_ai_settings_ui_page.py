@@ -23,8 +23,10 @@ class PhishDetectAISettingsUIConfiguration(PhishDetectAISettings):
             )
         )
         self.assessment_preview_window = AssessmentPreview(
-            self.page.locator("//p[text()='PhishDectectAI Assesment Preview']/../../..")
-        )  # TODO fix locator after fixing AIW-5346 issue
+            self.page.locator(
+                "//p[text()='PhishDectectAI Assessment Preview']/../../.."
+            )
+        )
 
     @allure.step('PhishDetectAISettingsUIConfiguration: change settings')
     def change_settings(self, settings: OutlookConfigData):
