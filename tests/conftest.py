@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import sys
@@ -237,6 +238,23 @@ def fx_ss_add_environment(request):
             f.write(f'BROWSER_NAME={os.getenv('BROWSER_NAME')}\n')
             f.write(f'BROWSER_VERSION={os.getenv('BROWSER_VERSION')}\n')
             f.close()
+
+            if os.environ.get('CI_PIPELINE_IID'):
+                props = {
+                    'type': 'gitlab',
+                    'name': os.environ['CI_PROJECT_PATH'],
+                    'url': os.environ['CI_PROJECT_URL'],
+                    'buildOrder': os.environ['CI_PIPELINE_IID'],
+                    'buildName': os.environ['CI_JOB_NAME'],
+                    'buildUrl': os.environ['CI_JOB_URL'],
+                    'reportName': 'Allure Report',
+                }
+                filename = os.path.join(
+                    request.config.getoption('--alluredir', None), 'executor.json'
+                )
+
+                with open(filename, 'w', encoding='utf8') as file:
+                    json.dump(props, file)
 
     request.addfinalizer(finalizer)
 
