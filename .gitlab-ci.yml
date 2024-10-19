@@ -2,6 +2,9 @@ variables:
   SERVER_DOCKER_FILE: ./Dockerfile
   SERVER_TAG: $CI_REGISTRY_IMAGE:main
   EPHEMERAL_BRANCHES_PATH: preview # subpath to ephemeral branches content for preview
+  TEST_PARALLELISM:
+    value: 4
+    description: "Amount of tests to run in parallel"
   ENV:
     value: staging
     description: "Environment name"
@@ -72,7 +75,7 @@ run-tests:
     EXIT=0
     pipenv run ruff check .
     pipenv run ruff format --check .
-    pipenv run pytest -vv -n 4 -m "not delivered_emails" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
+    pipenv run pytest -vv -n $TEST_PARALLELISM -m "not delivered_emails" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
     echo "EXIT_CODE=$EXIT" > .exit_code
     exit $EXIT
   allow_failure: true # in case pipeline fails process run
