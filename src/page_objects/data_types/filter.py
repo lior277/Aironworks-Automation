@@ -22,6 +22,7 @@ class Filter:
         Log.info(f'Filter by {filter_name} column and {value} value')
         if not self.filter_select.is_visible():
             self.button.click()
+        sleep(2)
         self.filter_select.select_option(filter_name)
         expect(self.filter_select).to_have_value(value=filter_name.lower())
         self.filter_value.fill(value)
