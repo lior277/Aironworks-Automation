@@ -50,7 +50,7 @@ def test_report_can_be_resolved(user, api_request_context_addin, employee_report
 def test_assessment_outlook(outlook_page):
     # goto specific message
     outlook_page.goto_message(
-        'AAQkADU4NWIwYzE0LTE2YzgtNGU0Yy04MWQ0LTg0ZmM3Y2NkNzg3OQAQAOkzkoNssJVOi%2FlzAm9aLr0%3D'
+        'AAQkADU4NWIwYzE0LTE2YzgtNGU0Yy04MWQ0LTg0ZmM3Y2NkNzg3OQAQAB5voNNKY59Mk9Md%2F%2BfAYjg%3D'
     )
     outlook_page.open_addin()
     outlook_page.perform_assessment()
