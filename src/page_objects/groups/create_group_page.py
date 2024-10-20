@@ -32,7 +32,9 @@ class CreateGroupPage(BasePage):
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
         )
-        self.filter_tooltip = self.page.get_by_role('tooltip')
+        self.filter_tooltip = self.page.get_by_role('tooltip').filter(
+            has_text='Email contains'
+        )
 
     @allure.step('CreateGroupPage: create {group_name} group')
     def create_group(
@@ -46,6 +48,7 @@ class CreateGroupPage(BasePage):
             self.add_managers_button.click()
             for email in managers_email:
                 self.filter.filter_by('Email', email)
+                self.filter_tooltip.click()
                 self.filter_tooltip.wait_for(state='hidden')
                 manager = self.table_choose_employees.get_row_by_column_value(
                     'email', email
@@ -60,6 +63,8 @@ class CreateGroupPage(BasePage):
             self.add_members_button.click()
             for email in employees_email:
                 self.filter.filter_by('Email', email)
+                self.filter_tooltip.click()
+                self.filter_tooltip.wait_for(state='hidden')
                 employee = self.table_choose_employees.get_row_by_column_value(
                     'email', email
                 )
