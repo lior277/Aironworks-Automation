@@ -6,15 +6,19 @@ import pytest
 from playwright.sync_api import expect
 
 from src.apis.api_factory import api
+from src.configs.config_loader import AppConfigs
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.utils.log import Log
+from src.utils.mailtrap import find_attachment
 from src.utils.waiter import wait_for_lro
 
 
 @pytest.mark.parametrize('user', [UserModelFactory.customer_admin()])
 @pytest.mark.smoke
 @allure.testcase('31554')
-def test_report_can_be_resolved(user, api_request_context_addin, employee_reports_page):
+def test_report_can_be_resolved(
+    user, api_request_context_addin, employee_reports_page, mailtrap
+):
     message = 'Test Mail E2E Test ' + str(random.randint(100000000, 999999999))
     assessment_service = api.assessment(api_request_context_addin)
     response = assessment_service.assessment_report(
@@ -33,7 +37,6 @@ def test_report_can_be_resolved(user, api_request_context_addin, employee_report
     expect(last_status).to_be_ok()
 
     assert last_status.json()['status'] == 'DONE'
-
     employee_reports_page.last_report_column_header.click()
     employee_reports_page.last_report_column_header.click()
     reported_message = employee_reports_page.get_report(
@@ -50,10 +53,30 @@ def test_report_can_be_resolved(user, api_request_context_addin, employee_report
 def test_assessment_outlook(outlook_page):
     # goto specific message
     outlook_page.goto_message(
-        'AAQkADU4NWIwYzE0LTE2YzgtNGU0Yy04MWQ0LTg0ZmM3Y2NkNzg3OQAQAB5voNNKY59Mk9Md%2F%2BfAYjg%3D'
+        'AAQkADU4NWIwYzE0LTE2YzgtNGU0Yy04MWQ0LTg0ZmM3Y2NkNzg3OQAQAFl%2BxStxIMJFnp6eBtTuA54%3D'
     )
     outlook_page.open_addin()
     outlook_page.perform_assessment()
     expect(
         outlook_page.app_frame.get_by_text('The email was sent to your')
     ).to_be_visible(timeout=60 * 1000)
+
+
+@allure.testcase('5847')
+@pytest.mark.smoke
+def test_report_outlook(outlook_page, mailtrap):
+    # goto specific message
+    outlook_page.goto_message(
+        'AAQkADU4NWIwYzE0LTE2YzgtNGU0Yy04MWQ0LTg0ZmM3Y2NkNzg3OQAQAFl%2BxStxIMJFnp6eBtTuA54%3D'
+    )
+    outlook_page.open_addin()
+    outlook_page.report_incident()
+    expect(
+        outlook_page.app_frame.get_by_text('The email was sent to your')
+    ).to_be_visible(timeout=60 * 1000)
+    assert (
+        mailtrap.wait_for_mail(
+            AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID, find_attachment()
+        )
+        is not None
+    )

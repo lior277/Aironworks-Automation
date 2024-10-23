@@ -1,3 +1,6 @@
+import random
+import string
+from datetime import datetime
 from time import sleep
 
 import allure
@@ -21,6 +24,15 @@ class OutlookPage:
         )
         self.report_incident_button = self.app_frame.get_by_role(
             'button', name='Report an Incident'
+        )
+        self.report_description = self.app_frame.get_by_role(
+            'textbox', name='Add a description of what happened'
+        )
+        self.report_incident_submit_button = self.app_frame.get_by_role(
+            'button', name='Submit'
+        )
+        self.report_incident_cancel_button = self.app_frame.get_by_role(
+            'button', name='Cancel'
         )
         self.login_button = self.app_frame.get_by_role('button', name='Login')
         self.allow_button = self.app_frame.get_by_role('button', name='Allow')
@@ -77,4 +89,12 @@ class OutlookPage:
 
     @allure.step('OutlookPage: report incident')
     def report_incident(self):
+        random_description = (
+            f'Description: {datetime.now().strftime('%d/%m/%Y, %H:%M:%S')} '
+        )
+        f'{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}'
+
         self.report_incident_button.click()
+        # Generate Random description
+        self.report_description.fill(random_description)
+        self.report_incident_submit_button.click()
