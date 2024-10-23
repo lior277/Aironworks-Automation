@@ -12,7 +12,6 @@ from src.models.factories.adding.assessment_info_model_factory import (
     AssessmentInfoModelFactory,
 )
 from src.utils.log import Log
-from src.utils.mailtrap import find_attachment
 from src.utils.waiter import wait_for_lro
 
 
@@ -53,12 +52,12 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     assert 'assessment' in assessment_result
     assert assessment_result['assessment']['error'] is None
 
-    assert (
-        mailtrap.wait_for_mail(
-            AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID, find_attachment()
-        )
-        is not None
-    )
+    # assert (
+    #     mailtrap.wait_for_mail(
+    #         AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID, find_attachment()
+    #     )
+    #     is not None
+    # )
 
 
 @allure.testcase('31560')

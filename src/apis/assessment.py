@@ -54,6 +54,7 @@ class AssessmentService(BaseService):
         return self._post(
             AddinApi.API_VERSION.value + AddinApi.ASSESSMENT_REPORT.value,
             data={
+                'has_attachment': True,
                 'message_text': message_text,
                 'sender_address': sender_address,
                 'subject': subject,

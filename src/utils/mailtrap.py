@@ -10,7 +10,7 @@ from src.models.mait_trap_model import MailTrapModel
 from src.utils.log import Log, print_execution_time
 
 
-def find_attachment(content_type: str = 'application/x-zip'):
+def find_attachment(content_type: str = 'application/octet-stream'):
     def predicate(mailtrap: MailTrap, mail):
         mail_id = mail['id']
         mail_raw = mailtrap.raw_message(
