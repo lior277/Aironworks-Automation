@@ -7,7 +7,7 @@ import { check, sleep } from 'k6';
 const BASE_URL = 'https://staging.app.aironworks.com';
 const data = new SharedArray('users', function () {
   // here you can open files, and then do additional processing or generate the array with data dynamically
-  const f = JSON.parse(open('./perf_education_campaign.json')).users;
+  const f = JSON.parse(open('../resources/perf_education_campaign.json'));
   return f; // f must be an array[]
 });
 
