@@ -1,0 +1,18 @@
+{ 
+    "users": [
+    {
+        "email": "leslie7zya2j91@aironworks.com",
+        "id": "7f043f4c3a71a99d3efd75ddacff7a93",
+        "portal_url": "https://staging.app.aironworks.com/guest/education/7f043f4c3a71a99d3efd75ddacff7a93?token=3fa431c3da3eb860&language=en",
+        "status": "PROCESSING",
+        "token": "3fa431c3da3eb860"
+    },
+    {
+        "email": "pamelaoelekbf6@aironworks.com",
+        "id": "a5c24662fa54b23358cee52013033d37",
+        "portal_url": "https://staging.app.aironworks.com/guest/education/a5c24662fa54b23358cee52013033d37?token=2d384291c7d103c7&language=en",
+        "status": "PROCESSING",
+        "token": "2d384291c7d103c7s"
+    }
+    ]
+}
