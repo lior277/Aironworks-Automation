@@ -58,7 +58,7 @@ def create_employees(
             }
         )
     buffer.flush()
-    buffer.seek(0, 0)
+    buffer.seek(0)
     data = buffer.read().encode('utf-8')
     path = api.upload(request_context).upload_file(
         'employees.csv', 'text/csv', data, 'TEMPORARY'

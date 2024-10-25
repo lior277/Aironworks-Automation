@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from src.models.base_dataclass import BaseDataClass
 
@@ -11,9 +12,9 @@ class HackerTips(BaseDataClass):
 
 @dataclass
 class SourceDetails(BaseDataClass):
-    sender_address: str
     sender_name: str
-    subject: str
+    sender_address: Optional[str] = None
+    subject: Optional[str] = None
 
 
 @dataclass
