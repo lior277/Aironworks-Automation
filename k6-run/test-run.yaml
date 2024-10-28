@@ -7,7 +7,7 @@ spec:
   # cleanup: post
   script:
     configMap:
-      name: crocodile-stress-test
+      name: scripts-cm
       file: k8test.js
   arguments: -o xk6-influxdb=http://influxdb-influxdb2.k6-operator-system:80
   runner:
