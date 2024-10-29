@@ -1,18 +1,16 @@
-{ 
-    "users": [
+[
     {
-        "email": "leslie7zya2j91@aironworks.com",
-        "id": "7f043f4c3a71a99d3efd75ddacff7a93",
-        "portal_url": "https://staging.app.aironworks.com/guest/education/7f043f4c3a71a99d3efd75ddacff7a93?token=3fa431c3da3eb860&language=en",
+        "email": "stacyinewk4j3@aironworks.com",
+        "id": "4d8357502633bff1dab592e5e03b4a25",
+        "portal_url": "https://staging.app.aironworks.com/guest/education/4d8357502633bff1dab592e5e03b4a25?token=d9f15f05c00ca324&language=en",
         "status": "PROCESSING",
-        "token": "3fa431c3da3eb860"
+        "token": "d9f15f05c00ca324"
     },
     {
-        "email": "pamelaoelekbf6@aironworks.com",
-        "id": "a5c24662fa54b23358cee52013033d37",
-        "portal_url": "https://staging.app.aironworks.com/guest/education/a5c24662fa54b23358cee52013033d37?token=2d384291c7d103c7&language=en",
+        "email": "beckyibu67uw3@aironworks.com",
+        "id": "ca3932539128476fb0086a45ddf2ceba",
+        "portal_url": "https://staging.app.aironworks.com/guest/education/ca3932539128476fb0086a45ddf2ceba?token=9e722499b7132ff2&language=en",
         "status": "PROCESSING",
-        "token": "2d384291c7d103c7s"
+        "token": "9e722499b7132ff2"
     }
-    ]
-}
+]
