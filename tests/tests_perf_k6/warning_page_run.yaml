@@ -1,0 +1,21 @@
+apiVersion: k6.io/v1alpha1
+kind: TestRun
+metadata:
+  name: warning-page
+spec:
+  parallelism: 4
+  # cleanup: post
+  script:
+    configMap:
+      name: scripts-and-dataset-cm2
+      file: warning_page_perf.js
+  arguments: -o xk6-influxdb=http://influxdb-influxdb2.k6-operator-system:80
+  runner:
+    image: 901127637159.dkr.ecr.eu-central-1.amazonaws.com/k6-runner
+    env:
+      - name: K6_INFLUXDB_ORGANIZATION
+        value: 'k6io'
+      - name: K6_INFLUXDB_TOKEN
+        value: EODLCYgBs62bENcpVQ3tv9YkDSevbusV
+      - name: K6_INFLUXDB_BUCKET
+        value: k6demo
