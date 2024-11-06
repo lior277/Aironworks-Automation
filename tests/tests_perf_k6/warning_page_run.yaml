@@ -6,12 +6,10 @@ spec:
   parallelism: 4
   # cleanup: post
   script:
-    configMap:
-      name: scripts-and-dataset-cm2
-      file: warning_page_perf.js
+    localFile: /testing/warning_page_perf.js
   arguments: -o xk6-influxdb=http://influxdb-influxdb2.k6-operator-system:80
   runner:
-    image: 901127637159.dkr.ecr.eu-central-1.amazonaws.com/k6-runner
+    image: 901127637159.dkr.ecr.eu-central-1.amazonaws.com/k6-runner:warning-page12345678
     env:
       - name: K6_INFLUXDB_ORGANIZATION
         value: 'k6io'

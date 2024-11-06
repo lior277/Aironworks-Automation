@@ -27,6 +27,7 @@ from src.utils.json_tool import JSONTool
 
 
 @pytest.mark.parametrize('employees_count', [2])
+@pytest.mark.prepare_data
 def test_education_campaign(
     api_request_context_customer_admin,
     clean_up_employees,
@@ -85,8 +86,9 @@ def test_education_campaign(
 # CSVTool.create_file(employees_list, column_names, file_path)
 
 
-@pytest.mark.parametrize('employees_count', [1])
+@pytest.mark.parametrize('employees_count', [3000])
 @pytest.mark.timeout(60 * 60)
+@pytest.mark.prepare_data
 def test_simulation_campaign(
     api_request_context_customer_admin,
     set_up_perf_survey: Survey,
