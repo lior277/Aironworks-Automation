@@ -11,7 +11,7 @@ spec:
       file: education_content_perf.js
   arguments: -o xk6-influxdb=http://influxdb-influxdb2.k6-operator-system:80
   runner:
-    image: 901127637159.dkr.ecr.eu-central-1.amazonaws.com/k6-runner
+    image: 901127637159.dkr.ecr.eu-central-1.amazonaws.com/k6-runner:$TAG
     env:
       - name: K6_INFLUXDB_ORGANIZATION
         value: 'k6io'

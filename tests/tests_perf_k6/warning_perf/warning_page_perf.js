@@ -1,9 +1,7 @@
 import http from 'k6/http';
 import exec from 'k6/execution';
-// import { open } from 'k6/experimental/fs';
-import papaparse from 'https://jslib.k6.io/papaparse/5.1.1/index.js';
 import { SharedArray } from 'k6/data';
-import { check, sleep } from 'k6';
+import { check } from 'k6';
 
 const BASE_URL = 'https://staging.app.aironworks.com';
 const data = new SharedArray('cases', function () {

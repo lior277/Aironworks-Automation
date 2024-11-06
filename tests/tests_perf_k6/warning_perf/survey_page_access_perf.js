@@ -1,8 +1,7 @@
 import http from 'k6/http';
-// import { open } from 'k6/experimental/fs';
-import papaparse from 'https://jslib.k6.io/papaparse/5.1.1/index.js';
+import exec from 'k6/execution';
 import { SharedArray } from 'k6/data';
-import { check, sleep } from 'k6';
+import { check } from 'k6';
 
 const BASE_URL = 'https://staging.app.aironworks.com';
 const data = new SharedArray('cases', function () {
@@ -18,20 +17,21 @@ export let options = {
 };
 
 export default function(){
-    let tags = { testid: 'k8s' };
+    let tags = { testid: 'warning_survey' };
     //Get data from data set
-    let currentIndex = __ITER % data.length;
+    let currentIndex = exec.scenario.iterationInTest % data.length;
     let row = data[currentIndex];
     console.log("Data:"+typeof(row));
     let url = row.attack_url;
 
     let payload = JSON.stringify({'url': url });
     let params = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      tags: tags,
     };
-    let res = http.post(BASE_URL + '/api/public/verify_url_click', payload, params, {tags: tags});
+    let res = http.post(BASE_URL + '/api/public/verify_url_click', payload, params);
     //Check if response is not 200
     check(res, {
         'is status 200': (r) => r.status === 200,
@@ -39,7 +39,7 @@ export default function(){
     let survey_id = res.json().id;
     let survey_token = res.json().survey_token;
     let req_url = BASE_URL + '/api/survey/get_surveys_for_attack?attack_id=' + survey_id + '&token=' + survey_token;
-    let res2 = http.get(req_url, {tags: tags});
+    let res2 = http.get(req_url, params);
     //Check if response is not 200
     check(res2, {
         'is status 200': (r) => r.status === 200,
