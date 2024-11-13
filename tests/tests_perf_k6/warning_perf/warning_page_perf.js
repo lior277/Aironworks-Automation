@@ -37,13 +37,15 @@ export default function(){
       },
       tags: tags
     };
-    let res = http.post(BASE_URL + '/api/public/verify_url_click', payload, params);
+    // let res = http.post(BASE_URL + '/api/public/verify_url_click', payload, params);
+
+    let res = http.post(BASE_URL + '/api/public/verify_data_entry', payload, params);
 
     // console.log("Response code:"+res.status);
     // console.log("Response:"+res.body);
 
     //Check if response is not 200
     check(res, {
-        'is status 200': (r) => r.status === 200,
+        'is status 200 or 204': (r) => r.status === 204 || r.status === 200,
     });
 }

@@ -14,3 +14,4 @@ class CampaignModel:
     content_id: str = None
     special: List[str] = field(default_factory=list)
     company_id: Optional[int] = None
+    send_attacks: Optional[bool] = True
