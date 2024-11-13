@@ -8,7 +8,7 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.company.employee_item_model_factory import (
     EmployeeItemModelFactory,
 )
-from src.page_objects.employee_directory import update_employee_success_message
+from src.page_objects.employee_directory.const import update_employee_success_message
 from src.page_objects.employee_directory.employee_directory_page import (
     EmployeeDirectoryPage,
 )

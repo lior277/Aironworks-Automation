@@ -2,7 +2,7 @@ import allure
 from playwright.sync_api import Page, expect
 
 from src.page_objects.base_page import BasePage
-from src.page_objects.education_campaign import (
+from src.page_objects.education_campaign.const import (
     confirm_deletion_body_text,
     education_campaign_deleted_text,
 )

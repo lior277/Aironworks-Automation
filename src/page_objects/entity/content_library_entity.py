@@ -4,7 +4,7 @@ import string
 from datetime import datetime
 
 from src.configs.config_loader import AppFolders
-from src.page_objects.content_library import ContentType
+from src.page_objects.content_library.const import ContentType
 
 
 def get_random_title():

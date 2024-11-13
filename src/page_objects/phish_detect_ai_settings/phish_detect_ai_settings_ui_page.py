@@ -4,7 +4,7 @@ from playwright.sync_api import Locator, Page, expect
 from src.models.phish_detect_ui_settings.outlook_localized_config import (
     OutlookConfigData,
 )
-from src.page_objects.phish_detect_ai_settings import updated_settings_text
+from src.page_objects.phish_detect_ai_settings.const import updated_settings_text
 from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_page import (
     PhishDetectAISettings,
 )

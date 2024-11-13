@@ -10,7 +10,7 @@ from src.configs.config_loader import AppFolders
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.company.employee_model_factory import EmployeeModelFactory
-from src.page_objects import upload_error_message
+from src.page_objects.const import upload_error_message
 from src.page_objects.employee_directory.employee_directory_page import (
     EmployeeDirectoryPage,
 )

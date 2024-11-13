@@ -5,6 +5,7 @@ from src.apis.assessment import AssessmentService
 from src.apis.company import CompanyService
 from src.apis.customer import CustomerService
 from src.apis.education import EducationService
+from src.apis.email_filter import EmailFilterService
 from src.apis.group_service import GroupService
 from src.apis.login import LoginService
 from src.apis.phish_detect_ai_service import PhishDetectUI
@@ -62,6 +63,10 @@ class ServiceFactory:
     @staticmethod
     def phish_detect_ui_settings(request_context: APIRequestContext) -> PhishDetectUI:
         return PhishDetectUI(request_context)
+
+    @staticmethod
+    def email_filter(request_context: APIRequestContext) -> EmailFilterService:
+        return EmailFilterService(request_context)
 
 
 api = ServiceFactory()

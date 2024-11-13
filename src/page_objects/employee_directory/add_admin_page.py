@@ -4,7 +4,7 @@ from playwright.sync_api import Page, expect
 from src.models.company.employee_model import EmployeeModel
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.drop_down_element import DropDown
-from src.page_objects.employee_directory import (
+from src.page_objects.employee_directory.const import (
     add_admin_existing_employee_success_message,
     add_admin_success_message,
 )

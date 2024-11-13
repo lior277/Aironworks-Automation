@@ -3,13 +3,16 @@ import tempfile
 import allure
 from playwright.sync_api import Locator, Page, expect
 
-from src.page_objects import file_type_must_be_csv_xlsx, get_file_size_error_message
 from src.page_objects.base_page import BasePage
+from src.page_objects.const import (
+    file_type_must_be_csv_xlsx,
+    get_file_size_error_message,
+)
 from src.page_objects.data_types.table_element import Table
 from src.page_objects.employee_directory.employee_directory_page import (
     RejectedUploadItemComponent,
 )
-from src.page_objects.groups import group_created_text
+from src.page_objects.groups.const import group_created_text
 from src.page_objects.groups.create_group_page import CreateGroupPage
 from src.page_objects.groups.edit_group_page import EditGroupPage
 from src.page_objects.groups.group_details_page import GroupDetailsPage

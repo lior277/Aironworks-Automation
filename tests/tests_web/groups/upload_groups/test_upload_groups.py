@@ -12,7 +12,7 @@ from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.group.group_model_factory import GroupModelFactory
 from src.models.group.group_list import GroupListModel
-from src.page_objects import update_succeeded_text
+from src.page_objects.const import update_succeeded_text
 from src.page_objects.groups.groups_page import GroupsPage
 from src.utils.csv_tool import CSVTool
 

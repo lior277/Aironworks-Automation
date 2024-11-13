@@ -2,7 +2,7 @@ import allure
 from playwright.sync_api import Page, expect
 
 from src.page_objects.base_page import BasePage
-from src.page_objects.content_library import quiz_attached_text
+from src.page_objects.content_library.const import quiz_attached_text
 from src.page_objects.entity.content_library_entity import QuizEntity
 
 

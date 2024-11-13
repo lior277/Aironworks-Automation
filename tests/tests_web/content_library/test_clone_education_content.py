@@ -4,7 +4,7 @@ import pytest
 from src.apis.api_factory import api
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.page_objects.content_library import ContentType
+from src.page_objects.content_library.const import ContentType
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
 
 

@@ -5,8 +5,8 @@ from playwright.sync_api import Locator, Page
 
 from src.models.education.education_content_model import Item
 from src.page_objects.base_page import BasePage
-from src.page_objects.content_library import ContentType
 from src.page_objects.content_library.add_content_page import AddContentPage
+from src.page_objects.content_library.const import ContentType
 from src.page_objects.content_library.content_library_details_page import (
     ContentLibraryDetailsPage,
 )

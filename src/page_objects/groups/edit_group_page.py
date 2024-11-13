@@ -6,7 +6,7 @@ from playwright.sync_api import Page, expect
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.filter import Filter
 from src.page_objects.data_types.table_element import Table
-from src.page_objects.groups import group_modified_successfully_text
+from src.page_objects.groups.const import group_modified_successfully_text
 from src.page_objects.groups.create_group_page import (
     ChooseEmployeesTableComponent,
     EmployeesTableComponent,

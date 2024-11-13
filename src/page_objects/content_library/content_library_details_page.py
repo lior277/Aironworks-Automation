@@ -2,16 +2,16 @@ import allure
 from playwright.sync_api import Page, expect
 
 from src.page_objects.base_page import BasePage
-from src.page_objects.content_library import (
-    ContentType,
-    attach_quiz_text,
-    content_successfully_updated_text,
-    education_content_cloned_text,
-)
 from src.page_objects.content_library.add_content_page import (
     AdditionalInformationComponent,
     ContentVisibilityComponent,
     GeneralInformationComponent,
+)
+from src.page_objects.content_library.const import (
+    ContentType,
+    attach_quiz_text,
+    content_successfully_updated_text,
+    education_content_cloned_text,
 )
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
