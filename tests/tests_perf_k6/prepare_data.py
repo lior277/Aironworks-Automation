@@ -128,13 +128,20 @@ def test_simulation_campaign(
         company_id=response.json()['user']['company_id'],
         employees=employee_ids['items'],
         attack_info_id=infos.id,
+        send_attacks=False,
     )
     admin_service = api.admin(api_request_context_customer_admin)
     response = admin_service.start_campaign(campaign_model)
 
-    campaign_urls = api.scenario(api_request_context_aw_admin).aw_admin_campaign_urls(
-        campaign_id=response.json()['id']
-    )
+    while True:
+        time.sleep(10)
+        campaign_urls = api.scenario(
+            api_request_context_aw_admin
+        ).aw_admin_campaign_urls(campaign_id=response.json()['id'])
+        o = campaign_urls.attacks[0].attack_url
+        if o is not None:
+            break
+
     file_path = os.path.join(
         AppFolders.TESTS_PATH, 'tests_perf_k6/perf_warning_page.json'
     )
