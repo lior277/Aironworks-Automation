@@ -2,7 +2,7 @@ import allure
 from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
-from src.page_objects.groups import group_is_deleted_text
+from src.page_objects.groups.const import group_is_deleted_text
 
 
 class GroupDetailsPage(BasePage):

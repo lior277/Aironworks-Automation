@@ -20,6 +20,11 @@ from src.page_objects.education_campaign.education_campaign_details_page import 
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
+from src.page_objects.email_filter.email_filter_settings_page import (
+    EmailFilterSettingsPage,
+)
+from src.page_objects.email_filter.email_statistics_page import EmailStatisticsPage
+from src.page_objects.email_filter.received_emails_page import ReceivedEmailsPage
 from src.page_objects.employee_directory.add_admin_page import AddAdminPage
 from src.page_objects.employee_directory.employee_directory_page import (
     EmployeeDirectoryPage,
@@ -224,3 +229,20 @@ def phish_detect_ai_settings_ui_page(
     dashboard_page: DashboardPage,
 ) -> PhishDetectAISettingsUIConfiguration:
     return dashboard_page.navigation_bar.navigate_phish_detect_ai_settings_ui_page()
+
+
+@pytest.fixture
+def email_statistics_page(dashboard_page: DashboardPage) -> EmailStatisticsPage:
+    return dashboard_page.navigation_bar.navigate_email_statistics_page()
+
+
+@pytest.fixture
+def email_filter_settings_page(
+    dashboard_page: DashboardPage,
+) -> EmailFilterSettingsPage:
+    return dashboard_page.navigation_bar.navigate_email_filter_settings_page()
+
+
+@pytest.fixture
+def received_emails_page(dashboard_page: DashboardPage) -> ReceivedEmailsPage:
+    return dashboard_page.navigation_bar.navigate_received_emails_page()

@@ -3,14 +3,14 @@ from playwright.sync_api import Locator, Page, expect
 
 from src.models.auth.user_model import UserModel
 from src.page_objects.base_page import BasePage
-from src.page_objects.content_library import (
+from src.page_objects.content_library.attach_quiz_page import AddQuizPage
+from src.page_objects.content_library.attach_survey_page import AddSurveyPage
+from src.page_objects.content_library.const import (
     ContentType,
     new_content_successfully_published_text,
     pdf_file_attached_text,
     sensitive_information_description_text,
 )
-from src.page_objects.content_library.attach_quiz_page import AddQuizPage
-from src.page_objects.content_library.attach_survey_page import AddSurveyPage
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 

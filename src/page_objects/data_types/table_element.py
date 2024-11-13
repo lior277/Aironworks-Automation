@@ -44,3 +44,7 @@ class Table(Generic[T]):
                 ).get_by_text(value)
             )
         )
+
+    def get_last_row(self) -> T:
+        Log.debug('Getting last row from the table')
+        return self._Table__structure(self._Table__locator.last)

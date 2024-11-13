@@ -64,5 +64,14 @@ class PSApi(Enum):
     OUTLOOK_LOCALIZED_CONFIG = '/company/outlook-localized-config'
     OUTLOOK_LOCALIZED_CONFIG_LANGUAGE = '/company/outlook-localized-config/{language}'
 
+    # Email filter
+    BLOCK_EMAIL = '/v1beta1/emailfilter/company/my_company/blocked_email'
+    UNBLOCK_EMAIL = '/v1beta1/emailfilter/company/my_company/blocked_email/{id}'
+    SAFE_EMAIL = '/v1beta1/emailfilter/company/my_company/safe_email'
+    UNSAFE_EMAIL = '/v1beta1/emailfilter/company/my_company/safe_email/{id}'
+    BLOCKED_LIST = '/v1beta1/emailfilter/company/my_company/blocked_email:list'
+    SAFE_LIST = '/v1beta1/emailfilter/company/my_company/safe_email:list'
+    HIGH_RISK_HANDLING = '/v1beta1/emailfilter/company/my_company'
+
     def get_endpoint(self):
         return self.API_VERSION.value + self.value

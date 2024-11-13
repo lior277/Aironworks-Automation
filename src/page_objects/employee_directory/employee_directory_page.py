@@ -4,16 +4,19 @@ import allure
 from playwright.sync_api import Locator, Page, expect
 
 from src.models.company.employee_list_model import EmployeeItemModel
-from src.page_objects import file_type_must_be_csv_xlsx, get_file_size_error_message
 from src.page_objects.base_page import BasePage
+from src.page_objects.const import (
+    file_type_must_be_csv_xlsx,
+    get_file_size_error_message,
+)
 from src.page_objects.data_types.filter import Filter
 from src.page_objects.data_types.table_element import Table
-from src.page_objects.employee_directory import (
+from src.page_objects.employee_directory.add_admin_page import AddAdminPage
+from src.page_objects.employee_directory.const import (
     deactivated_employees_success_message,
     employees_deleted_message,
     employees_restored_message,
 )
-from src.page_objects.employee_directory.add_admin_page import AddAdminPage
 from src.page_objects.employee_directory.edit_employee_page import EditEmployeePage
 from src.page_objects.entity.employee_entity import (
     EmployeeEntity,

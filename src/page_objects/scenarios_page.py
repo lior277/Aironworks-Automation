@@ -6,13 +6,13 @@ from playwright.sync_api import Locator, Page, expect
 
 from src.models.scenario import CampaignType, ScenarioCloneMode, TargetType
 from src.models.scenario_model import ScenarioModel
-from src.page_objects import (
+from src.page_objects.base_page import BasePage
+from src.page_objects.const import (
     created_new_scenario_text,
     invalid_file_type_text,
     marked_attack_non_draft_message,
     scenario_file_name_helper_text,
 )
-from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.execute_campaign_page import ExecuteCampaignPage
 

@@ -2,7 +2,7 @@ import allure
 from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
-from src.page_objects.content_library import created_education_campaign_text
+from src.page_objects.content_library.const import created_education_campaign_text
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.data_types.table_element import Table
 

@@ -6,12 +6,17 @@ from src.page_objects.content_library.content_library_page import ContentLibrary
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
+from src.page_objects.email_filter.email_filter_settings_page import (
+    EmailFilterSettingsPage,
+)
+from src.page_objects.email_filter.email_statistics_page import EmailStatisticsPage
+from src.page_objects.email_filter.received_emails_page import ReceivedEmailsPage
 from src.page_objects.employee_directory.employee_directory_page import (
     EmployeeDirectoryPage,
 )
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.groups.groups_page import GroupsPage
-from src.page_objects.phish_detect_ai_settings import phishing_assessment_title
+from src.page_objects.phish_detect_ai_settings.const import phishing_assessment_title
 from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_general_page import (
     PhishDetectAISettingsGeneral,
 )
@@ -41,6 +46,11 @@ class NavigationBar:
         self.groups_button = page.get_by_role('link', name='Groups', exact=True)
         self.phish_detect_ai_settings_button = page.get_by_role(
             'link', name='PhishDetectAI Settings', exact=True
+        )
+        self.email_statistics_button = page.get_by_role('link', name='Email Statistics')
+        self.received_emails_button = page.get_by_role('link', name='Received Emails')
+        self.email_filter_settings_button = page.get_by_role(
+            'link', name='Email Filter Settings'
         )
 
     @allure.step('NavigationBar: Navigate to scenarios')
@@ -124,3 +134,24 @@ class NavigationBar:
         ui_configuration_page.ui_configuration_tab.click()
         ui_configuration_page.show_preview_button.wait_for()
         return ui_configuration_page
+
+    @allure.step('NavigationBar: Navigate to email statistics page')
+    def navigate_email_statistics_page(self):
+        self.email_statistics_button.click()
+        email_statistics_page = EmailStatisticsPage(self.page)
+        email_statistics_page.wait_for_progress_bar_disappears()
+        return email_statistics_page
+
+    @allure.step('NavigationBar: Navigate to received emails page')
+    def navigate_received_emails_page(self):
+        self.received_emails_button.click()
+        received_emails_page = ReceivedEmailsPage(self.page)
+        received_emails_page.wait_for_progress_bar_disappears()
+        return received_emails_page
+
+    @allure.step('NavigationBar: Navigate to email filter settings page')
+    def navigate_email_filter_settings_page(self):
+        self.email_filter_settings_button.click()
+        email_filter_settings_page = EmailFilterSettingsPage(self.page)
+        email_filter_settings_page.wait_for_progress_bar_disappears()
+        return email_filter_settings_page
