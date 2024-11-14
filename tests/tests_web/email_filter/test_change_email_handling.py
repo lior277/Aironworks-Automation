@@ -11,12 +11,12 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
     'user, option',
     [
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             'Block High-Risk Email',
             marks=allure.testcase('C31803'),
         ),
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             'Label As High-Risk Only',
             marks=allure.testcase('C31804'),
         ),
