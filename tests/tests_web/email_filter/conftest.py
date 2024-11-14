@@ -11,18 +11,26 @@ from src.page_objects.email_filter.sender_details_page import SenderDetailsPage
 
 
 @pytest.fixture(scope='function')
-def add_to_block_list(request, api_request_context_customer_admin) -> EmailDomainModel:
+def add_to_block_list(
+    request, api_request_context_customer_admin_email_filter
+) -> EmailDomainModel:
     email_domain = EmailDomainModelFactory.get_random_email_domain_with_empty_domain()
-    email_filter_service = api.email_filter(api_request_context_customer_admin)
+    email_filter_service = api.email_filter(
+        api_request_context_customer_admin_email_filter
+    )
     expect(
         email_filter_service.block_email(email=email_domain.email_address)
     ).to_be_ok()
 
 
 @pytest.fixture(scope='function')
-def add_to_safe_list(request, api_request_context_customer_admin) -> EmailDomainModel:
+def add_to_safe_list(
+    request, api_request_context_customer_admin_email_filter
+) -> EmailDomainModel:
     email_domain = EmailDomainModelFactory.get_random_email_domain_with_empty_domain()
-    email_filter_service = api.email_filter(api_request_context_customer_admin)
+    email_filter_service = api.email_filter(
+        api_request_context_customer_admin_email_filter
+    )
     expect(email_filter_service.safe_email(email=email_domain.email_address)).to_be_ok()
 
 
@@ -34,8 +42,10 @@ def sender_details_page(request, received_emails_page) -> SenderDetailsPage:
 
 
 @pytest.fixture(scope='function')
-def option(request, api_request_context_customer_admin):
-    email_filter_service = api.email_filter(api_request_context_customer_admin)
+def option(request, api_request_context_customer_admin_email_filter):
+    email_filter_service = api.email_filter(
+        api_request_context_customer_admin_email_filter
+    )
     option = request.param
     if option == 'Block High-Risk Email':
         expect(email_filter_service.label_as_high_risk()).to_be_ok()
@@ -47,9 +57,11 @@ def option(request, api_request_context_customer_admin):
 
 
 @pytest.fixture(scope='function')
-def remove_from_block_list(request, api_request_context_customer_admin):
+def remove_from_block_list(request, api_request_context_customer_admin_email_filter):
     def finalizer():
-        email_filter_service = api.email_filter(api_request_context_customer_admin)
+        email_filter_service = api.email_filter(
+            api_request_context_customer_admin_email_filter
+        )
         email_domain = getattr(request.node, 'email_domain', None)
         data = email_filter_service.list_blocked_emails_domains().json()
         email_domain_list = data.get('blocked_emails', [])
@@ -69,9 +81,11 @@ def remove_from_block_list(request, api_request_context_customer_admin):
 
 
 @pytest.fixture(scope='function')
-def remove_from_safe_list(request, api_request_context_customer_admin):
+def remove_from_safe_list(request, api_request_context_customer_admin_email_filter):
     def finalizer():
-        email_filter_service = api.email_filter(api_request_context_customer_admin)
+        email_filter_service = api.email_filter(
+            api_request_context_customer_admin_email_filter
+        )
         email_domain = getattr(request.node, 'email_domain', None)
         data = email_filter_service.list_safe_emails_domains().json()
         email_domain_list = data.get('safe_emails', [])
@@ -91,9 +105,13 @@ def remove_from_safe_list(request, api_request_context_customer_admin):
 
 
 @pytest.fixture(scope='function')
-def remove_from_block_list_sender(request, api_request_context_customer_admin):
+def remove_from_block_list_sender(
+    request, api_request_context_customer_admin_email_filter
+):
     def finalizer():
-        email_filter_service = api.email_filter(api_request_context_customer_admin)
+        email_filter_service = api.email_filter(
+            api_request_context_customer_admin_email_filter
+        )
         email_domain = getattr(request.node, 'email_domain', None)
         data = email_filter_service.list_blocked_emails_domains().json()
         email_domain_list = data.get('blocked_emails', [])
@@ -108,9 +126,13 @@ def remove_from_block_list_sender(request, api_request_context_customer_admin):
 
 
 @pytest.fixture(scope='function')
-def remove_from_safe_list_sender(request, api_request_context_customer_admin):
+def remove_from_safe_list_sender(
+    request, api_request_context_customer_admin_email_filter
+):
     def finalizer():
-        email_filter_service = api.email_filter(api_request_context_customer_admin)
+        email_filter_service = api.email_filter(
+            api_request_context_customer_admin_email_filter
+        )
         email_domain = getattr(request.node, 'email_domain', None)
         data = email_filter_service.list_safe_emails_domains().json()
         email_domain_list = data.get('safe_emails', [])

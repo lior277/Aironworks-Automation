@@ -60,3 +60,12 @@ class UserModelFactory:
             company='Upload Admin',
             is_admin=False,
         )
+
+    @staticmethod
+    def customer_admin_email_filter() -> UserModel:
+        return UserModel(
+            email=AppConfigs.CUSTOMER_ADMIN_EMAIL_FILTER_USERNAME,
+            password=AppConfigs.CUSTOMER_ADMIN_EMAIL_FILTER_PASSWORD,
+            company='Email Filter Test Company',
+            is_admin=False,
+        )

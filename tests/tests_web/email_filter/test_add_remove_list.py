@@ -15,12 +15,12 @@ from src.models.factories.email_filter.email_domain_model_factory import (
     'user, email_domain',
     [
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             EmailDomainModelFactory.get_random_email_domain_with_empty_domain(),
             marks=allure.testcase('C31803'),
         ),
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             EmailDomainModelFactory.get_random_email_domain_with_empty_email(),
             marks=allure.testcase('C31804'),
         ),
@@ -44,12 +44,12 @@ def test_add_to_block_list(
     'user, email_domain',
     [
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             EmailDomainModelFactory.get_random_email_domain_with_empty_domain(),
             marks=allure.testcase('C31822'),
         ),
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             EmailDomainModelFactory.get_random_email_domain_with_empty_email(),
             marks=allure.testcase('C31822'),
         ),
@@ -73,13 +73,13 @@ def test_add_to_safe_list(
     'user, sender_details_page, is_email',
     [
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             True,
             marks=allure.testcase('C31822'),
         ),
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             False,
             marks=allure.testcase('C31822'),
@@ -105,13 +105,13 @@ def test_add_to_block_list_from_sender(
     'user, sender_details_page, is_email',
     [
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             False,
             marks=allure.testcase('C31822'),
         ),
         pytest.param(
-            UserModelFactory.customer_admin(),
+            UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             True,
             marks=allure.testcase('C31822'),
@@ -135,7 +135,12 @@ def test_add_to_safe_list_from_sender(
 @pytest.mark.web
 @pytest.mark.parametrize(
     'user',
-    [pytest.param(UserModelFactory.customer_admin(), marks=allure.testcase('C31803'))],
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            marks=allure.testcase('C31803'),
+        )
+    ],
 )
 def test_remove_from_block_list(
     is_emailfilter_enabled,
@@ -151,7 +156,12 @@ def test_remove_from_block_list(
 @pytest.mark.web
 @pytest.mark.parametrize(
     'user',
-    [pytest.param(UserModelFactory.customer_admin(), marks=allure.testcase('C31804'))],
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            marks=allure.testcase('C31804'),
+        )
+    ],
 )
 def test_remove_from_safe_list(
     is_emailfilter_enabled,
