@@ -20,7 +20,7 @@ class EmailFilterSettingsPage(BasePage):
         super().__init__(page)
         self.blocked_list = self.page.get_by_role('tab', name='Blocked List')
         self.safe_list = self.page.get_by_role('tab', name='Safe List')
-        self.high_risk_emails = self.page.get_by_role('tab', name='High-Risk Emails')
+        self.high_risk_emails = self.page.get_by_role('tab', name='High Risk Emails')
 
         self.blocked_list_tab = BlockedListTab(
             self.page.get_by_label('EmailBlockedListTab')
