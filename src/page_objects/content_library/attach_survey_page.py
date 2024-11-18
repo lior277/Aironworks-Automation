@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.content_library.const import survey_attached_text
@@ -26,4 +26,4 @@ class AddSurveyPage(BasePage):
             self.answer_one_input.fill(survey.questions[0].answers[0])
             self.answer_two_input.fill(survey.questions[0].answers[1])
             self.apply_button.click()
-            expect(self.alert_message).to_have_text(survey_attached_text)
+            self.ensure_alert_message_is_visible(survey_attached_text)

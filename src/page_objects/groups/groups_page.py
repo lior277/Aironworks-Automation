@@ -50,7 +50,7 @@ class GroupsPage(BasePage):
         self.create_group_button.click()
         create_group_page = CreateGroupPage(self.page)
         create_group_page.create_group(group_name, managers_email, employees_email)
-        expect(self.alert_message).to_have_text(group_created_text)
+        self.ensure_alert_message_is_visible(group_created_text)
 
     @allure.step('GroupsPage: upload file {file_path}')
     def upload_file(self, file_path: str):

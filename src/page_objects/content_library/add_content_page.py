@@ -63,18 +63,14 @@ class AddContentPage(BasePage):
         elif education_content.content_type == ContentType.SURVEY:
             self.add_survey(education_content)
         self.save_and_publish_button.click()
-        expect(self.alert_message).to_contain_text(
-            new_content_successfully_published_text
-        )
+        self.ensure_alert_message_is_visible(new_content_successfully_published_text)
 
     @allure.step('AddContentPage: upload pdf file')
     def upload_pdf_file(self, education_content: ContentLibraryEntity):
         with self.page.expect_file_chooser() as fc:
             self.general_information.upload_pdf_button.click()
             fc.value.set_files(education_content.pdf_file_path)
-        expect(self.alert_message).to_contain_text(
-            pdf_file_attached_text, timeout=20_000
-        )
+        self.ensure_alert_message_is_visible(pdf_file_attached_text, timeout=20_000)
 
     @allure.step('AddContentPage: add quiz {education_content}')
     def add_quiz(self, education_content: ContentLibraryEntity):

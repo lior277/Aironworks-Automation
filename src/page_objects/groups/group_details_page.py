@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Locator, Page, expect
+from playwright.sync_api import Locator, Page
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.groups.const import group_is_deleted_text
@@ -22,7 +22,7 @@ class GroupDetailsPage(BasePage):
         self.delete_group_component.locator.wait_for()
         self.delete_group_component.delete_button.click()
         self.wait_for_progress_bar_disappears()
-        expect(self.alert_message).to_have_text(group_is_deleted_text)
+        self.ensure_alert_message_is_visible(group_is_deleted_text)
 
 
 class DeleteGroupComponent:

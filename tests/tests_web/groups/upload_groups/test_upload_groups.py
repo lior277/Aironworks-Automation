@@ -77,7 +77,7 @@ class TestUploadGroups:
         is_csv_file: bool,
     ):
         groups_page.upload_file(generate_groups_file)
-        expect(groups_page.alert_message).to_contain_text(update_succeeded_text)
+        groups_page.ensure_alert_message_is_visible(update_succeeded_text)
 
     @pytest.mark.smoke
     @pytest.mark.web

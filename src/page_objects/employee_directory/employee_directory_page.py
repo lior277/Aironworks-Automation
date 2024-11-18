@@ -157,7 +157,7 @@ class EmployeeDirectoryPage(BasePage):
         self.employee_checkbox.check()
         self.deactivate_button.click()
         self.deactivate_employees_component.ok_button.click()
-        expect(self.alert_message).to_have_text(deactivated_employees_success_message)
+        self.ensure_alert_message_is_visible(deactivated_employees_success_message)
 
     @allure.step('EmployeeDirectoryPage: restore employee by {email} email')
     def restore_employee(self, email: str):
@@ -165,7 +165,7 @@ class EmployeeDirectoryPage(BasePage):
         self.filter_employee_by_email(email)
         self.employee_checkbox.check()
         self.restore_button.click()
-        expect(self.alert_message).to_have_text(employees_restored_message)
+        self.ensure_alert_message_is_visible(employees_restored_message)
 
     @allure.step('EmployeeDirectoryPage: delete employee by {email} email')
     def delete_employee(self, email: str):
@@ -176,7 +176,7 @@ class EmployeeDirectoryPage(BasePage):
         self.employee_checkbox.check()
         self.delete_button.click()
         self.delete_employees_component.ok_button.click()
-        expect(self.alert_message).to_have_text(employees_deleted_message)
+        self.ensure_alert_message_is_visible(employees_deleted_message)
 
     @allure.step('EmployeeDirectoryPage: go to add admin page')
     def go_to_add_admin_page(self):

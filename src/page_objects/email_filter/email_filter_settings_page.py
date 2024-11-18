@@ -53,7 +53,7 @@ class EmailFilterSettingsPage(BasePage):
         expect(self.add_email_domain_popup.locator).to_be_visible()
         self.add_email_domain_popup.add_email_domain(email_domain)
         self.add_email_domain_popup.block_button.click()
-        expect(self.alert_message.first).to_contain_text(
+        self.ensure_alert_message_is_visible(
             add_email_domain_to_blocked_list_success_message
         )
 
@@ -63,7 +63,7 @@ class EmailFilterSettingsPage(BasePage):
         expect(self.add_email_domain_popup.locator).to_be_visible()
         self.add_email_domain_popup.add_email_domain(email_domain)
         self.add_email_domain_popup.mark_as_safe_button.click()
-        expect(self.alert_message.first).to_contain_text(
+        self.ensure_alert_message_is_visible(
             add_email_domain_to_safe_list_success_message
         )
 
@@ -72,7 +72,7 @@ class EmailFilterSettingsPage(BasePage):
         self.blocked_list_tab.block_list_table.get_last_row().actions.click()
         expect(self.remove_email_domain_popup.locator).to_be_visible()
         self.remove_email_domain_popup.unblock_button.click()
-        expect(self.alert_message.first).to_contain_text(
+        self.ensure_alert_message_is_visible(
             remove_email_domain_from_blocked_list_success_message
         )
 
@@ -82,7 +82,7 @@ class EmailFilterSettingsPage(BasePage):
         self.safe_list_tab.safe_list_table.get_last_row().actions.click()
         expect(self.remove_email_domain_popup.locator).to_be_visible()
         self.remove_email_domain_popup.remove_button.click()
-        expect(self.alert_message.first).to_contain_text(
+        self.ensure_alert_message_is_visible(
             remove_email_domain_from_safe_list_success_message
         )
 
@@ -94,12 +94,12 @@ class EmailFilterSettingsPage(BasePage):
         match option:
             case 'Block High-Risk Email':
                 self.high_risk_emails_tab.block_high_risk_emails()
-                expect(self.alert_message.first).to_contain_text(
+                self.ensure_alert_message_is_visible(
                     block_high_risk_emails_success_message
                 )
             case 'Label As High-Risk Only':
                 self.high_risk_emails_tab.label_as_high_risk_only()
-                expect(self.alert_message.first).to_contain_text(
+                self.ensure_alert_message_is_visible(
                     label_as_high_risk_only_success_message
                 )
             case _:
