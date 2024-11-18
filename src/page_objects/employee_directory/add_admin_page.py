@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 
 from src.models.company.employee_model import EmployeeModel
 from src.page_objects.base_page import BasePage
@@ -14,7 +14,6 @@ class AddAdminPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.breadcrumb = self.page.get_by_role('current-breadcrumb')
-        self.alert_message = self.page.locator("[id='notistack-snackbar']")
 
         # Select option step
         self.create_new_admin_account_option = self.page.get_by_role(
@@ -79,7 +78,7 @@ class AddAdminPage(BasePage):
         self.rows_checkbox.nth(0).click()
         self.confirm_button.click()
         self.wait_for_progress_bar_disappears()
-        expect(self.alert_message).to_contain_text(
+        self.ensure_alert_message_is_visible(
             add_admin_existing_employee_success_message
         )
 
@@ -87,7 +86,7 @@ class AddAdminPage(BasePage):
     def add_new_admin_and_check_invitation(self, employee: EmployeeModel):
         self.add_new_admin(employee)
         self.wait_for_progress_bar_disappears()
-        expect(self.alert_message).to_contain_text(add_admin_success_message)
+        self.ensure_alert_message_is_visible(add_admin_success_message)
 
     @allure.step('AddAdminPage: add admin')
     def add_admin(self, employee: EmployeeModel, create_new: bool):

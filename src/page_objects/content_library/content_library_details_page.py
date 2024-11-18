@@ -62,9 +62,7 @@ class ContentLibraryDetailsPage(BasePage):
         if not self.language_dropdown.locator.text_content() == '':
             self.language_dropdown.select_item_by_text('English')
         self.save_button.click()
-        expect(self.alert_message.first).to_contain_text(
-            content_successfully_updated_text
-        )
+        self.ensure_alert_message_is_visible(content_successfully_updated_text)
         expect(self.page.get_by_text(attach_quiz_text)).to_be_visible()
         return self
 
@@ -74,7 +72,7 @@ class ContentLibraryDetailsPage(BasePage):
             'value'
         )
         self.clone_button.click()
-        expect(self.alert_message).to_have_text(education_content_cloned_text)
+        self.ensure_alert_message_is_visible(education_content_cloned_text)
         expect(self.general_information.title).to_have_attribute(
             name='value', value=expected_title
         )

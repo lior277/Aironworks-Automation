@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Locator, Page, expect
+from playwright.sync_api import Locator, Page
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.table_element import Table
@@ -63,7 +63,7 @@ class SenderDetailsPage(BasePage):
         self.add_to_block_list_button.click()
         email_domain = self.add_email_domain_popup.add_email_domain(is_email)
         self.add_email_domain_popup.block_button.click()
-        expect(self.alert_message.first).to_contain_text(
+        self.ensure_alert_message_is_visible(
             add_email_domain_to_blocked_list_success_message
         )
         return email_domain
@@ -73,7 +73,7 @@ class SenderDetailsPage(BasePage):
         self.add_to_safe_list_button.click()
         email_domain = self.add_email_domain_popup.add_email_domain(is_email)
         self.add_email_domain_popup.mark_as_safe_button.click()
-        expect(self.alert_message.first).to_contain_text(
+        self.ensure_alert_message_is_visible(
             add_email_domain_to_safe_list_success_message
         )
         return email_domain

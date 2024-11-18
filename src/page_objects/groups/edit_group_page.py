@@ -56,7 +56,7 @@ class EditGroupPage(BasePage):
         if remove_employees:
             self.remove_all_employees()
         self.save_button.click()
-        expect(self.alert_message).to_have_text(
+        self.ensure_alert_message_is_visible(
             group_modified_successfully_text, timeout=10000
         )
         return GroupDetailsPage(self.page)

@@ -100,7 +100,7 @@ class ScenariosPage(BasePage):
     def finish_draft(self):
         self.page.get_by_role('button', name='Finish Draft').click()
         self.page.get_by_role('button', name='OK').click()
-        expect(self.alert_message.first).to_contain_text(
+        self.ensure_alert_message_is_visible(
             marked_attack_non_draft_message, timeout=30_000
         )
 
@@ -157,7 +157,7 @@ class ScenariosPage(BasePage):
     def create_scenario(self, scenario: ScenarioModel):
         self.navigate_create_scenario()
         self.submit_create_scenario_form(scenario)
-        expect(self.alert_message.first).to_contain_text(created_new_scenario_text)
+        self.ensure_alert_message_is_visible(created_new_scenario_text)
 
     @allure.step('Find scenario by {scenario_name} name')
     def find_scenario(self, scenario_name: str):
@@ -201,7 +201,7 @@ class ScenariosPage(BasePage):
                             scenario_file_name_helper_text
                         )
                     else:
-                        expect(self.alert_message).to_have_text(invalid_file_type_text)
+                        self.ensure_alert_message_is_visible(invalid_file_type_text)
                         expect(self.delete_file_button).not_to_be_visible()
             case _:
                 self.phishing_link_button.check()

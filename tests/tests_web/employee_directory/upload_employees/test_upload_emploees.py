@@ -4,7 +4,6 @@ import string
 
 import allure
 import pytest
-from playwright.sync_api import expect
 
 from src.configs.config_loader import AppFolders
 from src.models.auth.user_model import UserModel
@@ -78,9 +77,7 @@ class TestUploadEmployees:
         is_csv_file: bool,
     ):
         employee_directory_page.upload_file(generate_employees_file, override)
-        expect(employee_directory_page.alert_message).to_contain_text(
-            update_succeeded_text
-        )
+        employee_directory_page.ensure_alert_message_is_visible(update_succeeded_text)
 
     @pytest.mark.smoke
     @pytest.mark.web
@@ -109,6 +106,4 @@ class TestUploadEmployees:
         employees_list = EmployeeModelFactory.get_random_employees(15)
         CSVTool.update_csv_file(file_path, employees_list)
         employee_directory_page.upload_file(file_path)
-        expect(employee_directory_page.alert_message).to_contain_text(
-            update_succeeded_text
-        )
+        employee_directory_page.ensure_alert_message_is_visible(update_succeeded_text)

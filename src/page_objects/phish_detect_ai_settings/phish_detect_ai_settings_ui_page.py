@@ -40,9 +40,7 @@ class PhishDetectAISettingsUIConfiguration(PhishDetectAISettings):
             self.button_visibility_component.report_incident_disabled_button.click()
 
         self.save_component.save_button.click()
-        expect(self.alert_message.filter(has_text=updated_settings_text)).to_have_text(
-            updated_settings_text
-        )
+        self.ensure_alert_message_is_visible(updated_settings_text)
 
     @allure.step('PhishDetectAISettingsUIConfiguration: open preview window')
     def open_preview_window(self):

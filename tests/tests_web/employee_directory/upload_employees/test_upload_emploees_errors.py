@@ -4,7 +4,6 @@ import string
 
 import allure
 import pytest
-from playwright.sync_api import expect
 
 from src.configs.config_loader import AppFolders
 from src.models.auth.user_model import UserModel
@@ -85,6 +84,6 @@ class TestUploadEmployeesUnsupportedColumns:
         columns: list,
     ):
         employee_directory_page.upload_file(generate_employees_file)
-        expect(employee_directory_page.alert_message).to_contain_text(
+        employee_directory_page.ensure_alert_message_is_visible(
             upload_error_message(columns)
         )

@@ -55,7 +55,7 @@ class CreateCampaignPage(BasePage):
     def create_campaign(self):
         self.select_targets()
         self.create_button.click()
-        expect(self.alert_message).to_have_text(created_education_campaign_text)
+        self.ensure_alert_message_is_visible(created_education_campaign_text)
 
 
 class SpecificEmployees:

@@ -1,6 +1,5 @@
 import allure
 import pytest
-from playwright.sync_api import expect
 
 from src.models.auth.user_model import UserModel
 from src.models.company.employee_list_model import EmployeeItemModel
@@ -38,7 +37,7 @@ def test_edit_employee_all_fields(
     expected_employee = EmployeeEntityFactory.from_employee_item(employee_item)
     employee_directory_page.filter_employee_by_email(get_employee.email)
     employee_directory_page.edit_employee(employee_item)
-    expect(employee_directory_page.alert_message).to_have_text(
+    employee_directory_page.ensure_alert_message_is_visible(
         update_employee_success_message
     )
     actual_employee = employee_directory_page.get_employee_entity_by_email(
