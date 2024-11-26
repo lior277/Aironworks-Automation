@@ -5,13 +5,15 @@ from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.data_types.table_element import Table
 from src.page_objects.email_filter.const import TabName
+from src.page_objects.email_filter.email_details_page import EmailDetailsPage
 from src.page_objects.email_filter.sender_details_page import SenderDetailsPage
+from src.page_objects.email_filter.vendor_details_page import VendorDetailsPage
 
 
 class ReceivedEmailsPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.high_risk_emails = self.page.get_by_role('tab', name='High Risk Emails')
+        self.high_risk_emails = self.page.get_by_role('tab', name='High-Risk Emails')
         self.senders = self.page.get_by_role('tab', name='Senders')
         self.vendors = self.page.get_by_role('tab', name='Vendors')
 
@@ -19,7 +21,7 @@ class ReceivedEmailsPage(BasePage):
         self.senders_tab = SendersTab(self.page.get_by_role('tabpanel'))
         self.vendors_tab = VendorsTab(self.page.get_by_role('tabpanel'))
 
-    @allure.step('ReceivedEmailsPage: open high risk emails list')
+    @allure.step('ReceivedEmailsPage: open tab {tab_name}')
     def open_tab(self, tab_name: str):
         match tab_name:
             case TabName.HIGH_RISK_EMAILS:
@@ -30,35 +32,79 @@ class ReceivedEmailsPage(BasePage):
                 self.vendors.click()
             case _:
                 raise ValueError(f'Tab {tab_name} is not supported')
+        self.page.wait_for_load_state(timeout=5)
 
     @allure.step('ReceivedEmailsPage: open senders details of {email}')
     def open_senders_details(self, email: str, employee: str = None):
-        self.get_senders(email, employee)
+        self.get_sender(email, employee)
         return self.go_to_senders_details(email)
 
-    @allure.step('ReceivedEmailsPage: get senders')
-    def get_senders(self, email, employee: str = None):
-        self.senders.click()
+    @allure.step('ReceivedEmailsPage: get sender')
+    def get_sender(self, email, employee: str = None):
+        self.open_tab('Senders')
         if employee:
             self.senders_tab.open_tab('Employee', employee)
             self.page.wait_for_load_state(timeout=5)
         self.senders_tab.search_by_email(email)
-        self.page.wait_for_load_state(timeout=5)
-        return self.senders_tab.get_senders()
+        data = self.senders_tab.get_sender_data()
+        return data
 
     @allure.step('ReceivedEmailsPage: go to senders details')
     def go_to_senders_details(self, email: str):
         self.senders_tab.click_by_email(email)
         return SenderDetailsPage(self.page)
 
+    @allure.step('ReceivedEmailsPage: open high risk email details of first email')
+    def open_high_risk_email_details(self):
+        self.get_high_risk_email()
+        return self.go_to_high_risk_email_details()
+
+    @allure.step('ReceivedEmailsPage: get high risk email')
+    def get_high_risk_email(self):
+        self.open_tab('High-Risk Emails')
+        data = self.high_risk_emails_tab.get_email_data()
+        return data
+
+    @allure.step('ReceivedEmailsPage: go to high risk email details')
+    def go_to_high_risk_email_details(self):
+        self.high_risk_emails_tab.click_first_row()
+        return EmailDetailsPage(self.page)
+
+    @allure.step('ReceivedEmailsPage: open vendor details of {vendor}')
+    def open_vendor_details(self, vendor: str):
+        self.get_vendor(vendor)
+        return self.go_to_vendor_details(vendor)
+
+    @allure.step('ReceivedEmailsPage: get vendor')
+    def get_vendor(self, vendor: str):
+        self.open_tab('Vendors')
+        self.vendors_tab.search_by_vendor_name_domain(vendor)
+        data = self.vendors_tab.get_vendor_data()
+        return data
+
+    @allure.step('ReceivedEmailsPage: go to vendor details')
+    def go_to_vendor_details(self, vendor: str):
+        self.vendors_tab.click_by_vendor_name(vendor)
+        return VendorDetailsPage(self.page)
+
 
 class HighRiskEmailsTab:
     def __init__(self, locator: Locator):
         self.locator = locator
         # High risk emails table
-        self.table = Table(
+        self.high_risk_emails_table = Table(
             self.locator.locator('.MuiDataGrid-row'), HighRiskEmailsTableComponent
         )
+
+    def get_email_data(self):
+        row = self.high_risk_emails_table.get_row_by_index(0)
+        return row.to_dict()
+
+    def click_first_row(self):
+        row = self.high_risk_emails_table.get_row_by_index(0)
+        if not row:
+            raise ValueError('Table is empty')
+        row.sender_address.click()
 
 
 class HighRiskEmailsTableComponent:
@@ -71,6 +117,14 @@ class HighRiskEmailsTableComponent:
         )
         self.attachment = self.locator.locator('[data-field="has_attachment"]')
         self.subject = self.locator.locator('[data-field="subject"]')
+
+    def to_dict(self):
+        return {
+            'sender_address': self.sender_address.text_content().strip(),
+            'date_received': self.date_received.text_content(),
+            'no_of_employees_received': self.no_of_employees_received.text_content(),
+            'subject': self.subject.text_content(),
+        }
 
 
 class SendersTab:
@@ -108,6 +162,9 @@ class SendersTab:
 
     def search_by_email(self, email: str):
         self.email_search.fill(email)
+        self.company_table.get_row_by_index(0).email_address.filter(
+            has_text=email
+        ).wait_for()
 
     def click_by_email(self, email: str):
         self.search_by_email(email)
@@ -116,8 +173,9 @@ class SendersTab:
             raise ValueError(f'Unable to find email {email}')
         row.email_address.click()
 
-    def get_senders(self):
-        return self.company_table.text_content()
+    def get_sender_data(self):
+        row = self.company_table.get_row_by_index(0)
+        return row.to_dict()
 
 
 class SendersTableComponent:
@@ -141,13 +199,46 @@ class SendersTableComponent:
         self.first_contact = self.locator.locator('[data-field="first_received_time"]')
         self.last_contact = self.locator.locator('[data-field="last_received_time"]')
 
+    def to_dict(self):
+        return {
+            'sender_name': self.sender_name.text_content(),
+            'sender_domain': self.email_address.text_content().split('@')[1].strip(),
+            'first_contacted': self.first_contact.text_content(),
+            'last_received': self.last_contact.text_content(),
+            'no_of_emails_received': self.no_of_emails_received.text_content(),
+            'no_of_employees_received': self.no_of_employees_received.text_content(),
+            'highest_risk_level': self.highest_risk_level.text_content(),
+            'average_risk_level': self.average_risk_level.text_content(),
+            'blocked_safe_status': self.blocked_safe_status.text_content(),
+        }
+
 
 class VendorsTab:
     def __init__(self, locator: Locator):
         self.locator = locator
+        self.search_input = self.locator.get_by_role(
+            'textbox', name='Search by vendor name or domain'
+        )
         self.vendors_table = Table(
             self.locator.locator('.MuiDataGrid-row'), VendorsTableComponent
         )
+
+    def search_by_vendor_name_domain(self, search_text: str):
+        self.search_input.fill(search_text)
+        self.vendors_table.get_row_by_index(0).vendor_name.filter(
+            has_text=search_text
+        ).wait_for()
+
+    def click_by_vendor_name(self, vendor_name: str):
+        # self.search_by_vendor_name_domain(vendor_name)
+        row = self.vendors_table.get_row_by_column_value('vendor_name', vendor_name)
+        if not row:
+            raise ValueError(f'Unable to find vendor {vendor_name}')
+        row.vendor_name.click()
+
+    def get_vendor_data(self):
+        row = self.vendors_table.get_row_by_index(0)
+        return row.to_dict()
 
 
 class VendorsTableComponent:
@@ -161,3 +252,12 @@ class VendorsTableComponent:
             '[data-field="total_mails_received"]'
         )
         self.last_received = self.locator.locator('[data-field="last_received_time"]')
+
+    def to_dict(self):
+        return {
+            'vendor_name': self.vendor_name.text_content().strip(),
+            'vendor_url': self.vendor_url_site.text_content(),
+            'description': self.description.text_content(),
+            'no_of_received_emails': self.no_of_emails_received.text_content(),
+            'last_received': self.last_received.text_content(),
+        }

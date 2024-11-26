@@ -8,6 +8,7 @@ from src.models.factories.email_filter.email_domain_model_factory import (
     EmailDomainModelFactory,
 )
 from src.page_objects.email_filter.sender_details_page import SenderDetailsPage
+from src.page_objects.email_filter.vendor_details_page import VendorDetailsPage
 
 
 @pytest.fixture(scope='function')
@@ -35,10 +36,45 @@ def add_to_safe_list(
 
 
 @pytest.fixture(scope='function')
+def add_to_block_list_selected(
+    request, api_request_context_customer_admin_email_filter
+):
+    email_domain = request.param
+    email_filter_service = api.email_filter(
+        api_request_context_customer_admin_email_filter
+    )
+    if email_domain.count('@') == 1:
+        expect(email_filter_service.block_email(email_domain)).to_be_ok()
+    else:
+        expect(email_filter_service.block_domain(email_domain)).to_be_ok()
+    return email_domain
+
+
+@pytest.fixture(scope='function')
+def add_to_safe_list_selected(request, api_request_context_customer_admin_email_filter):
+    email_domain = request.param
+    email_filter_service = api.email_filter(
+        api_request_context_customer_admin_email_filter
+    )
+    if email_domain.count('@') == 1:
+        expect(email_filter_service.safe_email(email_domain)).to_be_ok()
+    else:
+        expect(email_filter_service.safe_domain(email_domain)).to_be_ok()
+    return email_domain
+
+
+@pytest.fixture(scope='function')
 def sender_details_page(request, received_emails_page) -> SenderDetailsPage:
     email = request.param
     sender_details_page = received_emails_page.open_senders_details(email)
     return sender_details_page
+
+
+@pytest.fixture(scope='function')
+def vendor_details_page(request, received_emails_page) -> VendorDetailsPage:
+    vendor = request.param
+    vendor_details_page = received_emails_page.open_vendor_details(vendor)
+    return vendor_details_page
 
 
 @pytest.fixture(scope='function')
@@ -105,7 +141,7 @@ def remove_from_safe_list(request, api_request_context_customer_admin_email_filt
 
 
 @pytest.fixture(scope='function')
-def remove_from_block_list_sender(
+def remove_from_block_list_details(
     request, api_request_context_customer_admin_email_filter
 ):
     def finalizer():
@@ -126,7 +162,7 @@ def remove_from_block_list_sender(
 
 
 @pytest.fixture(scope='function')
-def remove_from_safe_list_sender(
+def remove_from_safe_list_details(
     request, api_request_context_customer_admin_email_filter
 ):
     def finalizer():
