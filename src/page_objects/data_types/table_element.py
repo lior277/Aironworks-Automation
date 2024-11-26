@@ -11,6 +11,7 @@ class Table(Generic[T]):
     def __init__(self, locator: Locator, structure: Callable[[Locator], T]):
         self._Table__structure = structure
         self._Table__locator = locator
+        self.loading = self._Table__locator.get_by_text('Loading')
 
     def get_content(self) -> list[T]:
         out = []
@@ -45,6 +46,16 @@ class Table(Generic[T]):
             )
         )
 
+    def get_row_by_index(self, index: int) -> T:
+        Log.debug('Getting row by index %s from the table' % index)
+        return self._Table__structure(self._Table__locator.nth(index))
+
     def get_last_row(self) -> T:
         Log.debug('Getting last row from the table')
         return self._Table__structure(self._Table__locator.last)
+
+    def wait_for_loading(self, timeout=10000):
+        if self.loading.first.is_visible(timeout=timeout):
+            for load in self.loading.all():
+                if load.is_visible():
+                    load.wait_for(timeout=timeout, state='hidden')

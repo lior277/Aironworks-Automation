@@ -30,7 +30,7 @@ class EmailFilterService(BaseService):
 
     @allure.step('EmailFilterService: safe domain')
     def safe_domain(self, domain: str) -> APIResponse:
-        data = {'safe_email': {'type': 'SAFE_EMAIL_TYPE_DOMAIN', 'link': domain}}
+        data = {'safe_email': {'type': 'BLOCKED_EMAIL_TYPE_DOMAIN', 'link': domain}}
         return self._post(PSApi.SAFE_EMAIL.get_endpoint().format(), data=data)
 
     @allure.step('EmailFilterService: unsafe email/domain')

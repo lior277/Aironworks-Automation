@@ -7,6 +7,7 @@ from src.page_objects.email_filter.const import (
     add_email_domain_to_blocked_list_success_message,
     add_email_domain_to_safe_list_success_message,
 )
+from src.page_objects.email_filter.email_details_page import EmailDetailsPage
 
 
 class SenderDetailsPage(BasePage):
@@ -21,6 +22,7 @@ class SenderDetailsPage(BasePage):
         self.remove_from_safe_list_button = self.page.get_by_role(
             'button', name='Remove from safe list'
         )
+        self.sender_name_text = self.page.get_by_role('heading', level=4)
         self.sender_domain_text = self.page.locator(
             '//*[contains(@aria-label,"senders.details.domain")]//*[name()="svg"]/..'
         )
@@ -47,16 +49,29 @@ class SenderDetailsPage(BasePage):
         )
         self.sender_emails = self.page.get_by_role('tab', name='Sender Emails')
         self.no_of_employees_received = self.page.get_by_role(
-            'tab', name='Emails Received'
+            'tab', name='Employees Received'
         )
         self.sender_emails_tab = SenderEmailsTab(self.page.get_by_role('tabpanel'))
-        self.emails_received_tab = EmailsReceivedTab(self.page.get_by_label('tabpanel'))
+        self.employees_received_tab = EmailsReceivedTab(
+            self.page.get_by_label('tabpanel')
+        )
         self.add_email_domain_popup = AddEmailDomainPopup(
             self.page.get_by_role('dialog')
         )
         self.remove_email_domain_popup = RemoveEmailDomainPopup(
             self.page.get_by_role('dialog')
         )
+
+    @allure.step('SenderDetailsPage: open tab {tab_name}')
+    def open_tab(self, tab_name: str):
+        match tab_name:
+            case 'Sender Emails':
+                self.sender_emails.click()
+            case 'Employees Received':
+                self.no_of_employees_received.click()
+            case _:
+                raise ValueError(f'Unknown tab name: {tab_name}')
+        self.page.wait_for_load_state(timeout=5)
 
     @allure.step('SenderDetailsPage: add to block list')
     def add_to_block_list(self, is_email: bool) -> str:
@@ -92,6 +107,7 @@ class SenderDetailsPage(BasePage):
     @allure.step('SenderDetailsPage: get sender details')
     def get_sender_details(self):
         return {
+            'sender_name': self.sender_name_text.text_content(),
             'sender_domain': self.sender_domain_text.text_content(),
             'first_contacted': self.first_contacted_text.text_content(),
             'last_received': self.last_received_text.text_content(),
@@ -102,16 +118,48 @@ class SenderDetailsPage(BasePage):
             'blocked_safe_status': self.blocked_safe_status_text.text_content(),
         }
 
+    @allure.step('SenderDetailsPage: open sender email details')
+    def open_sender_email_details(self, email_subject: str):
+        self.get_sender_email_details(email_subject)
+        return self.go_to_sender_email_details(email_subject)
+
+    @allure.step('SenderDetailsPage: get sender email details')
+    def get_sender_email_details(self, email_subject: str):
+        self.open_tab('Sender Emails')
+        self.sender_emails_tab.search_by_subject(email_subject)
+        data = self.sender_emails_tab.get_email_data()
+        return data
+
+    @allure.step('SenderDetailsPage: go to sender email details')
+    def go_to_sender_email_details(self):
+        self.sender_emails_tab.click_first_row()
+        return EmailDetailsPage(self.page)
+
 
 class SenderEmailsTab:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.search_by_email = self.locator.get_by_role(
-            'textbox', name='Search by email'
+        self.search_input = self.locator.get_by_role(
+            'textbox', name='Search by subject'
         )
         self.sender_emails_table = Table(
             self.locator.locator('.MuiDataGrid-row'), SenderEmailsTableComponent
         )
+
+    def search_by_subject(self, subject: str):
+        self.search_input.fill(subject)
+
+    def click_first_row(self):
+        row = self.sender_emails_table.get_row_by_index(0)
+        if not row:
+            raise ValueError('Table is empty')
+        row.date_received.click()
+
+    def get_email_data(self):
+        row = self.sender_emails_table.get_row_by_index(0)
+        if not row:
+            raise ValueError('Table is empty')
+        return row.to_dict()
 
 
 class SenderEmailsTableComponent:
@@ -120,6 +168,12 @@ class SenderEmailsTableComponent:
         self.date_received = self.locator.locator('[data-field="received_time"]')
         self.subject = self.locator.locator('[data-field="subject"]')
         self.risk_level = self.locator.locator('[data-field="verdict"]')
+
+    def to_dict(self):
+        return {
+            'date_received': self.date_received.text_content(),
+            'subject': self.subject.text_content(),
+        }
 
 
 class EmailsReceivedTab:

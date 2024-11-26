@@ -93,7 +93,7 @@ def test_add_to_block_list_from_sender(
     user: UserModel,
     sender_details_page,
     is_email,
-    remove_from_block_list_sender,
+    remove_from_block_list_details,
 ):
     email_domain = sender_details_page.add_to_block_list(is_email)
     request.node.email_domain = email_domain
@@ -125,7 +125,7 @@ def test_add_to_safe_list_from_sender(
     user: UserModel,
     sender_details_page,
     is_email,
-    remove_from_safe_list_sender,
+    remove_from_safe_list_details,
 ):
     email_domain = sender_details_page.add_to_safe_list(is_email)
     request.node.email_domain = email_domain
@@ -171,3 +171,203 @@ def test_remove_from_safe_list(
     request,
 ):
     email_filter_settings_page.remove_from_safe_list()
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user, vendor_details_page, sender',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            'Aironworks',
+            'gonen@aironworks.com',
+            marks=allure.testcase('C31822'),
+        )
+    ],
+    indirect=['vendor_details_page'],
+)
+def test_add_sender_to_block_list_from_vendor(
+    request,
+    is_emailfilter_enabled,
+    user: UserModel,
+    vendor_details_page,
+    sender,
+    remove_from_block_list_details,
+):
+    vendor_details_page.select_sender_block(sender)
+    request.node.email_domain = sender
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user, vendor_details_page, domain',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            'Aironworks',
+            'aironworks.com',
+            marks=allure.testcase('C31822'),
+        )
+    ],
+    indirect=['vendor_details_page'],
+)
+def test_add_domain_to_block_list_from_vendor(
+    is_emailfilter_enabled,
+    vendor_details_page,
+    user: UserModel,
+    domain,
+    remove_from_block_list_details,
+    request,
+):
+    vendor_details_page.select_domain_block(domain)
+    request.node.email_domain = domain
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user, vendor_details_page, sender',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            'Aironworks',
+            'gonen@aironworks.com',
+            marks=allure.testcase('C31822'),
+        )
+    ],
+    indirect=['vendor_details_page'],
+)
+def test_add_sender_to_safe_list_from_vendor(
+    is_emailfilter_enabled,
+    vendor_details_page,
+    user: UserModel,
+    sender,
+    remove_from_safe_list_details,
+    request,
+):
+    vendor_details_page.select_sender_add_to_safe_list(sender)
+    request.node.email_domain = sender
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user, vendor_details_page, domain',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            'Aironworks',
+            'aironworks.com',
+            marks=allure.testcase('C31822'),
+        )
+    ],
+    indirect=['vendor_details_page'],
+)
+def test_add_domain_to_safe_list_from_vendor(
+    is_emailfilter_enabled,
+    vendor_details_page,
+    user: UserModel,
+    domain,
+    remove_from_safe_list_details,
+    request,
+):
+    vendor_details_page.select_domain_add_to_safe_list(domain)
+    request.node.email_domain = domain
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user, vendor_details_page, add_to_block_list_selected',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            'Aironworks',
+            'gonen@aironworks.com',
+            marks=allure.testcase('C31822'),
+        )
+    ],
+    indirect=['vendor_details_page', 'add_to_block_list_selected'],
+)
+def test_remove_sender_from_block_list_from_vendor(
+    is_emailfilter_enabled,
+    vendor_details_page,
+    user: UserModel,
+    add_to_block_list_selected,
+    request,
+):
+    vendor_details_page.select_sender_remove_from_block_list(add_to_block_list_selected)
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user, vendor_details_page, add_to_block_list_selected',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            'Aironworks',
+            'aironworks.com',
+            marks=allure.testcase('C31822'),
+        )
+    ],
+    indirect=['vendor_details_page', 'add_to_block_list_selected'],
+)
+def test_remove_domain_from_block_list_from_vendor(
+    is_emailfilter_enabled,
+    vendor_details_page,
+    user: UserModel,
+    add_to_block_list_selected,
+    request,
+):
+    vendor_details_page.select_domain_remove_from_block_list()
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user, vendor_details_page, add_to_safe_list_selected',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            'Aironworks',
+            'gonen@aironworks.com',
+            marks=allure.testcase('C31822'),
+        )
+    ],
+    indirect=['vendor_details_page', 'add_to_safe_list_selected'],
+)
+def test_remove_sender_from_safe_list_from_vendor(
+    is_emailfilter_enabled,
+    vendor_details_page,
+    user: UserModel,
+    add_to_safe_list_selected,
+    request,
+):
+    vendor_details_page.select_sender_remove_from_safe_list(add_to_safe_list_selected)
+
+
+@pytest.mark.smoke
+@pytest.mark.web
+@pytest.mark.parametrize(
+    'user, vendor_details_page, add_to_safe_list_selected',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            'Aironworks',
+            'aironworks.com',
+            marks=allure.testcase('C31822'),
+        )
+    ],
+    indirect=['vendor_details_page', 'add_to_safe_list_selected'],
+)
+def test_remove_domain_from_safe_list_from_vendor(
+    is_emailfilter_enabled,
+    vendor_details_page,
+    user: UserModel,
+    add_to_safe_list_selected,
+    request,
+):
+    vendor_details_page.select_domain_remove_from_safe_list()
