@@ -241,6 +241,7 @@ class AssociatedSendersTab(BasePage):
 
     def search_sender(self, sender: str):
         self.search_input.fill(sender)
+        self.senders_table.get_row_by_index(0).email.filter(has_text=sender).wait_for()
 
     def get_sender_data(self):
         row = self.senders_table.get_row_by_index(0)
