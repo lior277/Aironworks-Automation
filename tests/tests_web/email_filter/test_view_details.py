@@ -13,7 +13,7 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
-            marks=allure.testcase(''),
+            marks=allure.testcase('C31820'),
         )
     ],
 )
@@ -55,7 +55,7 @@ def test_view_high_risk_email_details(
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'AironWorks',
-            marks=allure.testcase(''),
+            marks=allure.testcase('C31819'),
         )
     ],
 )
@@ -79,7 +79,7 @@ def test_view_vendor_details(
             UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             'Re: AironWorks-Email-Filter',
-            marks=allure.testcase(''),
+            marks=allure.testcase('C31826'),
         )
     ],
 )
@@ -108,7 +108,7 @@ def test_view_email_details_from_sender(
             UserModelFactory.customer_admin_email_filter(),
             'AironWorks',
             '',
-            marks=allure.testcase(''),
+            marks=allure.testcase('C31832'),
         )
     ],
 )
@@ -137,7 +137,7 @@ def test_view_sender_details_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'AironWorks',
             '',
-            marks=allure.testcase(''),
+            marks=allure.testcase('C31833'),
         )
     ],
 )

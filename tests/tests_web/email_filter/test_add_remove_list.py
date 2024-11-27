@@ -22,7 +22,7 @@ from src.models.factories.email_filter.email_domain_model_factory import (
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             EmailDomainModelFactory.get_random_email_domain_with_empty_email(),
-            marks=allure.testcase('C31804'),
+            marks=allure.testcase('C31831'),
         ),
     ],
 )
@@ -51,7 +51,7 @@ def test_add_to_block_list(
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             EmailDomainModelFactory.get_random_email_domain_with_empty_email(),
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31830'),
         ),
     ],
 )
@@ -76,13 +76,13 @@ def test_add_to_safe_list(
             UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             True,
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31821'),
         ),
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             False,
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31821'),
         ),
     ],
     indirect=['sender_details_page'],
@@ -108,13 +108,13 @@ def test_add_to_block_list_from_sender(
             UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             False,
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31823'),
         ),
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
             True,
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31823'),
         ),
     ],
     indirect=['sender_details_page'],
@@ -138,7 +138,7 @@ def test_add_to_safe_list_from_sender(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            marks=allure.testcase('C31803'),
+            marks=allure.testcase('C31802'),
         )
     ],
 )
@@ -159,7 +159,7 @@ def test_remove_from_block_list(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            marks=allure.testcase('C31804'),
+            marks=allure.testcase('C31828'),
         )
     ],
 )
@@ -182,7 +182,7 @@ def test_remove_from_safe_list(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'gonen@aironworks.com',
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31836'),
         )
     ],
     indirect=['vendor_details_page'],
@@ -208,7 +208,7 @@ def test_add_sender_to_block_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'aironworks.com',
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31837'),
         )
     ],
     indirect=['vendor_details_page'],
@@ -234,7 +234,7 @@ def test_add_domain_to_block_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'gonen@aironworks.com',
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31838'),
         )
     ],
     indirect=['vendor_details_page'],
@@ -260,7 +260,7 @@ def test_add_sender_to_safe_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'aironworks.com',
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31839'),
         )
     ],
     indirect=['vendor_details_page'],
@@ -286,7 +286,7 @@ def test_add_domain_to_safe_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'gonen@aironworks.com',
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31840'),
         )
     ],
     indirect=['vendor_details_page', 'add_to_block_list_selected'],
@@ -310,7 +310,7 @@ def test_remove_sender_from_block_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'aironworks.com',
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31841'),
         )
     ],
     indirect=['vendor_details_page', 'add_to_block_list_selected'],
@@ -334,7 +334,7 @@ def test_remove_domain_from_block_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'gonen@aironworks.com',
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31842'),
         )
     ],
     indirect=['vendor_details_page', 'add_to_safe_list_selected'],
@@ -358,7 +358,7 @@ def test_remove_sender_from_safe_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'aironworks.com',
-            marks=allure.testcase('C31822'),
+            marks=allure.testcase('C31843'),
         )
     ],
     indirect=['vendor_details_page', 'add_to_safe_list_selected'],
