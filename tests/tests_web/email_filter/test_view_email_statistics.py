@@ -12,7 +12,7 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            marks=allure.testcase('C31803'),
+            marks=allure.testcase('C31805'),
         )
     ],
 )
