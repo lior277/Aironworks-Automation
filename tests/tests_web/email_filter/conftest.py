@@ -184,5 +184,5 @@ def remove_from_safe_list_details(
 
 @pytest.fixture(scope='session')
 def is_emailfilter_enabled():
-    if AppConfigs.ENV != 'development':
+    if AppConfigs.ENV != 'development' and AppConfigs.ENV != 'staging':
         pytest.skip('Email Filter not available')
