@@ -70,7 +70,7 @@ class ScenariosPage(BasePage):
         self.data_entry_button = self.page.locator('[value="DATAENTRY"]')
         self.attachment_button = self.page.locator('[value="ATTACHMENT"]')
         self.upload_pdf_file_button = self.page.get_by_role(
-            'button', name='Upload a PDF file'
+            'button', name='Upload Attachment File'
         )
         self.delete_file_button = self.page.get_by_label('delete-file')
         self.file_name_input = self.page.locator(

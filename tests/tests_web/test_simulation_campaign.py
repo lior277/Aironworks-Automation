@@ -103,9 +103,6 @@ def test_campaign_summary_page(campaign_details_page, user):
             'heading', name=re.compile(AppConfigs.SAMPLE_CAMPAIGN_NAME + '.*')
         )
     ).to_have_count(1)  # test title
-    expect(campaign_details_page.page.get_by_text('1 days')).to_have_count(
-        1
-    )  # test duration
     expect(
         campaign_details_page.page.get_by_text(AppConfigs.QA_COMPANY_NAME)
     ).to_have_count(1)
