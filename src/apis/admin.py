@@ -16,6 +16,7 @@ class AdminService(BaseService):
 
     @allure.step('create simulation campaign {campaign}')
     def start_campaign(self, campaign: CampaignModel):
+        print('data:' + str(asdict(campaign)))
         return self._post(PSApi.CAMPAIGN.get_endpoint(), data=asdict(campaign))
 
     @allure.step('get attack execution {campaign_id}')

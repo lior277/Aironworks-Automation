@@ -22,11 +22,13 @@ def run_campaign_on_employee(
 ):
     admin_service = api.admin(api_request_context_customer_admin)
     public_service = api.public(api_request_context_customer_admin)
+    end_date = 24  # Hours
     result = admin_service.start_campaign(
         campaign=CampaignModel(
             campaign_name='Automation scenario',
             attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
-            days_until_fail=1,
+            start_date=0,
+            end_date=end_date * 3600,
             employees=[employee.employee_id],
         )
     )
@@ -53,7 +55,7 @@ def run_campaign_on_employee(
         campaign_status = admin_service.get_attack_execution(campaign_id=campaign_id)
         expect(campaign_status).to_be_ok()
 
-        return campaign_status.json()['execution']['finished']
+        return campaign_status.json()['execution']
 
     assert wait_for(validate_campaign_status, 60)
 
