@@ -107,7 +107,7 @@ def test_view_email_details_from_sender(
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'AironWorks',
-            '',
+            'natsuki@aironworks.com',
             marks=allure.testcase('C31832'),
         )
     ],

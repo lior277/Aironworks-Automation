@@ -181,7 +181,7 @@ def test_remove_from_safe_list(
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
-            'gonen@aironworks.com',
+            'pham.duc@aironworks.com',
             marks=allure.testcase('C31836'),
         )
     ],
@@ -206,8 +206,8 @@ def test_add_sender_to_block_list_from_vendor(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'Aironworks',
-            'aironworks.com',
+            'Eight',
+            '8card.net',
             marks=allure.testcase('C31837'),
         )
     ],
@@ -258,8 +258,8 @@ def test_add_sender_to_safe_list_from_vendor(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'Aironworks',
-            'aironworks.com',
+            'Gmail',
+            'gmail.com',
             marks=allure.testcase('C31839'),
         )
     ],
@@ -285,7 +285,7 @@ def test_add_domain_to_safe_list_from_vendor(
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
-            'gonen@aironworks.com',
+            'ani@aironworks.com',
             marks=allure.testcase('C31840'),
         )
     ],
@@ -308,8 +308,8 @@ def test_remove_sender_from_block_list_from_vendor(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'Aironworks',
-            'aironworks.com',
+            'Gitlab',
+            'gitlab.com',
             marks=allure.testcase('C31841'),
         )
     ],
@@ -333,7 +333,7 @@ def test_remove_domain_from_block_list_from_vendor(
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
-            'gonen@aironworks.com',
+            'taiga@aironworks.com',
             marks=allure.testcase('C31842'),
         )
     ],
@@ -356,8 +356,8 @@ def test_remove_sender_from_safe_list_from_vendor(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'Aironworks',
-            'aironworks.com',
+            'MIND',
+            'mind.co.jp',
             marks=allure.testcase('C31843'),
         )
     ],

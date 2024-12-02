@@ -41,8 +41,10 @@ class EmailFilterSettingsPage(BasePage):
         match tab_name:
             case TabName.BLOCKED_LIST:
                 self.blocked_list.click()
+                self.blocked_list_tab.block_list_table.wait_for_loading()
             case TabName.SAFE_LIST:
                 self.safe_list.click()
+                self.safe_list_tab.safe_list_table.wait_for_loading()
             case TabName.HIGH_RISK_EMAIL_SETTINGS:
                 self.high_risk_emails.click()
             case _:
