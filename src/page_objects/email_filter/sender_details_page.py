@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Locator, Page
+from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.table_element import Table
@@ -148,6 +148,7 @@ class SenderEmailsTab:
 
     def search_by_subject(self, subject: str):
         self.search_input.fill(subject)
+        expect(self.locator.get_by_role('row')).to_have_count(2)
 
     def click_first_row(self):
         row = self.sender_emails_table.get_row_by_index(0)

@@ -78,7 +78,7 @@ def test_view_vendor_details(
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'gitlab@mg.gitlab.com',
-            'Re: AironWorks-Email-Filter',
+            '8c774f5d',
             marks=allure.testcase('C31826'),
         )
     ],
