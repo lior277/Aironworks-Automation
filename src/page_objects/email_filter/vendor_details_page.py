@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Locator, Page
+from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.table_element import Table
@@ -122,7 +122,7 @@ class VendorDetailsPage(BasePage):
         self.ensure_alert_message_is_visible(
             add_email_domain_to_blocked_list_success_message
         )
-        self.page.wait_for_load_state(timeout=5)
+        self.associated_senders_tab.senders_table.wait_for_loading()
         data = self.get_sender_details(sender)
         return data
 
@@ -134,7 +134,7 @@ class VendorDetailsPage(BasePage):
         self.ensure_alert_message_is_visible(
             add_email_domain_to_safe_list_success_message
         )
-        self.page.wait_for_load_state(timeout=5)
+        self.associated_senders_tab.senders_table.wait_for_loading()
         data = self.associated_senders_tab.get_sender_data()
         return data
 
@@ -146,7 +146,7 @@ class VendorDetailsPage(BasePage):
         self.ensure_alert_message_is_visible(
             add_email_domain_to_blocked_list_success_message
         )
-        self.page.wait_for_load_state(timeout=5)
+        self.vendor_domains_tab.domains_table.wait_for_loading()
         data = self.vendor_domains_tab.get_domain_data()
         return data
 
@@ -158,7 +158,7 @@ class VendorDetailsPage(BasePage):
         self.ensure_alert_message_is_visible(
             add_email_domain_to_safe_list_success_message
         )
-        self.page.wait_for_load_state(timeout=5)
+        self.vendor_domains_tab.domains_table.wait_for_loading()
         data = self.vendor_domains_tab.get_domain_data()
         return data
 
@@ -241,7 +241,7 @@ class AssociatedSendersTab(BasePage):
 
     def search_sender(self, sender: str):
         self.search_input.fill(sender)
-        self.senders_table.get_row_by_index(0).email.filter(has_text=sender).wait_for()
+        expect(self.locator.get_by_role('row')).to_have_count(2)
 
     def get_sender_data(self):
         row = self.senders_table.get_row_by_index(0)
