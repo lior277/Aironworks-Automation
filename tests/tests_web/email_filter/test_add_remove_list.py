@@ -356,8 +356,8 @@ def test_remove_sender_from_safe_list_from_vendor(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'MIND',
-            'mind.co.jp',
+            'Notion',
+            'notion.so',
             marks=allure.testcase('C31843'),
         )
     ],
