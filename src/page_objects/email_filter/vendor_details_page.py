@@ -78,7 +78,7 @@ class VendorDetailsPage(BasePage):
                 self.vendor_emails.click()
             case _:
                 raise ValueError(f'Unknown tab name: {tab_name}')
-        self.wait_for_loading_state(timeout=10000)
+        self.page.wait_for_load_state()
 
     @allure.step('VendorDetailsPage: Get sender details')
     def get_sender_details(self, sender: str):
