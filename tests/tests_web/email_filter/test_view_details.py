@@ -34,7 +34,8 @@ def test_view_sender_details(
     'user',
     [
         pytest.param(
-            UserModelFactory.customer_admin_email_filter(), marks=allure.testcase('')
+            UserModelFactory.customer_admin_email_filter(),
+            marks=allure.testcase('C31817'),
         )
     ],
 )
