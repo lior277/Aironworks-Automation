@@ -172,13 +172,13 @@ pages:
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
-        CURRENT_CONTENT_PATH: $ENV
+        CURRENT_CONTENT_PATH: $ENV/$CI_PIPELINE_ID
         ENV_NAME: $ENV
   stage: deploy
   script:
-    - if [ "$CURRENT_CONTENT_PATH" != "." ]; then rm -rf public/$CURRENT_CONTENT_PATH || true; fi
-    - mkdir -p public/$CURRENT_CONTENT_PATH
-    - cp -TRv ./allure-report/ public/$CURRENT_CONTENT_PATH
+        mkdir -p public/$CURRENT_CONTENT_PATH;
+        cp -TRv ./allure-report/ "public/$CURRENT_CONTENT_PATH";
+        find public/$CURRENT_CONTENT_PATH/* -type d -mtime +30 -exec rm -rf {} \; || true;
   environment:
     name: pages/$ENV_NAME
     action: start
@@ -205,7 +205,7 @@ post_test_results:
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
-        CURRENT_CONTENT_PATH: $ENV
+        CURRENT_CONTENT_PATH: $ENV/$CI_PIPELINE_ID
   script: |
     source .exit_code
     DEPLOYMENT_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") 
