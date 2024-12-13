@@ -14,7 +14,7 @@ class OutlookPage:
     def __init__(self, page: Page):
         self.page = page
 
-        self.mail_icon = page.locator('[data-testid="SentReceivedSavedTime"]')
+        self.mail_icon = page.get_by_role('option')
         self.apps_locator = page.get_by_label('Apps', exact=True)
         self.app_frame = page.frame_locator(
             f'iframe[src^="{AppConfigs.ADDIN_BASE_URL}"]'
@@ -39,6 +39,8 @@ class OutlookPage:
         self.addin_name_button = self.page.get_by_label(
             AppConfigs.ADDIN_NAME, exact=True
         ).first
+        self.search_mail_input = self.page.locator('//input[@id="topSearchInput"]')
+        self.search_button = self.page.get_by_role('button', name='Search', exact=True)
 
     @allure.step('OutlookPage: login to outlook')
     def login(self):
@@ -63,9 +65,10 @@ class OutlookPage:
             self.page.locator('[name="Yes"]').click()
 
     @allure.step('OutlookPage: goto message id')
-    def goto_message(self, message_id: str):
-        self.page.goto(f'https://outlook.office.com/mail/inbox/id/{message_id}')
-        self.mail_icon.last.click()
+    def goto_message(self, message: str):
+        self.search_mail_input.fill(message)
+        self.search_button.click()
+        self.mail_icon.first.click()
 
     @allure.step('OutlookPage: open addin')
     def open_addin(self):
@@ -80,7 +83,7 @@ class OutlookPage:
     @allure.step('OutlookPage: perform assessment')
     def login_addin(self):
         self.login_button.click()
-        self.allow_button.click()
+        # self.allow_button.click()
         self.perform_assessment_button.wait_for()
 
     @allure.step('OutlookPage: perform assessment')
