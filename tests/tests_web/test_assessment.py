@@ -51,10 +51,8 @@ def test_report_can_be_resolved(
 @allure.testcase('5846')
 @pytest.mark.smoke
 def test_assessment_outlook(outlook_page):
-    # goto specific message
-    outlook_page.goto_message(
-        'AAQkADU4NWIwYzE0LTE2YzgtNGU0Yy04MWQ0LTg0ZmM3Y2NkNzg3OQAQAFl%2BxStxIMJFnp6eBtTuA54%3D'
-    )
+    # goto specific messagex
+    outlook_page.goto_message('Outlook assessment mail')
     outlook_page.open_addin()
     outlook_page.perform_assessment()
     expect(
@@ -66,9 +64,7 @@ def test_assessment_outlook(outlook_page):
 @pytest.mark.smoke
 def test_report_outlook(outlook_page, mailtrap):
     # goto specific message
-    outlook_page.goto_message(
-        'AAQkADU4NWIwYzE0LTE2YzgtNGU0Yy04MWQ0LTg0ZmM3Y2NkNzg3OQAQAFl%2BxStxIMJFnp6eBtTuA54%3D'
-    )
+    outlook_page.goto_message('Outlook assessment mail')
     outlook_page.open_addin()
     outlook_page.report_incident()
     expect(
