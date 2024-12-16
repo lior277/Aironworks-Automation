@@ -11,6 +11,9 @@ class ExecuteCampaignPage(BasePage):
         self.review_button = page.get_by_role('button', name='Review')
         self.execute_button = page.get_by_role('button', name='Execute')
         self.confirm_execute_button = page.get_by_role('button', name='Confirm')
+        self.number_of_employees = page.get_by_text(
+            'Number of targets in this campaign:'
+        ).locator('span')
         self.employee_table = EmployeeTableComponent(page.get_by_test_id('table'), page)
 
     @allure.step('ExecuteCampaignPage: pick {company_name} company')

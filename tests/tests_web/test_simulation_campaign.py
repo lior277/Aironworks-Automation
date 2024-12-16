@@ -48,9 +48,9 @@ def test_create_simulation_campaign(
 
     execute_campaign_page.employee_table.get_employee_row(employee.email).select_row()
     execute_campaign_page.review_button.click()
+    assert execute_campaign_page.number_of_employees.text_content() == '1'
     execute_campaign_page.execute_button.click()
     execute_campaign_page.confirm_execute_button.click()
-
     mail = mailtrap.wait_for_mail(
         AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email), timeout=240
     )
