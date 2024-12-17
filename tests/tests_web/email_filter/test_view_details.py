@@ -12,7 +12,7 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'gitlab@mg.gitlab.com',
+            'bar@aironworks.com',
             marks=allure.testcase('C31820'),
         )
     ],
@@ -78,8 +78,8 @@ def test_view_vendor_details(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'gitlab@mg.gitlab.com',
-            '8c774f5d',
+            'bar@aironworks.com',
+            'Last One I Promise',
             marks=allure.testcase('C31826'),
         )
     ],
