@@ -1,5 +1,6 @@
 import csv
 import re
+from datetime import datetime, timedelta
 
 import allure
 import pytest
@@ -58,6 +59,46 @@ def test_create_simulation_campaign(
     assert (
         mail is not None
     ), f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+
+
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31547')
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            id='Customer Admin',
+            marks=allure.testcase('31548'),
+        ),
+    ],
+)
+@pytest.mark.smoke
+def test_create_simulation_campaign_scheduled(
+    user: UserModel, employee, scenarios_page: ScenariosPage, mailtrap
+):
+    scenario_name = AppConfigs.EXAMPLE_SCENARIO_NAME
+    scenarios_page.filter_by_name(scenario_name)
+    generic_scenario = scenarios_page.find_scenario(scenario_name)
+
+    generic_scenario.click()
+
+    execute_campaign_page = scenarios_page.execute_scenario()
+    if user.is_admin:
+        execute_campaign_page.pick_company(AppConfigs.QA_COMPANY_NAME)
+    time_plus_one_day = datetime.now() + timedelta(days=1)
+    formatted_time = time_plus_one_day.strftime('%m/%d/%Y %I:%M %p').lower()
+    execute_campaign_page.select_time(formatted_time)
+    execute_campaign_page.pick_employees.click()
+    expect(execute_campaign_page.employee_table.table).to_be_visible()
+    execute_campaign_page.employee_table.set_filter_column('email', employee.email)
+
+    execute_campaign_page.employee_table.get_employee_row(employee.email).select_row()
+    execute_campaign_page.review_button.click()
+    assert execute_campaign_page.number_of_employees.text_content() == '1'
+    execute_campaign_page.execute_button.click()
+    execute_campaign_page.confirm_execute_button.click()
 
 
 @pytest.mark.parametrize(

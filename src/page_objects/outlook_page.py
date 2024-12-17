@@ -78,7 +78,8 @@ class OutlookPage:
         sleep(2)  # just to make sure all apps were displayed
         self.addin_name_button.wait_for()
         self.addin_name_button.click()
-        self.login_addin()
+        if self.login_button.is_visible(timeout=10000):
+            self.login_addin()
 
     @allure.step('OutlookPage: perform assessment')
     def login_addin(self):
