@@ -6,6 +6,7 @@ from time import sleep
 import allure
 import pyotp
 from playwright.sync_api import Page, expect
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 from src.configs.config_loader import AppConfigs
 
@@ -78,8 +79,12 @@ class OutlookPage:
         sleep(2)  # just to make sure all apps were displayed
         self.addin_name_button.wait_for()
         self.addin_name_button.click()
-        if self.login_button.is_visible(timeout=10000):
-            self.login_addin()
+        try:
+            self.login_button.wait_for(timeout=10000)
+            if self.login_button.is_visible(timeout=10000):
+                self.login_addin()
+        except PlaywrightTimeoutError:
+            print('Addin already logged in')
 
     @allure.step('OutlookPage: perform assessment')
     def login_addin(self):
