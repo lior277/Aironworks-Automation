@@ -176,9 +176,9 @@ pages:
         ENV_NAME: $ENV
   stage: deploy
   script:
-        mkdir -p public/$CURRENT_CONTENT_PATH;
-        cp -TRv ./allure-report/ "public/$CURRENT_CONTENT_PATH";
-        find public/$CURRENT_CONTENT_PATH/* -type d -mtime +30 -exec rm -rf {} \; || true;
+      - mkdir -p public/$CURRENT_CONTENT_PATH;
+      - cp -TRv ./allure-report/ "public/$CURRENT_CONTENT_PATH";
+      - find public/$CURRENT_CONTENT_PATH/* -maxdepth 0 -type d | sort -r | tail -n +6 | xargs rm -rf || true
   environment:
     name: pages/$ENV_NAME
     action: start
