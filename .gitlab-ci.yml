@@ -181,6 +181,7 @@ pages:
       - ls -1t public/$CURRENT_CONTENT_PATH/../
       - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +5
       - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +5 | xargs rm -rf | true
+      - ls -1t public/$CURRENT_CONTENT_PATH/../
   environment:
     name: pages/$ENV_NAME
     action: start
@@ -188,7 +189,7 @@ pages:
     on_stop: pages-clean-preview
   artifacts:
     paths:
-      - public/$CURRENT_CONTENT_PATH
+      - public
 
 post_test_results:
   stage: deploy
