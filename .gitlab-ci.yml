@@ -188,7 +188,7 @@ pages:
     on_stop: pages-clean-preview
   artifacts:
     paths:
-      - public
+      - public/$CURRENT_CONTENT_PATH
 
 post_test_results:
   stage: deploy
