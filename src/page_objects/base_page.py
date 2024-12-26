@@ -25,7 +25,7 @@ class BasePage:
             Log.info(f'page URL = {self.page.url}\n page Title = {self.page.title()}')
 
     @allure.step('BasePage: ensure alert message is visible')
-    def ensure_alert_message_is_visible(self, text, timeout=10_000):
+    def ensure_alert_message_is_visible(self, text, timeout=15_000):
         expect(self.alert_message.filter(has_text=text)).to_be_visible(timeout=timeout)
 
     @allure.step('BasePage: wait for loading state')

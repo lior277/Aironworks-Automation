@@ -179,8 +179,8 @@ pages:
       - mkdir -p public/$CURRENT_CONTENT_PATH;
       - cp -TRv ./allure-report/ "public/$CURRENT_CONTENT_PATH";
       - ls -1t public/$CURRENT_CONTENT_PATH/../
-      - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +5
-      - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +5 | xargs -I {} rm -rf public/$CURRENT_CONTENT_PATH/../{} | true
+      - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +6
+      - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +6 | xargs -I {} rm -rf public/$CURRENT_CONTENT_PATH/../{} | true
       - ls -1t public/$CURRENT_CONTENT_PATH/../
   environment:
     name: pages/$ENV_NAME

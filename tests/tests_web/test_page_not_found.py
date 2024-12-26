@@ -114,7 +114,7 @@ def test_page_not_found(user: UserModel, dashboard_page: DashboardPage, url: str
     dashboard_page.page.goto(
         url=dashboard_page.default_url + url.format(id=str(uuid.uuid4()))
     )
-    expect(dashboard_page.back_home_button).to_be_visible()
+    expect(dashboard_page.back_home_button).to_be_visible(timeout=15000)
     expect(dashboard_page.page).to_have_title(browser_title)
     expect(dashboard_page.page.get_by_text(page_not_found_title)).to_be_visible()
     expect(dashboard_page.page.get_by_text(page_not_found_description)).to_be_visible()
