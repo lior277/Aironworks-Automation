@@ -29,7 +29,7 @@ class BasePage:
         expect(self.alert_message.filter(has_text=text)).to_be_visible(timeout=timeout)
 
     @allure.step('BasePage: wait for loading state')
-    def wait_for_loading_state(self, timeout=10000):
+    def wait_for_loading_state(self, timeout=15000):
         if self.loading.first.is_visible(timeout=timeout):
             for load in self.loading.all():
                 if load.is_visible():
