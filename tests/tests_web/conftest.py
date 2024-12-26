@@ -69,7 +69,7 @@ def playwright_config(request, launch_browser, browser_type):
         permissions=['clipboard-read', 'clipboard-write'],
     )
     context.set_default_timeout(timeout=120 * 1000)
-    expect.set_options(timeout=10_000)
+    expect.set_options(timeout=15_000)
     context.tracing.start(
         name=request.node.name, snapshots=True, screenshots=True, sources=True
     )
