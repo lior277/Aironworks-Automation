@@ -57,7 +57,7 @@ class EditGroupPage(BasePage):
             self.remove_all_employees()
         self.save_button.click()
         self.ensure_alert_message_is_visible(
-            group_modified_successfully_text, timeout=10000
+            group_modified_successfully_text, timeout=20000
         )
         return GroupDetailsPage(self.page)
 

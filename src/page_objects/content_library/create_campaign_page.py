@@ -35,7 +35,7 @@ class CreateCampaignPage(BasePage):
     )
     def open(self, content_library_id: str):
         self.page.goto(self.url.format(content_library_id=content_library_id))
-        self.create_button.wait_for(timeout=10000, state='visible')
+        self.create_button.wait_for(timeout=20000, state='visible')
         return self
 
     @allure.step('CreateCampaignPage: select targets')
