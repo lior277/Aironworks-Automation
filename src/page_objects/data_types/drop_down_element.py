@@ -22,7 +22,7 @@ class DropDown:
         search: bool = False,
         wait_for_hidden: bool = True,
         loading_text: str = None,
-        timeout: typing.Optional[float] = 10_000,
+        timeout: typing.Optional[float] = 15_000,
     ):
         Log.info(f'Selecting {text}')
         selected = False
