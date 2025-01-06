@@ -200,8 +200,12 @@ class SendersTableComponent:
         self.last_contact = self.locator.locator('[data-field="last_received_time"]')
 
     def to_dict(self):
+        if self.sender_name.text_content() == 'Sender Name Unavailable':
+            sender_name_text = ' '
+        else:
+            sender_name_text = self.sender_name.text_content()
         return {
-            'sender_name': self.sender_name.text_content(),
+            'sender_name': sender_name_text.strip(),
             'sender_domain': self.email_address.text_content().split('@')[1].strip(),
             'first_contacted': self.first_contact.text_content(),
             'last_received': self.last_contact.text_content(),
