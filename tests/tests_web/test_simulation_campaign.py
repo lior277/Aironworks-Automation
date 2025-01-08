@@ -195,3 +195,63 @@ def test_campaign_export(campaign_details_page: CampaignDetailsPage, user):
     csv_entity = CampaignAttacksSummaryFactory.get_entity_from_dict(rows[0])
 
     assert page_entity == csv_entity
+
+
+@pytest.mark.parametrize(
+    'user, content_type, scenario_name',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            'application/pdf',
+            AppConfigs.SCENARIO_PDF_NAME,
+            id='Customer Admin',
+            marks=allure.testcase('31545'),
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            AppConfigs.SCENARIO_DOCX_NAME,
+            id='Customer Admin',
+            marks=allure.testcase('31545'),
+        ),
+    ],
+)
+@pytest.mark.smoke
+def test_create_simulation_campaign_attachment(
+    user: UserModel,
+    employee,
+    employee2,
+    content_type,
+    scenario_name,
+    scenarios_page: ScenariosPage,
+    mailtrap,
+):
+    scenarios_page.filter_by_name(scenario_name)
+    generic_scenario = scenarios_page.find_scenario(scenario_name)
+
+    generic_scenario.click()
+
+    execute_campaign_page = scenarios_page.execute_scenario()
+    if user.is_admin:
+        execute_campaign_page.pick_company(AppConfigs.QA_COMPANY_NAME)
+    execute_campaign_page.pick_employees.click()
+    expect(execute_campaign_page.employee_table.table).to_be_visible()
+    execute_campaign_page.employee_table.set_filter_column('email', employee.email)
+
+    execute_campaign_page.employee_table.get_employee_row(employee.email).select_row()
+
+    execute_campaign_page.employee_table.set_filter_column('email', employee2.email)
+
+    execute_campaign_page.employee_table.get_employee_row(employee2.email).select_row()
+    execute_campaign_page.review_button.click()
+    assert execute_campaign_page.number_of_employees.text_content() == '2'
+    execute_campaign_page.execute_button.click()
+    execute_campaign_page.confirm_execute_button.click()
+
+    mailtrap.download_attachment_and_open_links(
+        AppConfigs.EMPLOYEE_INBOX_ID,
+        employee.email,
+        employee2.email,
+        content_type,
+        timeout=240,
+    )

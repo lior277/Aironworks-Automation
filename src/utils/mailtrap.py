@@ -1,8 +1,12 @@
+import os
 import time
+import zipfile
 from datetime import datetime
 from email import message_from_bytes
 from email.message import Message
+from xml.etree import ElementTree as ET
 
+import fitz
 from playwright.sync_api import APIRequestContext, Playwright, expect
 
 from src.configs.config_loader import AppConfigs
@@ -215,6 +219,101 @@ class MailTrap:
             for mail_trap in to_be_removed:
                 list_mail_traps.remove(mail_trap)
         return employees_email_list
+
+    def download_attachment_and_open_links(
+        self,
+        inbox_id: str,
+        email: str,
+        email2: str,
+        content_type: str,
+        timeout: int = 120,
+    ):
+        # Wait for an email with the desired attachment
+        filepath1 = self.download_attachment(
+            inbox_id, email, content_type, '1', timeout=timeout
+        )
+        filepath2 = self.download_attachment(
+            inbox_id, email2, content_type, '2', timeout=timeout
+        )
+        filepaths = [filepath1, filepath2]
+        check_links = []
+        for filepath in filepaths:
+            print('Opening file:', filepath)
+            if filepath.endswith('.pdf'):
+                # Extract links from PDF using PyMuPDF
+                pdf_document = fitz.open(filepath)
+                links = []
+                for page_num in range(pdf_document.page_count):
+                    page = pdf_document.load_page(page_num)
+                    for link in page.get_links():
+                        if 'uri' in link:
+                            links.append(link['uri'])
+
+                # Open the first link (or handle multiple links as needed)
+                if links:
+                    print(f'Add link: {links[1]}')
+                    check_links.append(links[1])
+                else:
+                    assert False, 'No links found in the PDF.'
+
+            # Handle DOCX files
+
+            elif filepath.endswith('.docx'):
+                # Extract links from DOCX using python-docx
+                with zipfile.ZipFile(filepath, 'r') as docx:
+                    rels_xml = docx.read('word/_rels/document.xml.rels')
+                    rels_tree = ET.XML(rels_xml)
+
+                    # Extract hyperlinks (which are stored as 'Relationship' entries with a 'Target' attribute)
+                    for rel in rels_tree.findall(
+                        '{http://schemas.openxmlformats.org/package/2006/relationships}Relationship'
+                    ):
+                        if (
+                            rel.attrib.get('Type')
+                            == 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/oleObject'
+                        ):
+                            link = rel.attrib.get('Target')
+                            print(f'Add link: {link}')
+                            if link:
+                                check_links.append(link)
+
+                if not check_links:
+                    assert False, 'No links found in the DOCX.'
+
+        assert check_links[0] != check_links[1], 'Links are the same'
+
+    def download_attachment(
+        self, inbox_id: str, email: str, content_types: str, no: str, timeout: int = 120
+    ):
+        # Wait for an email with the desired attachment
+        mail = self.wait_for_mail(
+            inbox_id=inbox_id, predicate=find_email(email), timeout=timeout
+        )
+        assert (
+            mail is not None
+        ), f'Unable to find email {email} please check the mailtrap inbox {inbox_id}'
+
+        # Get raw message
+        mail_raw = self.raw_message(inbox_id, mail['id'])
+        message = message_from_bytes(mail_raw.body())
+        parts = message.get_payload()
+
+        # Process each part to find the attachment
+        for part in parts:
+            print('Content:', part.get_content_type())
+            if part.get_content_type() in content_types and part.get_filename():
+                attachment_content = part.get_payload(decode=True)
+                original_name = part.get_filename()
+                extension = os.path.splitext(original_name)[1]
+                filename = f'{no}_testfile{extension}'
+                filepath = os.path.join(os.getcwd(), filename)
+
+                # Save the attachment locally
+                with open(filepath, 'wb') as file:
+                    file.write(attachment_content)
+                print(f'Attachment saved: {filepath}')
+                return filepath
+        assert False, 'No matching attachment found in the email.'
 
     def close(self):
         pass

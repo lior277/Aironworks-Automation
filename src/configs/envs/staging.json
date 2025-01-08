@@ -7,6 +7,8 @@
   "mailtrap_assessment_inbox_mail": "68fa80bce3-28fbb0@inbox.mailtrap.io",
   "mailtrap_account_id": "1311290",
   "example_scenario": "e2ced54e064a4adea24adb5a913aea83",
+  "scenario_pdf_name": "Scenario PDF",
+  "scenario_docx_name": "Scenario Docx",
   "example_scenario_name": "General Scenario - English",
   "example_education_content": "113876b9e7ee492aac8eff99ac4ca915",
   "links_domain": "staging.sd.aironworks.com",

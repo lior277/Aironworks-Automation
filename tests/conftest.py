@@ -166,6 +166,30 @@ def employee(api_request_context_customer_admin):
     return replace(employee, employee_id=employee_data['id'])
 
 
+@pytest.fixture(scope='function')
+def employee2(api_request_context_customer_admin):
+    email = AppConfigs.EMPLOYEE_INBOX % fake.pystr().lower()
+
+    company = api.company(api_request_context_customer_admin)
+    employee = EmployeeModel(
+        email,
+        fake.first_name(),
+        fake.last_name(),
+        language=random.choice(['English', 'Japanese', 'Chinese']),
+        employee_id=None,
+    )
+    response = create_employee(api_request_context_customer_admin, employee)
+    expect(response).to_be_ok()
+
+    employee_data = company.employee_by_mail(email=email)
+
+    assert employee_data['employee_role']
+    assert not employee_data['admin_role']
+    assert employee_data['email'] == email
+
+    return replace(employee, employee_id=employee_data['id'])
+
+
 @pytest.fixture(scope='session')
 def api_request_context_aw_admin(
     playwright: Playwright,
