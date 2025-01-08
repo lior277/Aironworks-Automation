@@ -16,7 +16,7 @@ class EmployeeTableComponent:
     def __init__(self, component: Locator, page: Page) -> None:
         self.table = component
         self.page = page
-        self.filters_button = self.table.get_by_label('Show filters')
+        self.filters_button = self.table.get_by_label('Show filters').nth(0)
         self.filter_column = self.page.get_by_label('Columns')
         self.filter_value = self.page.get_by_placeholder('Filter value')
 
