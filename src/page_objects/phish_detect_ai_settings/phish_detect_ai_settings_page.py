@@ -10,5 +10,5 @@ class PhishDetectAISettings(BasePage):
         self.title = self.page.locator('[data-testid="heading"]')
         self.general_tab = self.page.get_by_role(role='tab', name='General')
         self.ui_configuration_tab = self.page.get_by_role(
-            role='tab', name='UI Configuration'
+            role='tab', name='Configuration'
         )

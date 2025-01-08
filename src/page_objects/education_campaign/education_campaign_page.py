@@ -43,7 +43,7 @@ class EducationCampaignPage(BasePage):
         row = self.table.get_row_by_column_value('title', title)
         if not row:
             raise ValueError(f'unable to find education campaign by {title} title')
-        row.title.click()
+        row.assignments_submission_rate.click()
         details_page = EducationCampaignDetailsPage(self.page)
         details_page.title_txt.wait_for(timeout=5000, state='visible')
         return details_page
