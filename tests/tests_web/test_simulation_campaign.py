@@ -225,6 +225,7 @@ def test_create_simulation_campaign_attachment(
     scenario_name,
     scenarios_page: ScenariosPage,
     mailtrap,
+    is_staging_env,
 ):
     scenarios_page.filter_by_name(scenario_name)
     generic_scenario = scenarios_page.find_scenario(scenario_name)
