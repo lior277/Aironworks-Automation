@@ -8,6 +8,8 @@
   "mailtrap_account_id": "1311290",
   "example_scenario": "5dfe9a9976ee490181c4ba3c182dfbfa",
   "example_scenario_name": "General Scenario - English",
+  "scenario_pdf_name": "Scenario PDF",
+  "scenario_docx_name": "Scenario Docx",
   "example_education_content": "adfa12a7956d41b68f0debb61c354d7c",
   "links_domain": "localhost:3001",
   "sender_domain": "moondev.tokyo",

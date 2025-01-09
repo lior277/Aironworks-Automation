@@ -8,6 +8,8 @@
   "mailtrap_account_id": "1311290",
   "example_scenario": "917b556c67934f61af87493be9701f38",
   "example_scenario_name": "QA Test Scenario",
+  "scenario_pdf_name": "Scenario PDF",
+  "scenario_docx_name": "Scenario Docx",
   "example_education_content": "b4b62e6eec12477b8db758b9425d4689",
   "links_domain": "www.moondev.tokyo",
   "sender_domain": "moondev.tokyo",

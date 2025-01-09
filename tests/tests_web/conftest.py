@@ -246,3 +246,9 @@ def email_filter_settings_page(
 @pytest.fixture
 def received_emails_page(dashboard_page: DashboardPage) -> ReceivedEmailsPage:
     return dashboard_page.navigation_bar.navigate_received_emails_page()
+
+
+@pytest.fixture(scope='function')
+def is_staging_env():
+    if AppConfigs.ENV != 'staging':
+        pytest.skip('Attachment not available')
