@@ -68,7 +68,6 @@ class GroupsPage(BasePage):
                 )
             else:
                 expect(self.loading).to_be_visible()
-                self.wait_for_loading_state()
                 expect(self.upload_groups_component.locator).not_to_be_visible()
 
     @allure.step('GroupsPage: download csv file')

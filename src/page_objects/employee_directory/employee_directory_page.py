@@ -111,7 +111,6 @@ class EmployeeDirectoryPage(BasePage):
                 else:
                     self.add_new_employees_only_button.click()
                 expect(self.loading).to_be_visible()
-                self.wait_for_loading_state(timeout=30000)
                 expect(self.upload_employees_component.locator).not_to_be_visible(
                     timeout=30000
                 )
