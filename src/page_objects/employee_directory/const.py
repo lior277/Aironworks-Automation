@@ -1,4 +1,5 @@
 update_employee_success_message = 'Employee data has been successfully updated.'
+update_succeeded_text = 'Update succeeded'
 deactivated_employees_success_message = 'Employee(s) deactivated'
 employees_restored_message = 'Employees restored'
 employees_deleted_message = 'Employees deleted'
