@@ -68,6 +68,7 @@ class TestUploadEmployees:
             ),
         ],
     )
+    @pytest.mark.single_thread
     def test_upload_employees(
         self,
         employee_directory_page: EmployeeDirectoryPage,
