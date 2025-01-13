@@ -225,6 +225,7 @@ post_test_results:
       \"text\": \"*Project:* $CI_PROJECT_NAME\n*Job:* $CI_JOB_NAME\n*Stage:* $CI_JOB_STAGE\n*User:* $GITLAB_USER_NAME\n*Deployment Date:* $DEPLOYMENT_DATE\n*Environment:* $ENV\n*Status:* $CI_JOB_STATUS_UPPER $EMOJI_STATUS\n*Details:* <$CI_PAGES_URL/$CURRENT_CONTENT_PATH/index.html|Test Report>\n$TAG\",
       \"mrkdwn\": true
     }" $SLACK_WEBHOOK;
+    echo "CI_PAGES_URL: $CI_PAGES_URL"
 
 set_pipeline_status:
   stage: deploy
