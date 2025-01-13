@@ -182,6 +182,7 @@ pages:
       - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +6
       - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +6 | xargs -I {} rm -rf public/$CURRENT_CONTENT_PATH/../{} | true
       - ls -1t public/$CURRENT_CONTENT_PATH/../
+      - echo "CI_PAGES_URL $CI_PAGES_URL/$CURRENT_CONTENT_PATH/index.html"
   environment:
     name: pages/$ENV_NAME
     action: start
