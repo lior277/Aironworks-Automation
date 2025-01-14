@@ -24,6 +24,7 @@ pytest-timeout = "*"
 pytest-sugar = "*"
 ruff = "*"
 pre-commit = "*"
+boto3 = "*"
 pymupdf = "*"
 
 [dev-packages]
