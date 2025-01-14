@@ -254,7 +254,7 @@ post_test_results:
       EMOJI_STATUS=":exclamation:"
     fi
     curl -X POST -H 'Content-type: application/json' --data "{
-      \"text\": \"*Project:* $CI_PROJECT_NAME\n*Job:* $CI_JOB_NAME\n*Stage:* $CI_JOB_STAGE\n*User:* $GITLAB_USER_NAME\n*Deployment Date:* $DEPLOYMENT_DATE\n*Environment:* $ENV\n*Status:* $CI_JOB_STATUS_UPPER $EMOJI_STATUS\n*Details:* <https://aironworks-testing-aironworks-ae7ce2bc510d8152758ae21ead56b7478.gitlab.io//$CURRENT_CONTENT_PATH/index.html|Test>\n*S3:*playwright/$CURRENT_CONTENT_PATH Report>\n$TAG\",
+      \"text\": \"*Project:* $CI_PROJECT_NAME\n*Job:* $CI_JOB_NAME\n*Stage:* $CI_JOB_STAGE\n*User:* $GITLAB_USER_NAME\n*Deployment Date:* $DEPLOYMENT_DATE\n*Environment:* $ENV\n*Status:* $CI_JOB_STATUS_UPPER $EMOJI_STATUS\n*Details:* <https://aironworks-testing-aironworks-ae7ce2bc510d8152758ae21ead56b7478.gitlab.io//$CURRENT_CONTENT_PATH/index.html|Test Report>\nS3: s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH \n$TAG\",
       \"mrkdwn\": true
     }" $SLACK_WEBHOOK;
     echo "CI_PAGES_URL: $CI_PAGES_URL"
