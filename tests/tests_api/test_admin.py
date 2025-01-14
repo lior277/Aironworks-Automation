@@ -38,9 +38,9 @@ def run_campaign_on_employee(
     mail = mailtrap.wait_for_mail(
         AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email)
     )
-    assert (
-        mail is not None
-    ), f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    assert mail is not None, (
+        f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    )
 
     source = mailtrap.message_source(AppConfigs.EMPLOYEE_INBOX_ID, mail['id']).body()
     links = get_text_links(source.decode())
@@ -95,7 +95,7 @@ def test_email_notification_match_setting(
         None,
     )
     Log.info(
-        f"waiting for email with title: {en_config['custom_attack_notification_subject']}"
+        f'waiting for email with title: {en_config["custom_attack_notification_subject"]}'
     )
 
     mail = mailtrap.wait_for_mail(
@@ -104,9 +104,9 @@ def test_email_notification_match_setting(
     )
     Log.info(f'employee email: {employee.email}')
 
-    assert (
-        mail is not None
-    ), f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    assert mail is not None, (
+        f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    )
 
     mail_id = mail['id']
     mail_raw = mailtrap.raw_message(AppConfigs.EMPLOYEE_INBOX_ID, mail_id)

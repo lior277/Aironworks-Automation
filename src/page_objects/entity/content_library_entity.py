@@ -9,8 +9,8 @@ from src.page_objects.content_library.const import ContentType
 
 def get_random_title():
     return (
-        f'Automation Content {datetime.now().strftime('%d/%m/%Y, %H:%M:%S')} '
-        f'{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}'
+        f'Automation Content {datetime.now().strftime("%d/%m/%Y, %H:%M:%S")} '
+        f'{"".join(random.choices(string.ascii_lowercase + string.digits, k=8))}'
     )
 
 

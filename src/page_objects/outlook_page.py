@@ -99,9 +99,9 @@ class OutlookPage:
     @allure.step('OutlookPage: report incident')
     def report_incident(self):
         random_description = (
-            f'Description: {datetime.now().strftime('%d/%m/%Y, %H:%M:%S')} '
+            f'Description: {datetime.now().strftime("%d/%m/%Y, %H:%M:%S")} '
         )
-        f'{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}'
+        f'{"".join(random.choices(string.ascii_lowercase + string.digits, k=8))}'
 
         self.report_incident_button.click()
         # Generate Random description

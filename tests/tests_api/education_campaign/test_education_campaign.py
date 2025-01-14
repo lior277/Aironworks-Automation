@@ -21,9 +21,9 @@ def test_education_campaign(api_request_context_customer_admin, employee, mailtr
     mail = run_education_campaign_on_employee(
         api_request_context_customer_admin, mailtrap, employee
     )
-    assert (
-        mail is not None
-    ), f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    assert mail is not None, (
+        f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    )
     source = mailtrap.message_source(AppConfigs.EMPLOYEE_INBOX_ID, mail['id']).body()
     links = get_text_links(source.decode())
     assert len(links) == 1
@@ -48,9 +48,9 @@ def test_education_campaign_notification_match_settings(
     mail = run_education_campaign_on_employee(
         api_request_context_customer_admin, mailtrap, employee
     )
-    assert (
-        mail is not None
-    ), f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    assert mail is not None, (
+        f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    )
     source = mailtrap.raw_message(AppConfigs.EMPLOYEE_INBOX_ID, mail['id']).body()
 
     message: Message = message_from_bytes(source)

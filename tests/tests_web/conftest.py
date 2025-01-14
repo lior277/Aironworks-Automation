@@ -134,10 +134,10 @@ def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
         def wait_for_cookies():
             return sign_in_page.page.context.storage_state()['cookies']
 
-        assert wait_for(
-            wait_for_cookies, timeout=15
-        ), f'cookies were not applied {wait_for_cookies=}'
-        Log.info(f"{sign_in_page.page.context.storage_state()["cookies"]=}")
+        assert wait_for(wait_for_cookies, timeout=15), (
+            f'cookies were not applied {wait_for_cookies=}'
+        )
+        Log.info(f'{sign_in_page.page.context.storage_state()["cookies"]=}')
 
     else:
         sign_in_page.navigate(admin=user.is_admin)

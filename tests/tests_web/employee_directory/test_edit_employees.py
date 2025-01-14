@@ -43,9 +43,9 @@ def test_edit_employee_all_fields(
     actual_employee = employee_directory_page.get_employee_entity_by_email(
         employee_item.email
     )
-    assert (
-        expected_employee == actual_employee
-    ), f'{expected_employee=}\n\n{actual_employee=}'
+    assert expected_employee == actual_employee, (
+        f'{expected_employee=}\n\n{actual_employee=}'
+    )
 
 
 @pytest.mark.smoke

@@ -81,9 +81,9 @@ def test_education_campaign_emails_delivered(
         expect(result).to_be_ok()
         response_body = LongRunningOperation.from_dict(result.json())
 
-        assert (
-            response_body.status == 'DONE'
-        ), f'Failed to upload file with employee. Response => {response_body}'
+        assert response_body.status == 'DONE', (
+            f'Failed to upload file with employee. Response => {response_body}'
+        )
         employees_list.extend(employees)
 
     Log.info('Getting employee ids')
@@ -91,9 +91,9 @@ def test_education_campaign_emails_delivered(
         EmployeeListIdsModel(employee_role=True, filters=None)
     )
     employee_ids = response.json()
-    assert (
-        len(employee_ids['items']) >= len(employees_list)
-    ), f"Expected employees => {len(employees_list)}\nActual employees => {len(employee_ids["items"])}"
+    assert len(employee_ids['items']) >= len(employees_list), (
+        f'Expected employees => {len(employees_list)}\nActual employees => {len(employee_ids["items"])}'
+    )
     education_campaign = EducationCampaignModelFactory.get_education_campaign(
         employee_ids['items']
     )

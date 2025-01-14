@@ -27,9 +27,9 @@ def test_credentials_should_be_correct(api_request_context_addin):
     expect(response).to_be_ok()
     actual_assessment_info = AssessmentInfoModel.from_dict(response.json())
 
-    assert (
-        expected_assessment_info == actual_assessment_info
-    ), f'{expected_assessment_info=}\n\n{actual_assessment_info=}'
+    assert expected_assessment_info == actual_assessment_info, (
+        f'{expected_assessment_info=}\n\n{actual_assessment_info=}'
+    )
 
 
 @allure.testcase('31558')

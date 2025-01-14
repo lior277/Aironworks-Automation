@@ -1,4 +1,5 @@
 import os
+import tempfile
 import time
 import zipfile
 from datetime import datetime
@@ -6,6 +7,7 @@ from email import message_from_bytes
 from email.message import Message
 from xml.etree import ElementTree as ET
 
+import allure
 import fitz
 from playwright.sync_api import APIRequestContext, Playwright, expect
 
@@ -220,22 +222,21 @@ class MailTrap:
                 list_mail_traps.remove(mail_trap)
         return employees_email_list
 
-    def download_attachment_and_open_links(
-        self,
-        inbox_id: str,
-        email: str,
-        email2: str,
-        content_type: str,
-        timeout: int = 120,
-    ):
+    @allure.step('Download attachments with file paths')
+    def download_attachments_with_file_paths(
+        self, inbox_id: str, emails: list, content_type: str, timeout: int = 120
+    ) -> list[str]:
         # Wait for an email with the desired attachment
-        filepath1 = self.download_attachment(
-            inbox_id, email, content_type, '1', timeout=timeout
-        )
-        filepath2 = self.download_attachment(
-            inbox_id, email2, content_type, '2', timeout=timeout
-        )
-        filepaths = [filepath1, filepath2]
+        filepaths = []
+        for email in emails:
+            filepath = self.download_attachment(
+                inbox_id, email, content_type, timeout=timeout
+            )
+            filepaths.append(filepath)
+        return filepaths
+
+    @allure.step('Extract links')
+    def extract_links(self, filepaths: list) -> list[str]:
         check_links = []
         for filepath in filepaths:
             print('Opening file:', filepath)
@@ -279,19 +280,19 @@ class MailTrap:
 
                 if not check_links:
                     assert False, 'No links found in the DOCX.'
-
-        assert check_links[0] != check_links[1], 'Links are the same'
+            os.remove(filepath)
+        return check_links
 
     def download_attachment(
-        self, inbox_id: str, email: str, content_types: str, no: str, timeout: int = 120
+        self, inbox_id: str, email: str, content_types: str, timeout: int = 120
     ):
         # Wait for an email with the desired attachment
         mail = self.wait_for_mail(
             inbox_id=inbox_id, predicate=find_email(email), timeout=timeout
         )
-        assert (
-            mail is not None
-        ), f'Unable to find email {email} please check the mailtrap inbox {inbox_id}'
+        assert mail is not None, (
+            f'Unable to find email {email} please check the mailtrap inbox {inbox_id}'
+        )
 
         # Get raw message
         mail_raw = self.raw_message(inbox_id, mail['id'])
@@ -305,15 +306,14 @@ class MailTrap:
                 attachment_content = part.get_payload(decode=True)
                 original_name = part.get_filename()
                 extension = os.path.splitext(original_name)[1]
-                filename = f'{no}_testfile{extension}'
-                filepath = os.path.join(os.getcwd(), filename)
-
-                # Save the attachment locally
-                with open(filepath, 'wb') as file:
-                    file.write(attachment_content)
-                print(f'Attachment saved: {filepath}')
-                return filepath
-        assert False, 'No matching attachment found in the email.'
+                with tempfile.NamedTemporaryFile(
+                    mode='wb', suffix=extension, delete=False
+                ) as temp_file:
+                    temp_file.write(attachment_content)
+                    file_name = temp_file.name
+                    temp_filepath = file_name
+                return temp_filepath
+        return None
 
     def close(self):
         pass

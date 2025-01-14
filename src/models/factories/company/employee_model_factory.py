@@ -55,6 +55,6 @@ class EmployeeModelFactory:
                 unique_id = ''.join(
                     random.choices(string.ascii_lowercase + string.digits, k=8)
                 )
-                email = f"{f"{email_name}+" if email_name else fake.first_name()}{unique_id}@{domain if domain else fake.domain_name()}"
+                email = f'{f"{email_name}+" if email_name else fake.first_name()}{unique_id}@{domain if domain else fake.domain_name()}'
             emails.add(email)
         return list(emails)

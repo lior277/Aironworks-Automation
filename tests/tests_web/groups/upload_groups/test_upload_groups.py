@@ -39,7 +39,7 @@ class TestUploadGroups:
         file_extension = '.csv' if is_csv_file else '.xlsx'
         file_path = os.path.join(
             AppFolders.RESOURCES_PATH,
-            f"group{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}{file_extension}",
+            f'group{"".join(random.choices(string.ascii_lowercase + string.digits, k=8))}{file_extension}',
         )
         column_names = [
             'Group Name',

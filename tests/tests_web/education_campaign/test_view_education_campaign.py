@@ -29,6 +29,6 @@ def test_view_education_campaign(
     expected_education_campaign = EducationCampaignFactory.get_education_campaign(
         remove_education_campaign
     )
-    assert (
-        actual_education_campaign == expected_education_campaign
-    ), f'{actual_education_campaign=}\n{expected_education_campaign=}'
+    assert actual_education_campaign == expected_education_campaign, (
+        f'{actual_education_campaign=}\n{expected_education_campaign=}'
+    )
