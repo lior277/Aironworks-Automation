@@ -56,9 +56,9 @@ def test_create_simulation_campaign(
         AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email), timeout=240
     )
 
-    assert (
-        mail is not None
-    ), f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    assert mail is not None, (
+        f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    )
 
 
 @pytest.mark.parametrize(
@@ -248,11 +248,15 @@ def test_create_simulation_campaign_attachment(
     assert execute_campaign_page.number_of_employees.text_content() == '2'
     execute_campaign_page.execute_button.click()
     execute_campaign_page.confirm_execute_button.click()
-
-    mailtrap.download_attachment_and_open_links(
-        AppConfigs.EMPLOYEE_INBOX_ID,
-        employee.email,
-        employee2.email,
-        content_type,
-        timeout=240,
+    emails = [employee.email, employee2.email]
+    filepaths = mailtrap.download_attachments_with_file_paths(
+        AppConfigs.EMPLOYEE_INBOX_ID, emails, content_type, timeout=240
     )
+    assert len(filepaths) == len(emails), (
+        'Number of attachments does not match number of emails'
+    )
+    links = mailtrap.extract_links(filepaths)
+    assert len(links) == len(filepaths), (
+        'Number of links does not match number of attachments'
+    )
+    assert len(links) == len(set(links)), 'Duplicate links found'

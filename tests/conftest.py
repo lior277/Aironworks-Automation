@@ -283,8 +283,8 @@ def fx_ss_add_environment(request):
             f.write(f'BASE_URL={AppConfigs.BASE_URL}\n')
             f.write(f'ADMIN_BASE_URL={AppConfigs.ADMIN_BASE_URL}\n')
             f.write(f'ADDIN_BASE_URL={AppConfigs.ADDIN_BASE_URL}\n')
-            f.write(f'BROWSER_NAME={os.getenv('BROWSER_NAME')}\n')
-            f.write(f'BROWSER_VERSION={os.getenv('BROWSER_VERSION')}\n')
+            f.write(f'BROWSER_NAME={os.getenv("BROWSER_NAME")}\n')
+            f.write(f'BROWSER_VERSION={os.getenv("BROWSER_VERSION")}\n')
             f.close()
 
             if os.environ.get('CI_PIPELINE_IID'):

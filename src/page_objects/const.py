@@ -17,4 +17,4 @@ def get_file_size_error_message(file_path: str):
 
 
 def upload_error_message(columns: list):
-    return f'The following columns are unrecognized: {', '.join(columns)}'
+    return f'The following columns are unrecognized: {", ".join(columns)}'

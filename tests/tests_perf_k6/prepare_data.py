@@ -48,9 +48,9 @@ def test_education_campaign(
         EmployeeListIdsModel(employee_role=True, filters=None)
     )
     employee_ids = response.json()
-    assert (
-        len(employee_ids['items']) == employees_count
-    ), f"Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}"
+    assert len(employee_ids['items']) == employees_count, (
+        f'Expected employees => {employees_count}\nActual employees => {len(employee_ids["items"])}'
+    )
     response = education.get_content_pagination()
     assert response.ok, f'Failed to fetch education content => {response.json()}'
     education_content = EducationContentModel.from_dict(response.json())

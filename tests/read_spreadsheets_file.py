@@ -47,7 +47,7 @@ def generate_testrail_csv(file_key: str):
                             f'{row[7]}',
                             f'{row[8]}',
                             f'{row[9]}',
-                            f"{row[10] if row[10] else "Medium"}",
+                            f'{row[10] if row[10] else "Medium"}',
                         ]
                         all_data.insert(index, data)
                         index += 1

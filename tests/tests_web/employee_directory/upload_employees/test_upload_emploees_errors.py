@@ -52,7 +52,7 @@ class TestUploadEmployeesUnsupportedColumns:
 
         file_path = os.path.join(
             AppFolders.RESOURCES_PATH,
-            f"employees{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}.csv",
+            f'employees{"".join(random.choices(string.ascii_lowercase + string.digits, k=8))}.csv',
         )
         column_names = ['First Name', 'Last Name', 'Email']
         data_to_update = {}

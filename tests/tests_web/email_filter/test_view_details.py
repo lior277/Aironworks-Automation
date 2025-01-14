@@ -23,9 +23,9 @@ def test_view_sender_details(
     sender = received_emails_page.get_sender(sender_email)
     sender_details_page = received_emails_page.go_to_senders_details(sender_email)
     sender_details = sender_details_page.get_sender_details()
-    assert (
-        sender == sender_details
-    ), f'Sender: {sender}, Sender details: {sender_details}'
+    assert sender == sender_details, (
+        f'Sender: {sender}, Sender details: {sender_details}'
+    )
 
 
 @pytest.mark.smoke
@@ -66,9 +66,9 @@ def test_view_vendor_details(
     vendor = received_emails_page.get_vendor(vendor_name)
     vendor_details_page = received_emails_page.go_to_vendor_details(vendor_name)
     vendor_details = vendor_details_page.get_vendor_details()
-    assert (
-        vendor == vendor_details
-    ), f'Vendor: {vendor}, Vendor details: {vendor_details}'
+    assert vendor == vendor_details, (
+        f'Vendor: {vendor}, Vendor details: {vendor_details}'
+    )
 
 
 @pytest.mark.smoke
@@ -95,9 +95,9 @@ def test_view_email_details_from_sender(
     email = sender_details_page.get_sender_email_details(subject)
     email_details_page = sender_details_page.go_to_sender_email_details()
     email_details = email_details_page.get_email_details()
-    assert all(
-        item in email_details.items() for item in email.items()
-    ), f'Email: {email}, Email Details: {email_details}'
+    assert all(item in email_details.items() for item in email.items()), (
+        f'Email: {email}, Email Details: {email_details}'
+    )
 
 
 @pytest.mark.smoke
@@ -124,9 +124,9 @@ def test_view_sender_details_from_vendor(
     sender = vendor_details_page.get_sender_details(sender)
     sender_details_page = vendor_details_page.go_to_sender_details(sender)
     sender_details = sender_details_page.get_sender_details()
-    assert all(
-        item in sender_details.items() for item in sender.items()
-    ), f'Sender: {sender}, Sender details: {sender_details}'
+    assert all(item in sender_details.items() for item in sender.items()), (
+        f'Sender: {sender}, Sender details: {sender_details}'
+    )
 
 
 @pytest.mark.smoke
@@ -154,6 +154,6 @@ def test_view_email_details_from_vendor(
     email_details_page = vendor_details_page.go_to_vendor_email_details()
     email_details = email_details_page.get_email_details()
     assert email is not None
-    assert all(
-        item in email_details.items() for item in email.items()
-    ), f'Email: {email}, Email Details: {email_details}'
+    assert all(item in email_details.items() for item in email.items()), (
+        f'Email: {email}, Email Details: {email_details}'
+    )

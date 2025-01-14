@@ -29,7 +29,7 @@ class TestUploadEmployees:
         file_extension = '.csv' if is_csv_file else '.xlsx'
         file_path = os.path.join(
             AppFolders.RESOURCES_PATH,
-            f"employees{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}{file_extension}",
+            f'employees{"".join(random.choices(string.ascii_lowercase + string.digits, k=8))}{file_extension}',
         )
         column_names = ['First Name', 'Last Name', 'Email']
         if is_csv_file:

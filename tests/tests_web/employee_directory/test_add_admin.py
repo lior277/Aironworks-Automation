@@ -56,6 +56,6 @@ def test_add_admin_new_employee(
     mail = mailtrap.wait_for_mail(
         AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email)
     )
-    assert (
-        mail is not None
-    ), f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    assert mail is not None, (
+        f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    )

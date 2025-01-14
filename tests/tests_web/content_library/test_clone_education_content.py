@@ -88,9 +88,9 @@ class TestCloneEducationContent:
             content_library_details_page.get_content_library_entity(content_type)
         )
         content_library_entity.title = 'Clone - ' + content_library_entity.title
-        assert (
-            content_library_entity == cloned_content_library_entity
-        ), f'{content_library_entity=}\n\n{cloned_content_library_entity=}'
+        assert content_library_entity == cloned_content_library_entity, (
+            f'{content_library_entity=}\n\n{cloned_content_library_entity=}'
+        )
         if user.is_admin:
             assert eval(
                 content_library_details_page.content_visibility.hidden_button.get_attribute(
