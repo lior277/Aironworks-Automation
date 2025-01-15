@@ -214,7 +214,7 @@ upload_to_s3:
         CURRENT_CONTENT_PATH: $ENV/$CI_PIPELINE_ID
         ENV_NAME: $ENV
   script:
-   - python upload.py public/$CURRENT_CONTENT_PATH/../ --prefix playwright/$CURRENT_CONTENT_PATH
+   - python upload.py public/$CURRENT_CONTENT_PATH/ --prefix playwright/$CURRENT_CONTENT_PATH
   dependencies:
    - pages
    - run-tests
