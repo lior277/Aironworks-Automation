@@ -73,12 +73,16 @@ def test_submit_quiz(api_request_context_customer_admin, mailtrap, employee, new
     # Select the first question option
     page.page.locator('#field_control_0').first.click()
     page.confirm_quiz()
-
-    expect(
-        page.page.get_by_role(
-            'heading', name='Congratulations on completion!', exact=True
-        )
-    ).to_be_visible()
+    if AppConfigs.ENV == 'development':
+        expect(
+            page.page.get_by_role('heading', name='Congratulations!', exact=True)
+        ).to_be_visible()
+    else:
+        expect(
+            page.page.get_by_role(
+                'heading', name='Congratulations on completion!', exact=True
+            )
+        ).to_be_visible()
     expect(
         page.page.get_by_role('heading', name='100 /100', exact=True)
     ).to_be_visible()
