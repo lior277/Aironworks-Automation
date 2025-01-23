@@ -17,21 +17,26 @@ from src.page_objects.employee_directory.employee_directory_page import (
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.groups.groups_page import GroupsPage
 from src.page_objects.phish_detect_ai_settings.const import phishing_assessment_title
+from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_configuration_page import (
+    PhishDetectAISettingsConfiguration,
+)
 from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_general_page import (
     PhishDetectAISettingsGeneral,
 )
-from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_ui_page import (
-    PhishDetectAISettingsUIConfiguration,
-)
 from src.page_objects.scenarios_page import ScenariosPage
-from src.page_objects.settings_page import SettingsPage
+from src.page_objects.training_settings.email_sending_page import EmailSendingPage
+from src.page_objects.training_settings.training_settings_page import (
+    TrainingSettingsPage,
+)
 
 
 class NavigationBar:
     def __init__(self, page: Page):
         self.page = page
         self.scenarios_button = page.get_by_role('link', name='Scenarios')
-        self.settings_button = page.get_by_role('link', name='Settings', exact=True)
+        self.training_settings_button = page.get_by_role(
+            'link', name='Training Settings', exact=True
+        )
         self.employee_reports_button = page.get_by_role(
             'link', name='PhishDetectAI Reports'
         )
@@ -64,8 +69,7 @@ class NavigationBar:
     def navigate_settings(self):
         self.settings_button.click()
         self.page.wait_for_load_state(timeout=5)
-
-        return SettingsPage(self.page)
+        return TrainingSettingsPage(self.page)
 
     @allure.step('NavigationBar: Navigate to employee reports')
     def navigate_employee_reports(self):
@@ -128,9 +132,9 @@ class NavigationBar:
     @allure.step('NavigationBar: Navigate to groups page')
     def navigate_phish_detect_ai_settings_ui_page(
         self,
-    ) -> PhishDetectAISettingsUIConfiguration:
+    ) -> PhishDetectAISettingsConfiguration:
         self.navigate_phish_detect_ai_settings_general_page()
-        ui_configuration_page = PhishDetectAISettingsUIConfiguration(self.page)
+        ui_configuration_page = PhishDetectAISettingsConfiguration(self.page)
         ui_configuration_page.ui_configuration_tab.click()
         ui_configuration_page.show_preview_button.wait_for()
         return ui_configuration_page
@@ -155,3 +159,11 @@ class NavigationBar:
         email_filter_settings_page = EmailFilterSettingsPage(self.page)
         email_filter_settings_page.wait_for_progress_bar_disappears()
         return email_filter_settings_page
+
+    @allure.step('NavigationBar: Navigate to training settings: email sending page')
+    def navigate_training_settings_email_sending_page(self):
+        self.training_settings_button.click()
+        email_sending_page = EmailSendingPage(self.page)
+        email_sending_page.select_tab('Email Sending')
+        email_sending_page.wait_for_progress_bar_disappears()
+        return email_sending_page

@@ -1,3 +1,5 @@
+import time
+
 import allure
 from playwright.sync_api import Page, expect
 
@@ -27,6 +29,7 @@ class BasePage:
     @allure.step('BasePage: ensure alert message is visible')
     def ensure_alert_message_is_visible(self, text, timeout=30_000):
         expect(self.alert_message.filter(has_text=text)).to_be_visible(timeout=timeout)
+        time.sleep(1)
 
     @allure.step('BasePage: wait for loading state')
     def wait_for_loading_state(self, timeout=20000):

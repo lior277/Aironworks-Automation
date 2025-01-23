@@ -14,6 +14,7 @@ class OutlookConfigData(BaseDataClass):
     incident_button_text: Optional[str] = None
     language: Optional[str] = None
     subtext: Optional[str] = None
+    completion_report_custom_text: Optional[str] = None
 
 
 @dataclass

@@ -35,7 +35,9 @@ def set_outlook_default_setting(request, api_request_context_customer_admin):
         pytest.param(
             UserModelFactory.customer_admin(),
             OutlookLocalizedConfigFactory.get_outlook_config(
-                assessment_button=False, incident_button=True
+                assessment_button=False,
+                incident_button=True,
+                completion_report_custom_text='Congratulations! You have successfully completed the assessment.',
             ),
             id='Test assessment_button visibility settings in phish detect ai',
             marks=allure.testcase('31798'),
@@ -43,7 +45,9 @@ def set_outlook_default_setting(request, api_request_context_customer_admin):
         pytest.param(
             UserModelFactory.customer_admin(),
             OutlookLocalizedConfigFactory.get_outlook_config(
-                assessment_button=True, incident_button=False
+                assessment_button=True,
+                incident_button=False,
+                completion_report_custom_text='Congratulations! You have successfully completed the assessment.',
             ),
             id='Test incident_button visibility settings in phish detect ai',
             marks=allure.testcase('31799'),
@@ -52,10 +56,10 @@ def set_outlook_default_setting(request, api_request_context_customer_admin):
 )
 @pytest.mark.smoke
 def test_phish_detect_ai_visibility_settings(
-    phish_detect_ai_settings_ui_page,
+    phish_detect_ai_settings_configuration_page,
     user,
     set_outlook_default_setting,
     settings: OutlookConfigData,
 ):
-    phish_detect_ai_settings_ui_page.change_settings(settings)
-    phish_detect_ai_settings_ui_page.check_settings_in_preview(settings)
+    phish_detect_ai_settings_configuration_page.change_settings(settings)
+    phish_detect_ai_settings_configuration_page.check_settings_in_preview(settings)

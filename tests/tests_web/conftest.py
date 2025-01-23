@@ -34,13 +34,14 @@ from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 from src.page_objects.groups.groups_page import GroupsPage
 from src.page_objects.login_page import SignInPage
 from src.page_objects.outlook_page import OutlookPage
+from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_configuration_page import (
+    PhishDetectAISettingsConfiguration,
+)
 from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_general_page import (
     PhishDetectAISettingsGeneral,
 )
-from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_ui_page import (
-    PhishDetectAISettingsUIConfiguration,
-)
 from src.page_objects.scenarios_page import ScenariosPage
+from src.page_objects.training_settings.email_sending_page import EmailSendingPage
 from src.utils.log import Log
 from src.utils.waiter import wait_for
 
@@ -225,9 +226,9 @@ def phish_detect_ai_settings_general_page(
 
 
 @pytest.fixture
-def phish_detect_ai_settings_ui_page(
+def phish_detect_ai_settings_configuration_page(
     dashboard_page: DashboardPage,
-) -> PhishDetectAISettingsUIConfiguration:
+) -> PhishDetectAISettingsConfiguration:
     return dashboard_page.navigation_bar.navigate_phish_detect_ai_settings_ui_page()
 
 
@@ -246,6 +247,13 @@ def email_filter_settings_page(
 @pytest.fixture
 def received_emails_page(dashboard_page: DashboardPage) -> ReceivedEmailsPage:
     return dashboard_page.navigation_bar.navigate_received_emails_page()
+
+
+@pytest.fixture
+def training_settings_email_sending_page(
+    dashboard_page: DashboardPage,
+) -> EmailSendingPage:
+    return dashboard_page.navigation_bar.navigate_training_settings_email_sending_page()
 
 
 @pytest.fixture(scope='function')
