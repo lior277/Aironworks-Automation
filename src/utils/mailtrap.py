@@ -315,6 +315,28 @@ class MailTrap:
                 return temp_filepath
         return None
 
+    def check_custom_header(
+        self, inbox_id: str, email: str, header_key: str, header_value: str, timeout=120
+    ):
+        # Retrieve the raw email source
+        mail = self.wait_for_mail(
+            inbox_id=inbox_id, predicate=find_email(email), timeout=timeout
+        )
+        assert mail is not None, (
+            f'Unable to find email {email} please check the mailtrap inbox {inbox_id}'
+        )
+        # Get raw message
+        mail_raw = self.raw_message(inbox_id, mail['id'])
+        message = message_from_bytes(mail_raw.body())
+        parts = message.get_payload()
+        text = '{header_key}: {header_value}'
+        for part in parts:
+            if text in part:
+                print(f"Header '{header_key}' with value '{header_value}' found.")
+                return True
+        print(f"Header '{header_key}' with value '{header_value}' not found.")
+        return False
+
     def close(self):
         pass
         # self.request_context.dispose() removed due to https://github.com/microsoft/playwright/issues/27048 which wasn't fixed for python

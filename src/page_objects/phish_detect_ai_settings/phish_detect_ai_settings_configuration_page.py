@@ -10,12 +10,17 @@ from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_page imp
 )
 
 
-class PhishDetectAISettingsUIConfiguration(PhishDetectAISettings):
+class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
     def __init__(self, page: Page):
         super().__init__(page)
         self.show_preview_button = self.page.get_by_role('button', name='Show Preview')
         self.button_visibility_component = ButtonVisibilityComponent(
             self.page.locator("//p[text()='Button Visibility']/../..")
+        )
+        self.completion_report_custom_text_component = (
+            CompletionReportCustomTextComponent(
+                self.page.locator("//p[text()='Completion Report Custom Text']/../..")
+            )
         )
         self.save_component = SaveComponent(
             self.page.locator(
@@ -28,7 +33,7 @@ class PhishDetectAISettingsUIConfiguration(PhishDetectAISettings):
             )
         )
 
-    @allure.step('PhishDetectAISettingsUIConfiguration: change settings')
+    @allure.step('PhishDetectAISettingsConfiguration: change settings')
     def change_settings(self, settings: OutlookConfigData):
         if settings.assessment_button:
             self.button_visibility_component.perform_assessment_enabled_button.click()
@@ -38,19 +43,21 @@ class PhishDetectAISettingsUIConfiguration(PhishDetectAISettings):
             self.button_visibility_component.report_incident_enabled_button.click()
         else:
             self.button_visibility_component.report_incident_disabled_button.click()
+        if settings.completion_report_custom_text:
+            self.completion_report_custom_text_component.custom_text_input.fill(
+                settings.completion_report_custom_text
+            )
 
         self.save_component.save_button.click()
         self.ensure_alert_message_is_visible(updated_settings_text)
 
-    @allure.step('PhishDetectAISettingsUIConfiguration: open preview window')
+    @allure.step('PhishDetectAISettingsConfiguration: open preview window')
     def open_preview_window(self):
         if not self.assessment_preview_window.locator.is_visible():
             self.show_preview_button.click()
             self.assessment_preview_window.locator.wait_for()
 
-    @allure.step(
-        'PhishDetectAISettingsUIConfiguration: check settings in preview window'
-    )
+    @allure.step('PhishDetectAISettingsConfiguration: check settings in preview window')
     def check_settings_in_preview(self, settings: OutlookConfigData):
         self.open_preview_window()
         if settings.assessment_button:
@@ -172,6 +179,12 @@ class ButtonVisibilityComponent:
         self.sub_text_input = self.locator.locator(
             '[data-testid="phisshing-assessment-configuration-subTextBlock"] #subtext'
         )
+
+
+class CompletionReportCustomTextComponent:
+    def __init__(self, locator: Locator):
+        self.locator = locator
+        self.custom_text_input = self.locator.get_by_role('textbox', name='Custom text')
 
 
 class SaveComponent:

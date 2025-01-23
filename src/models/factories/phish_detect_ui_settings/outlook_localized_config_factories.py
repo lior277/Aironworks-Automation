@@ -45,7 +45,9 @@ class OutlookLocalizedConfigFactory:
 
     @staticmethod
     def get_outlook_config(
-        assessment_button: bool, incident_button: bool
+        assessment_button: bool,
+        incident_button: bool,
+        completion_report_custom_text: str = None,
     ) -> OutlookConfigData:
         return OutlookConfigData(
             assessment_button=assessment_button,
@@ -56,4 +58,5 @@ class OutlookLocalizedConfigFactory:
             incident_button_text='Report an Incident',
             language='en',
             subtext='',
+            completion_report_custom_text='',
         )
