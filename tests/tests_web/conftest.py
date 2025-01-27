@@ -144,6 +144,7 @@ def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
         sign_in_page.navigate(admin=user.is_admin)
         sign_in_page.submit_sign_in_form(user)
         cookies = sign_in_page.page.context.cookies()
+        Log.info(f'{cookies=}')
         os.environ[refresh_token] = cookies[0]['value']
         os.environ[session] = cookies[1]['value']
         os.environ[token] = cookies[2]['value']
