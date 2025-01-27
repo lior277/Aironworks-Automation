@@ -117,15 +117,21 @@ def sign_in_page(playwright_config) -> SignInPage:
     return SignInPage(page)
 
 
+def get_cookie_value(cookies, name):
+    for cookie in cookies:
+        if cookie['name'] == name:
+            return cookie['value']
+    raise ValueError(f'Cookie with name {name} not found')
+
+
 @pytest.fixture(scope='function')
 def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
     refresh_token = f'{user.email}_refresh_token'
-    session = f'{user.email}_session'
     token = f'{user.email}_token'
     if os.getenv(refresh_token):
         sign_in_page.page.set_extra_http_headers(
             {
-                'Cookie': f'refresh_token={os.environ[refresh_token]}; session={os.environ[session]};token={os.environ[token]}'
+                'Cookie': f'refresh_token={os.environ[refresh_token]}; token={os.environ[token]}'
             }
         )
         response = sign_in_page.navigate(admin=user.is_admin)
@@ -145,9 +151,8 @@ def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
         sign_in_page.submit_sign_in_form(user)
         cookies = sign_in_page.page.context.cookies()
         Log.info(f'{cookies=}')
-        os.environ[refresh_token] = cookies[0]['value']
-        os.environ[session] = cookies[1]['value']
-        os.environ[token] = cookies[2]['value']
+        os.environ[refresh_token] = get_cookie_value(cookies, 'refresh_token')
+        os.environ[token] = get_cookie_value(cookies, 'token')
     return DashboardPage(sign_in_page.page)
 
 
