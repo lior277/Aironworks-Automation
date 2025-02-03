@@ -10,11 +10,14 @@ from src.page_objects.data_types.table_element import Table
 class CampaignDetailsPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.export_csv_button = self.page.get_by_role('button', name='Export CSV')
+        # self.export_csv_button = self.page.get_by_role('button', name='Export CSV')
+        self.summary_export_csv_button = self.page.get_by_role(
+            'heading', name='Campaign Attacks Summary'
+        ).locator('..//button[text()="Export CSV"]')
         self.url = self.default_url + 'admin/dashboard/attacks/executions/'
         self.table_campaign_attacks_summary = Table(
             page.locator(
-                '//div[contains(@class,"MuiDataGrid-row")]', has_not_text='Preview'
+                '//button[text()="Preview"]//ancestor::div[contains(@class,"MuiDataGrid-pinnedColumns")]/preceding-sibling::div//div[@role="row"]'
             ),
             CampaignAttacksSummary,
         )
@@ -24,8 +27,8 @@ class CampaignDetailsPage(BasePage):
     )
     def open(self, campaign_id: str):
         self.page.goto(self.url + campaign_id)
-        expect(self.export_csv_button).to_be_visible()
-        self.export_csv_button.scroll_into_view_if_needed()
+        expect(self.summary_export_csv_button).to_be_visible()
+        self.summary_export_csv_button.scroll_into_view_if_needed()
         self.wait_for_progress_bar_disappears()
         self.wait_for_loading_state()
         return self
@@ -34,7 +37,7 @@ class CampaignDetailsPage(BasePage):
     def export_csv(self):
         path = tempfile.mktemp(suffix='.csv')
         with self.page.expect_download() as download_info:
-            self.export_csv_button.click()
+            self.summary_export_csv_button.click()
         download_event = download_info.value
         download_event.save_as(path)
         return path
