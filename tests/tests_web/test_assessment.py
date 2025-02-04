@@ -1,5 +1,6 @@
 import random
 import re
+from base64 import b64encode
 
 import allure
 import pytest
@@ -20,10 +21,21 @@ def test_report_can_be_resolved(
     user, api_request_context_addin, employee_reports_page, mailtrap
 ):
     message = 'Test Mail E2E Test ' + str(random.randint(100000000, 999999999))
+    mail_content = b64encode(
+        f"""From: Random Mail <random@mail.com>
+Subject: {message}
+Content-Type: multipart/alternative;
+	boundary=mk3-e46c63ea11ba4304848685bb456f01b2; charset=UTF-8
+
+--mk3-e46c63ea11ba4304848685bb456f01b2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+{message}
+""".encode()
+    ).decode('utf-8')
     assessment_service = api.assessment(api_request_context_addin)
-    response = assessment_service.assessment_report(
-        message, 'random@mail.com', subject=message
-    )
+    response = assessment_service.assessment(mail_content)
     expect(response).to_be_ok()
 
     assert 'id' in response.json()
