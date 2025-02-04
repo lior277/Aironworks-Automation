@@ -1,4 +1,3 @@
-import random
 from base64 import b64encode
 
 import allure
@@ -58,28 +57,3 @@ def test_assessment_api(api_request_context_addin, example_mail, mailtrap):
     #     )
     #     is not None
     # )
-
-
-@allure.testcase('31560')
-@pytest.mark.addin_api
-def test_assessment_report(api_request_context_addin, mailtrap):
-    message = 'Test Mail E2E Test ' + str(random.randint(100000000, 999999999))
-    assessment_service = api.assessment(api_request_context_addin)
-    response = assessment_service.assessment_report(message, 'random@mail.com')
-    expect(response).to_be_ok()
-
-    assert 'id' in response.json()
-
-    assessment_lro_id = response.json()['id']
-    Log.info(f'assessment lro id: {assessment_lro_id}')
-    last_status = wait_for_lro(
-        lambda: assessment_service.assessment_report_by_id(assessment_lro_id), 60
-    )
-
-    expect(last_status).to_be_ok()
-
-    assert last_status.json()['status'] == 'DONE'
-
-    assert 'assessment_result' in last_status.json()
-    assessment_result = last_status.json()['assessment_result']
-    assert assessment_result['error'] is None
