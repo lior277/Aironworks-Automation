@@ -211,10 +211,7 @@ upload_to_s3:
         CURRENT_CONTENT_PATH: $ENV/$CI_PIPELINE_ID
         ENV_NAME: $ENV
   script:
-   - aws s3 sync public/$CURRENT_CONTENT_PATH/ s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH
-  dependencies:
-   - pages
-   - run-tests
+   - aws s3 sync ./allure-report/ s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH
   variables:
    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
