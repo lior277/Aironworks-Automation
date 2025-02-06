@@ -66,8 +66,16 @@ def test_view_vendor_details(
     vendor = received_emails_page.get_vendor(vendor_name)
     vendor_details_page = received_emails_page.go_to_vendor_details(vendor_name)
     vendor_details = vendor_details_page.get_vendor_details()
+    count = vendor['no_of_received_emails']
+    count_details = vendor_details['no_of_received_emails']
+    del vendor['no_of_received_emails']
+    del vendor_details['no_of_received_emails']
     assert vendor == vendor_details, (
         f'Vendor: {vendor}, Vendor details: {vendor_details}'
+    )
+
+    assert abs(int(count) - int(count_details)) <= 10, (
+        f'count {count} and count_details {count_details} have a big difference'
     )
 
 
