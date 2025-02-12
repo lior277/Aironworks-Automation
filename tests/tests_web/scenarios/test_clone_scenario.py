@@ -23,6 +23,13 @@ fake = faker.Faker()
             marks=allure.testcase('31492'),
         ),
         pytest.param(
+            UserModelFactory.encrypted_customer_admin(),
+            ScenarioModelFactory.scenario(),
+            ScenarioCloneMode.NEW_BODY,
+            id='test clone scenario with editing encrypted customer admin',
+            marks=allure.testcase('31492'),
+        ),
+        pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(),
             ScenarioCloneMode.NEW_BODY,

@@ -95,6 +95,16 @@ class TestUploadEmployees:
                 False,
                 marks=allure.testcase('31662'),
             ),
+            pytest.param(
+                UserModelFactory.encrypted_customer_admin(),
+                True,
+                marks=allure.testcase('31665'),
+            ),
+            pytest.param(
+                UserModelFactory.encrypted_customer_admin(),
+                False,
+                marks=allure.testcase('31662'),
+            ),
         ],
     )
     def test_upload_employees_with_updated_csv_example_file(
