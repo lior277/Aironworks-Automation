@@ -27,6 +27,15 @@ class UserModelFactory:
         )
 
     @staticmethod
+    def encrypted_customer_admin() -> UserModel:
+        return UserModel(
+            email=AppConfigs.ENCRYPTED_CUSTOMER_ADMIN_USERNAME,
+            password=AppConfigs.ENCRYPTED_CUSTOMER_ADMIN_PASSWORD,
+            company=AppConfigs.ENCRYPTED_COMPANY_NAME,
+            is_admin=False,
+        )
+
+    @staticmethod
     def group_admin() -> UserModel:
         return UserModel(
             email=AppConfigs.GROUP_ADMIN_USERNAME,

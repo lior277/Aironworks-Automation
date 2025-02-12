@@ -22,6 +22,12 @@ from src.page_objects.scenarios_page import ScenariosPage
             marks=allure.testcase('31490'),
         ),
         pytest.param(
+            UserModelFactory.encrypted_customer_admin(),
+            ScenarioModelFactory.scenario(),
+            id='test create scenario customer admin',
+            marks=allure.testcase('31490'),
+        ),
+        pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(
                 target_details=TargetDetails(target_type=TargetType.EMPLOYEE)
@@ -73,6 +79,12 @@ def test_create_scenario(
     [
         pytest.param(
             UserModelFactory.customer_admin(),
+            ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_APPLE),
+            id='test create Apple data entry scenario customer admin',
+            marks=allure.testcase('31772'),
+        ),
+        pytest.param(
+            UserModelFactory.encrypted_customer_admin(),
             ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_APPLE),
             id='test create Apple data entry scenario customer admin',
             marks=allure.testcase('31772'),
@@ -134,6 +146,16 @@ def test_create_data_entry_scenario(
             marks=allure.testcase('31783'),
         ),
         pytest.param(
+            UserModelFactory.encrypted_customer_admin(),
+            ScenarioModelFactory.scenario(
+                html_content=None,
+                campaign_type=CampaignType.ATTACHMENT,
+                file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.pdf'),
+            ),
+            id='test create attachment scenario customer admin',
+            marks=allure.testcase('31783'),
+        ),
+        pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(
                 html_content=None,
@@ -157,6 +179,15 @@ def test_create_attachment_scenario(
     [
         pytest.param(
             UserModelFactory.customer_admin(),
+            ScenarioModelFactory.scenario(
+                campaign_type=CampaignType.ATTACHMENT,
+                file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.txt'),
+            ),
+            id='test create attachment scenario customer admin',
+            marks=allure.testcase('31784'),
+        ),
+        pytest.param(
+            UserModelFactory.encrypted_customer_admin(),
             ScenarioModelFactory.scenario(
                 campaign_type=CampaignType.ATTACHMENT,
                 file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.txt'),
