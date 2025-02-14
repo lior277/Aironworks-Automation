@@ -1,3 +1,5 @@
+import os
+
 import allure
 import faker
 import pytest
@@ -27,7 +29,12 @@ fake = faker.Faker()
             ScenarioModelFactory.scenario(),
             ScenarioCloneMode.NEW_BODY,
             id='test clone scenario with editing encrypted customer admin',
-            marks=allure.testcase('31492'),
+            marks=[
+                allure.testcase('31492'),
+                pytest.mark.skipif(
+                    os.getenv('ENV') != 'staging', reason='Staging only'
+                ),
+            ],
         ),
         pytest.param(
             UserModelFactory.aw_admin(),

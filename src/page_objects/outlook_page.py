@@ -5,6 +5,7 @@ from time import sleep
 
 import allure
 import pyotp
+from playwright._impl._errors import TargetClosedError
 from playwright.sync_api import Page, expect
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
@@ -43,17 +44,29 @@ class OutlookPage:
         self.search_mail_input = self.page.locator('//input[@id="topSearchInput"]')
         self.search_button = self.page.get_by_role('button', name='Search', exact=True)
 
+    @allure.step('OutlookPage: go to outlook')
+    def go_to_outlook(self):
+        self.page.goto('https://outlook.office.com/mail/')
+
     @allure.step('OutlookPage: login to outlook')
     def login(self):
-        self.page.goto('https://outlook.office.com/mail/')
         self.page.fill('[name="loginfmt"]', AppConfigs.MSLIVE_USER)
         self.page.click('[type="submit"]')
 
         self.page.fill('input[type="password"]', AppConfigs.MSLIVE_PWD)
         self.page.locator('[data-report-event="Signin_Submit"]').click()
         self.page.locator('[type="submit"]').click()
-        if self.page.locator('input[type="tel"]').is_visible(timeout=10000):
-            self.verify_login()
+        try:
+            self.page.wait_for_selector(
+                'input[type="tel"]', timeout=10000, strict=False
+            )
+            if self.page.locator('input[type="tel"]').is_visible(timeout=10000):
+                self.verify_login()
+        except (TargetClosedError, PlaywrightTimeoutError):
+            print('No verification code needed. Proceeding...')
+
+    @allure.step('OutlookPage: navigate to inbox')
+    def navigate_to_inbox(self):
         self.page.locator(
             '[aria-labelledby="favoritesRoot"] [data-folder-name="inbox"]'
         ).click()

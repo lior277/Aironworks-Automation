@@ -25,7 +25,12 @@ from src.page_objects.scenarios_page import ScenariosPage
             UserModelFactory.encrypted_customer_admin(),
             ScenarioModelFactory.scenario(),
             id='test create scenario customer admin',
-            marks=allure.testcase('31490'),
+            marks=[
+                allure.testcase('31490'),
+                pytest.mark.skipif(
+                    os.getenv('ENV') != 'staging', reason='Staging only'
+                ),
+            ],
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -87,7 +92,12 @@ def test_create_scenario(
             UserModelFactory.encrypted_customer_admin(),
             ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_APPLE),
             id='test create Apple data entry scenario customer admin',
-            marks=allure.testcase('31772'),
+            marks=[
+                allure.testcase('31772'),
+                pytest.mark.skipif(
+                    os.getenv('ENV') != 'staging', reason='Staging only'
+                ),
+            ],
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -153,7 +163,12 @@ def test_create_data_entry_scenario(
                 file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.pdf'),
             ),
             id='test create attachment scenario customer admin',
-            marks=allure.testcase('31783'),
+            marks=[
+                allure.testcase('31783'),
+                pytest.mark.skipif(
+                    os.getenv('ENV') != 'staging', reason='Staging only'
+                ),
+            ],
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
@@ -193,7 +208,12 @@ def test_create_attachment_scenario(
                 file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.txt'),
             ),
             id='test create attachment scenario customer admin',
-            marks=allure.testcase('31784'),
+            marks=[
+                allure.testcase('31784'),
+                pytest.mark.skipif(
+                    os.getenv('ENV') != 'staging', reason='Staging only'
+                ),
+            ],
         ),
         pytest.param(
             UserModelFactory.aw_admin(),

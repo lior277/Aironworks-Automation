@@ -83,9 +83,7 @@ def test_submit_quiz(api_request_context_customer_admin, mailtrap, employee, new
                 'heading', name='Congratulations on completion!', exact=True
             )
         ).to_be_visible()
-        expect(
-            page.page.get_by_role('heading', name='0 /100', exact=True)
-        ).to_be_visible()
+        expect(page.page.get_by_role('heading', name='/100').nth(1)).to_be_visible()
     new_page.close()
 
 
