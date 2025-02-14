@@ -25,6 +25,7 @@ class AppConfigs:
     _env_config = get_env_config(ENV)
 
     BASE_URL = _env_config['base_url']
+    EMPLOYEE_BASE_URL = _env_config['employee_base_url']
     ADMIN_BASE_URL = _env_config['admin_base_url']
     ADDIN_BASE_URL = _env_config['addin_base_url']
     ADDIN_NAME = _env_config['addin_name']

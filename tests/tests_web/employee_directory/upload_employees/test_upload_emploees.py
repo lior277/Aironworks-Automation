@@ -98,12 +98,22 @@ class TestUploadEmployees:
             pytest.param(
                 UserModelFactory.encrypted_customer_admin(),
                 True,
-                marks=allure.testcase('31665'),
+                marks=[
+                    allure.testcase('31665'),
+                    pytest.mark.skipif(
+                        os.getenv('ENV') != 'staging', reason='Staging only'
+                    ),
+                ],
             ),
             pytest.param(
                 UserModelFactory.encrypted_customer_admin(),
                 False,
-                marks=allure.testcase('31662'),
+                marks=[
+                    allure.testcase('31662'),
+                    pytest.mark.skipif(
+                        os.getenv('ENV') != 'staging', reason='Staging only'
+                    ),
+                ],
             ),
         ],
     )

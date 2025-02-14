@@ -25,6 +25,9 @@ from src.page_objects.email_filter.email_filter_settings_page import (
 )
 from src.page_objects.email_filter.email_statistics_page import EmailStatisticsPage
 from src.page_objects.email_filter.received_emails_page import ReceivedEmailsPage
+from src.page_objects.employee_dashboard.employee_dashboard_page import (
+    EmployeeDashboardPage,
+)
 from src.page_objects.employee_directory.add_admin_page import AddAdminPage
 from src.page_objects.employee_directory.employee_directory_page import (
     EmployeeDirectoryPage,
@@ -104,7 +107,9 @@ def outlook_page(playwright_config) -> OutlookPage:
     page: Page = playwright_config[1].new_page()
 
     outlook_page = OutlookPage(page)
+    outlook_page.go_to_outlook()
     outlook_page.login()
+    outlook_page.navigate_to_inbox()
 
     return outlook_page
 
@@ -154,6 +159,18 @@ def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
         os.environ[refresh_token] = get_cookie_value(cookies, 'refresh_token')
         os.environ[token] = get_cookie_value(cookies, 'token')
     return DashboardPage(sign_in_page.page)
+
+
+@pytest.fixture(scope='function')
+def employee_dashboard_page(
+    sign_in_page: SignInPage, user: UserModel
+) -> EmployeeDashboardPage:
+    sign_in_page.navigate_to_employee_sign_in_page()
+    with sign_in_page.page.expect_popup() as popup_info:
+        sign_in_page.login_with_microsoft()
+    outlook_page = OutlookPage(popup_info.value)
+    outlook_page.login()
+    return EmployeeDashboardPage(sign_in_page.page)
 
 
 @pytest.fixture(scope='function')
