@@ -1,5 +1,6 @@
 {
   "base_url": "https://app.aironworks.com/",
+  "employee_base_url": "https://employee.aironworks.com/",
   "admin_base_url": "https://35e25956259136c9.aironworks.com/",
   "addin_base_url": "https://outlookaddin.aironworks.com",
   "addin_name": "PhishDetectAI",
