@@ -70,6 +70,7 @@ def test_assessment_outlook(outlook_page):
     expect(
         outlook_page.app_frame.get_by_text('The email was sent to your')
     ).to_be_visible(timeout=60 * 1000)
+    outlook_page.provide_feedback()
 
 
 @allure.testcase('5847')

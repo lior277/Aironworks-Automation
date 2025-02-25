@@ -24,6 +24,20 @@ class OutlookPage:
         self.perform_assessment_button = self.app_frame.get_by_role(
             'button', name='Perform AI Risk Assessment'
         )
+        self.provide_feedback_button = self.app_frame.get_by_role(
+            'link', name='Provide Feedback'
+        ).locator('..')
+        self.accurate_option = self.app_frame.locator(
+            "input[type='radio'][value='NEUTRAL']"
+        ).locator('..')
+        self.neutral_option = self.app_frame.locator(
+            "input[type='radio'][value='NEUTRAL']"
+        ).locator('..')
+        self.poor_option = self.app_frame.locator("input[type='radio'][value='POOR']")
+        self.reason_textbox = self.app_frame.get_by_role('textbox')
+        self.back_button = self.app_frame.get_by_role('button', name='Back')
+        self.submit_button = self.app_frame.get_by_role('button', name='Submit')
+
         self.report_incident_button = self.app_frame.get_by_role(
             'button', name='Report an Incident'
         )
@@ -120,3 +134,16 @@ class OutlookPage:
         # Generate Random description
         self.report_description.fill(random_description)
         self.report_incident_submit_button.click()
+
+    @allure.step('OutlookPage: provide feedback')
+    def provide_feedback(self):
+        self.provide_feedback_button.click()
+        expect(self.neutral_option).to_be_visible()
+        self.neutral_option.click()
+        self.reason_textbox.fill('Test Reason')
+        self.submit_button.click()
+        expect(
+            self.app_frame.locator(
+                "//p[@class='MuiTypography-root MuiTypography-body1 css-1q0t4ms']"
+            )
+        ).to_have_text('Thank you')
