@@ -2,6 +2,7 @@ import allure
 
 from .base_page import BasePage
 from .employee_table_component import EmployeeTableComponent
+from .warning_page import WarningPage
 
 
 class ExecuteCampaignPage(BasePage):
@@ -36,3 +37,8 @@ class ExecuteCampaignPage(BasePage):
         if completion_time:
             self.completion_date.fill(completion_time)
         return self
+
+    @allure.step('ExecuteCampaignPage: go to employeee campaign warnign page')
+    def go_to_employee_campaign_warning_page(self, url: str):
+        self.page.goto(url)
+        return WarningPage(self.page)
