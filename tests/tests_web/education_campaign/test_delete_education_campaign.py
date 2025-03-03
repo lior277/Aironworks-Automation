@@ -19,6 +19,10 @@ class TestDeleteEducationCampaign:
             pytest.param(
                 UserModelFactory.customer_admin(), marks=allure.testcase('31625')
             ),
+            pytest.param(UserModelFactory.aw_admin(), marks=allure.testcase('31628')),
+            pytest.param(
+                UserModelFactory.customer_admin(), marks=allure.testcase('31625')
+            ),
         ],
     )
     def test_delete_education_campaign(

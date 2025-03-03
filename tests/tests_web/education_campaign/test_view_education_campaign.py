@@ -16,6 +16,8 @@ from src.page_objects.entity.education_campaign_entity import EducationCampaignF
     [
         pytest.param(UserModelFactory.aw_admin(), marks=allure.testcase('31525')),
         pytest.param(UserModelFactory.customer_admin(), marks=allure.testcase('31526')),
+        pytest.param(UserModelFactory.aw_admin(), marks=allure.testcase('31525')),
+        pytest.param(UserModelFactory.customer_admin(), marks=allure.testcase('31526')),
     ],
 )
 def test_view_education_campaign(
