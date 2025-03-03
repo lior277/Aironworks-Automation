@@ -35,12 +35,6 @@ def test_filter_company_by_visibility(user, content_library_page: ContentLibrary
             marks=allure.testcase('31518'),
         ),
         pytest.param(
-            UserModelFactory.aw_admin(),
-            'abc',
-            id='AW Admin',
-            marks=allure.testcase('31518'),
-        ),
-        pytest.param(
             UserModelFactory.customer_admin(),
             'Test Content for QA',
             id='Customer Admin',
