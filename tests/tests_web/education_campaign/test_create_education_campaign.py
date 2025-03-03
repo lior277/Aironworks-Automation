@@ -17,6 +17,10 @@ class TestCreateVideoEducationCampaign:
             pytest.param(
                 UserModelFactory.customer_admin(), marks=allure.testcase('31521')
             ),
+            pytest.param(UserModelFactory.aw_admin(), marks=allure.testcase('31522')),
+            pytest.param(
+                UserModelFactory.customer_admin(), marks=allure.testcase('31521')
+            ),
         ],
     )
     def test_create_education_campaign(

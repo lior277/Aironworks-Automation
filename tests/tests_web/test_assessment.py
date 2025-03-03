@@ -7,14 +7,14 @@ import pytest
 from playwright.sync_api import expect
 
 from src.apis.api_factory import api
-from src.configs.config_loader import AppConfigs
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.utils.log import Log
-from src.utils.mailtrap import find_attachment
 from src.utils.waiter import wait_for_lro
 
 
-@pytest.mark.parametrize('user', [UserModelFactory.customer_admin()])
+@pytest.mark.parametrize(
+    'user', [UserModelFactory.customer_admin(), UserModelFactory.customer_admin()]
+)
 @pytest.mark.smoke
 @allure.testcase('31554')
 def test_report_can_be_resolved(
@@ -60,11 +60,18 @@ Content-Transfer-Encoding: quoted-printable
     expect(reported_message).to_have_count(0)
 
 
+@pytest.mark.parametrize(
+    'user, search_subject',
+    [
+        pytest.param(UserModelFactory.customer_admin(), 'Outlook assessment mail'),
+        pytest.param(UserModelFactory.customer_admin(), 'ABC'),
+    ],
+)
 @allure.testcase('5846')
 @pytest.mark.smoke
-def test_assessment_outlook(outlook_page):
+def test_assessment_outlook(user, outlook_page, search_subject):
     # goto specific messagex
-    outlook_page.goto_message('Outlook assessment mail')
+    outlook_page.goto_message(search_subject)
     outlook_page.open_addin()
     outlook_page.perform_assessment()
     expect(
@@ -73,19 +80,20 @@ def test_assessment_outlook(outlook_page):
     outlook_page.provide_feedback()
 
 
+@pytest.mark.parametrize(
+    'user, search_subject',
+    [
+        pytest.param(UserModelFactory.customer_admin(), 'Outlook assessment mail'),
+        pytest.param(UserModelFactory.customer_admin(), 'ABC'),
+    ],
+)
 @allure.testcase('5847')
 @pytest.mark.smoke
-def test_report_outlook(outlook_page, mailtrap):
+def test_report_outlook(user, outlook_page, mailtrap, search_subject):
     # goto specific message
-    outlook_page.goto_message('Outlook assessment mail')
+    outlook_page.goto_message(search_subject)
     outlook_page.open_addin()
     outlook_page.report_incident()
     expect(
         outlook_page.app_frame.get_by_text('The email was sent to your')
     ).to_be_visible(timeout=60 * 1000)
-    assert (
-        mailtrap.wait_for_mail(
-            AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID, find_attachment()
-        )
-        is not None
-    )

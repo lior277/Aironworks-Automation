@@ -24,6 +24,16 @@ from src.models.factories.email_filter.email_domain_model_factory import (
             EmailDomainModelFactory.get_random_email_domain_with_empty_email(),
             marks=allure.testcase('C31831'),
         ),
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            EmailDomainModelFactory.get_random_email_domain_with_empty_domain(),
+            marks=allure.testcase('C31803'),
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            EmailDomainModelFactory.get_random_email_domain_with_empty_email(),
+            marks=allure.testcase('C31831'),
+        ),
     ],
 )
 def test_add_to_block_list(
@@ -43,6 +53,16 @@ def test_add_to_block_list(
 @pytest.mark.parametrize(
     'user, email_domain',
     [
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            EmailDomainModelFactory.get_random_email_domain_with_empty_domain(),
+            marks=allure.testcase('C31822'),
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin_email_filter(),
+            EmailDomainModelFactory.get_random_email_domain_with_empty_email(),
+            marks=allure.testcase('C31830'),
+        ),
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             EmailDomainModelFactory.get_random_email_domain_with_empty_domain(),

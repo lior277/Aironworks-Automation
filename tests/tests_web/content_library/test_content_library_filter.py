@@ -9,7 +9,14 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
 
 
-@pytest.mark.parametrize('user', [UserModelFactory.aw_admin()])
+@pytest.mark.parametrize(
+    'user',
+    [
+        UserModelFactory.aw_admin(),
+        UserModelFactory.aw_admin(),
+        UserModelFactory.aw_admin(),
+    ],
+)
 @allure.testcase('31520')
 @pytest.mark.smoke
 def test_filter_company_by_visibility(user, content_library_page: ContentLibraryPage):
@@ -19,13 +26,29 @@ def test_filter_company_by_visibility(user, content_library_page: ContentLibrary
 
 
 @pytest.mark.parametrize(
-    'user',
+    'user, filter_name',
     [
         pytest.param(
-            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31518')
+            UserModelFactory.aw_admin(),
+            'Test Content for QA',
+            id='AW Admin',
+            marks=allure.testcase('31518'),
+        ),
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            'abc',
+            id='AW Admin',
+            marks=allure.testcase('31518'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
+            'Test Content for QA',
+            id='Customer Admin',
+            marks=allure.testcase('31519'),
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            'abc',
             id='Customer Admin',
             marks=allure.testcase('31519'),
         ),
@@ -33,12 +56,12 @@ def test_filter_company_by_visibility(user, content_library_page: ContentLibrary
 )
 @pytest.mark.smoke
 def test_filter_company_by_name(
-    user: UserModel, content_library_page: ContentLibraryPage
+    user: UserModel, content_library_page: ContentLibraryPage, filter_name
 ):
-    content_library_page.set_name_filter('Test Content for QA')
+    content_library_page.set_name_filter(filter_name)
 
     expect(content_library_page.cards).to_have_count(1)
-    expect(content_library_page.cards.first).to_contain_text('Test Content for QA')
+    expect(content_library_page.cards.first).to_contain_text(filter_name)
 
 
 @pytest.mark.parametrize(
