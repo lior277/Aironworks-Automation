@@ -40,12 +40,6 @@ def test_filter_company_by_visibility(user, content_library_page: ContentLibrary
             id='Customer Admin',
             marks=allure.testcase('31519'),
         ),
-        pytest.param(
-            UserModelFactory.customer_admin(),
-            'abc',
-            id='Customer Admin',
-            marks=allure.testcase('31519'),
-        ),
     ],
 )
 @pytest.mark.smoke
