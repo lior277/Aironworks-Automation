@@ -73,6 +73,7 @@ run-tests:
     - saas-linux-large-amd64
   script: |
     EXIT=0
+    playwright install
     pipenv run ruff check .
     pipenv run ruff format --check .
     pipenv run pytest -vv -n $TEST_PARALLELISM -m "not delivered_emails and not prepare_data" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
