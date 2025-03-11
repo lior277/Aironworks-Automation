@@ -175,3 +175,5 @@ class AppConfigs:
     MSLIVE_USER = os.getenv('MSLIVE_USER')
     MSLIVE_PWD = os.getenv('MSLIVE_PWD')
     MSLIVE_TOTP = os.getenv('MSLIVE_TOTP')
+    MSLIVE_SHARED_USER = os.getenv('MSLIVE_SHARED_USER')
+    SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')

@@ -1,4 +1,5 @@
 import tempfile
+import time
 
 import allure
 from playwright.sync_api import Locator, Page, expect
@@ -129,6 +130,8 @@ class EmployeeDirectoryPage(BasePage):
         download_event = download_info.value
         download_event.save_as(path)
         Log.info(f'{path=}')
+        self.page.keyboard.press('Escape')
+        time.sleep(1)
         return path
 
     @allure.step('EmployeeDirectoryPage: filter employee by {email} email')
