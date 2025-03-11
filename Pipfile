@@ -26,6 +26,7 @@ ruff = "*"
 pre-commit = "*"
 boto3 = "*"
 pymupdf = "*"
+sendgrid = "*"
 
 [dev-packages]
 

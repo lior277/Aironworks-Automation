@@ -46,6 +46,7 @@ from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_general_
 from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.training_settings.email_sending_page import EmailSendingPage
 from src.utils.log import Log
+from src.utils.sendgrid import SendGrid
 from src.utils.waiter import wait_for
 
 
@@ -102,15 +103,34 @@ def playwright_config(request, launch_browser, browser_type):
     browser.close()
 
 
+def send_random_email(from_email: str):
+    sendgrid = SendGrid(AppConfigs.SENDGRID_API_KEY)
+    subject = sendgrid.send_random_mail(from_email)
+    return subject
+
+
 @pytest.fixture(scope='function')
 def outlook_page(playwright_config) -> OutlookPage:
     page: Page = playwright_config[1].new_page()
-
+    subject = send_random_email(AppConfigs.MSLIVE_USER)
+    print(f'Subject: {subject}')
     outlook_page = OutlookPage(page)
     outlook_page.go_to_outlook()
     outlook_page.login()
     outlook_page.navigate_to_inbox()
+    outlook_page.goto_message(subject)
+    return outlook_page
 
+
+@pytest.fixture(scope='function')
+def outlook_page_shared(playwright_config) -> OutlookPage:
+    page: Page = playwright_config[1].new_page()
+    subject = send_random_email(AppConfigs.MSLIVE_SHARED_USER)
+    outlook_page = OutlookPage(page)
+    outlook_page.go_to_outlook()
+    outlook_page.login()
+    outlook_page.navigate_to_shared_inbox()
+    outlook_page.goto_message(subject)
     return outlook_page
 
 

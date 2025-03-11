@@ -7,8 +7,10 @@ import pytest
 from playwright.sync_api import expect
 
 from src.apis.api_factory import api
+from src.configs.config_loader import AppConfigs
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.utils.log import Log
+from src.utils.mailtrap import find_email
 from src.utils.waiter import wait_for_lro
 
 
@@ -61,39 +63,98 @@ Content-Transfer-Encoding: quoted-printable
 
 
 @pytest.mark.parametrize(
-    'user, search_subject',
+    'user',
     [
-        pytest.param(UserModelFactory.customer_admin(), 'Outlook assessment mail'),
-        pytest.param(UserModelFactory.customer_admin(), 'ABC'),
+        pytest.param(UserModelFactory.customer_admin()),
+        pytest.param(UserModelFactory.customer_admin()),
     ],
 )
 @allure.testcase('5846')
 @pytest.mark.smoke
-def test_assessment_outlook(user, outlook_page, search_subject):
+def test_assessment_outlook(user, outlook_page, mailtrap):
     # goto specific messagex
-    outlook_page.goto_message(search_subject)
     outlook_page.open_addin()
     outlook_page.perform_assessment()
     expect(
         outlook_page.app_frame.get_by_text('The email was sent to your')
     ).to_be_visible(timeout=60 * 1000)
+    mail = mailtrap.wait_for_mail(
+        AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+        find_email('68fa80bce3-28fbb0@inbox.mailtrap.io'),
+        timeout=240,
+    )
+    assert mail is not None, (
+        f'Unable to find email 68fa80bce3-28fbb0@inbox.mailtrap.io please check the mailtrap inbox {AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID}'
+    )
+    assert 'Suspicious Email Report' in mail['subject']
     outlook_page.provide_feedback()
 
 
+@pytest.mark.parametrize('user', [pytest.param(UserModelFactory.customer_admin())])
+@allure.testcase('5846')
+@pytest.mark.smoke
+def test_assessment_outlook_shared(user, outlook_page_shared, mailtrap):
+    # goto specific messagex
+    outlook_page_shared.open_addin()
+    outlook_page_shared.perform_assessment()
+    expect(
+        outlook_page_shared.app_frame.get_by_text('The email was sent to your')
+    ).to_be_visible(timeout=60 * 1000)
+    mail = mailtrap.wait_for_mail(
+        AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+        find_email('68fa80bce3-28fbb0@inbox.mailtrap.io'),
+        timeout=240,
+    )
+    assert mail is not None, (
+        f'Unable to find email 68fa80bce3-28fbb0@inbox.mailtrap.io please check the mailtrap inbox {AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID}'
+    )
+    assert 'Suspicious Email Report' in mail['subject']
+    outlook_page_shared.provide_feedback()
+
+
 @pytest.mark.parametrize(
-    'user, search_subject',
+    'user',
     [
-        pytest.param(UserModelFactory.customer_admin(), 'Outlook assessment mail'),
-        pytest.param(UserModelFactory.customer_admin(), 'ABC'),
+        pytest.param(UserModelFactory.customer_admin()),
+        pytest.param(UserModelFactory.customer_admin()),
     ],
 )
 @allure.testcase('5847')
 @pytest.mark.smoke
-def test_report_outlook(user, outlook_page, mailtrap, search_subject):
+def test_report_outlook(user, outlook_page, mailtrap):
     # goto specific message
-    outlook_page.goto_message(search_subject)
     outlook_page.open_addin()
     outlook_page.report_incident()
     expect(
         outlook_page.app_frame.get_by_text('The email was sent to your')
     ).to_be_visible(timeout=60 * 1000)
+    mail = mailtrap.wait_for_mail(
+        AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+        find_email('68fa80bce3-28fbb0@inbox.mailtrap.io'),
+        timeout=240,
+    )
+    assert mail is not None, (
+        f'Unable to find email 68fa80bce3-28fbb0@inbox.mailtrap.io please check the mailtrap inbox {AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID}'
+    )
+    assert 'Suspicious Email Report' in mail['subject']
+
+
+@pytest.mark.parametrize('user', [pytest.param(UserModelFactory.customer_admin())])
+@allure.testcase('5847')
+@pytest.mark.smoke
+def test_report_outlook_shared(user, outlook_page_shared, mailtrap):
+    # goto specific message
+    outlook_page_shared.open_addin()
+    outlook_page_shared.report_incident()
+    expect(
+        outlook_page_shared.app_frame.get_by_text('The email was sent to your')
+    ).to_be_visible(timeout=60 * 1000)
+    mail = mailtrap.wait_for_mail(
+        AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+        find_email('68fa80bce3-28fbb0@inbox.mailtrap.io'),
+        timeout=240,
+    )
+    assert mail is not None, (
+        f'Unable to find email 68fa80bce3-28fbb0@inbox.mailtrap.io please check the mailtrap inbox {AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID}'
+    )
+    assert 'Suspicious Email Report' in mail['subject']

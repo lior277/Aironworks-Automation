@@ -67,7 +67,7 @@ class GroupsPage(BasePage):
                     get_file_size_error_message(file_path)
                 )
             else:
-                expect(self.loading).to_be_visible()
+                expect(self.uploading_file).to_be_visible()
                 expect(self.upload_groups_component.locator).not_to_be_visible()
 
     @allure.step('GroupsPage: download csv file')

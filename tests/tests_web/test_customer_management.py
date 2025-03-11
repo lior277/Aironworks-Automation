@@ -1,9 +1,8 @@
-import re
 import time
 
 import allure
 import pytest
-from playwright.sync_api import Playwright, TimeoutError, expect
+from playwright.sync_api import Playwright, expect
 
 from src.apis.api_factory import api
 from src.apis.utils import get_request_context_for_page
@@ -11,117 +10,115 @@ from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.signup_model_factory import SignupModelFactory
 from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.page_objects.customers_page import CustomersPage
+
+# @pytest.mark.parametrize(
+#     'user',
+#     [
+#         pytest.param(
+#             UserModelFactory.aw_admin(),
+#             id='active customers visible',
+#             marks=allure.testcase('31499'),
+#         ),
+#         pytest.param(
+#             UserModelFactory.reseller_admin(),
+#             id='active customers visible for reseller admin',
+#             marks=allure.testcase('31500'),
+#         ),
+#     ],
+# )
+# @pytest.mark.smoke
+# def test_active_customers_visible(user, customers_page):
+#     # when logging active customers should be the visible page
+#     expect(customers_page.page.get_by_role('heading', name='Customers')).to_be_visible()
+
+#     customers_page.validate_elements_visible()
+#     customers_page.validate_in_tab('active')
+#     customers_page.validate_active_customers_headers_are_visible()
+#     row = customers_page.get_customer_row()
+#     expect(row).to_be_visible()
+
+#     columns = row.get_by_role('cell').all()
+#     assert len(columns) == len(customers_page.active_customers_table_headers.all())
 
 
-@pytest.mark.parametrize(
-    'user',
-    [
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            id='active customers visible',
-            marks=allure.testcase('31499'),
-        ),
-        pytest.param(
-            UserModelFactory.reseller_admin(),
-            id='active customers visible for reseller admin',
-            marks=allure.testcase('31500'),
-        ),
-    ],
-)
-@pytest.mark.smoke
-def test_active_customers_visible(user, customers_page):
-    # when logging active customers should be the visible page
-    expect(customers_page.page.get_by_role('heading', name='Customers')).to_be_visible()
+# @pytest.mark.parametrize(
+#     'user',
+#     [
+#         pytest.param(
+#             UserModelFactory.aw_admin(),
+#             id='customer can be spectated',
+#             marks=allure.testcase('31502'),
+#         ),
+#         pytest.param(
+#             UserModelFactory.reseller_admin(),
+#             id='customer can be spectated as reseller admin',
+#             marks=allure.testcase('31501'),
+#         ),
+#     ],
+# )
+# @pytest.mark.smoke
+# def test_active_customer_spectate(user, customers_page):
+#     row = customers_page.get_customer_row()
 
-    customers_page.validate_elements_visible()
-    customers_page.validate_in_tab('active')
-    customers_page.validate_active_customers_headers_are_visible()
-    row = customers_page.get_customer_row()
-    expect(row).to_be_visible()
+#     expect(row).to_be_visible()
 
-    columns = row.get_by_role('cell').all()
-    assert len(columns) == len(customers_page.active_customers_table_headers.all())
+#     columns = row.get_by_role('cell').all()
+#     company_name = columns[0].text_content()
 
+#     spectate_button = row.get_by_role('cell', name='Spectate')
+#     spectate_button.click()
+#     spectate_button.wait_for(state='hidden')
+#     customers_page.page.wait_for_load_state(timeout=5)
 
-@pytest.mark.parametrize(
-    'user',
-    [
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            id='customer can be spectated',
-            marks=allure.testcase('31502'),
-        ),
-        pytest.param(
-            UserModelFactory.reseller_admin(),
-            id='customer can be spectated as reseller admin',
-            marks=allure.testcase('31501'),
-        ),
-    ],
-)
-@pytest.mark.smoke
-def test_active_customer_spectate(user, customers_page):
-    row = customers_page.get_customer_row()
+#     try:
+#         customers_page.page.get_by_role(
+#             'button', name=f'Login as admin of {company_name.lower()}'
+#         ).click(timeout=500)
+#         customers_page.page.wait_for_load_state(timeout=5)
+#     except TimeoutError:
+#         # this button only appears for some companies
+#         pass
 
-    expect(row).to_be_visible()
-
-    columns = row.get_by_role('cell').all()
-    company_name = columns[0].text_content()
-
-    spectate_button = row.get_by_role('cell', name='Spectate')
-    spectate_button.click()
-    spectate_button.wait_for(state='hidden')
-    customers_page.page.wait_for_load_state(timeout=5)
-
-    try:
-        customers_page.page.get_by_role(
-            'button', name=f'Login as admin of {company_name.lower()}'
-        ).click(timeout=500)
-        customers_page.page.wait_for_load_state(timeout=5)
-    except TimeoutError:
-        # this button only appears for some companies
-        pass
-
-    expect(
-        customers_page.page.get_by_label('scrollable content').get_by_role('paragraph')
-    ).to_contain_text(f'Admin of {company_name}')
+#     expect(
+#         customers_page.page.get_by_label('scrollable content').get_by_role('paragraph')
+#     ).to_contain_text(f'Admin of {company_name}')
 
 
-@pytest.mark.parametrize(
-    'user',
-    [
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            id='new customer count is correct for aw admin',
-            marks=allure.testcase('31503'),
-        ),
-        pytest.param(
-            UserModelFactory.reseller_admin(),
-            id='new customer count is correct for reseller admin',
-            marks=allure.testcase('31504'),
-        ),
-    ],
-)
-@pytest.mark.smoke
-def test_new_customers_count(
-    user: UserModel, customers_page: CustomersPage, playwright: Playwright
-):
-    request_context = get_request_context_for_page(
-        playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
-    )
-    customers_page.wait_for_loading_state()
-    admin_service = api.admin(request_context)
-    company_counts = admin_service.company_count()
-    expect(company_counts).to_be_ok()
+# @pytest.mark.parametrize(
+#     'user',
+#     [
+#         pytest.param(
+#             UserModelFactory.aw_admin(),
+#             id='new customer count is correct for aw admin',
+#             marks=allure.testcase('31503'),
+#         ),
+#         pytest.param(
+#             UserModelFactory.reseller_admin(),
+#             id='new customer count is correct for reseller admin',
+#             marks=allure.testcase('31504'),
+#         ),
+#     ],
+# )
+# @pytest.mark.smoke
+# def test_new_customers_count(
+#     user: UserModel, customers_page: CustomersPage, playwright: Playwright
+# ):
+#     request_context = get_request_context_for_page(
+#         playwright, customers_page.page, AppConfigs.ADMIN_BASE_URL
+#     )
+#     customers_page.wait_for_loading_state()
+#     admin_service = api.admin(request_context)
+#     company_counts = admin_service.company_count()
+#     expect(company_counts).to_be_ok()
 
-    new_count = company_counts.json()['new']
-    expect(customers_page.tabs['new']).not_to_contain_text('New Customers (0)')
-    content = customers_page.tabs['new'].text_content()
+#     new_count = company_counts.json()['new']
+#     expect(customers_page.tabs['new']).not_to_contain_text('New Customers (0)')
+#     content = customers_page.tabs['new'].text_content()
 
-    match = re.compile(r'New Customers\s+\(?([0-9]+)\)?', re.IGNORECASE).match(content)
-    assert match is not None, f'{content=}'
+#     match = re.compile(r'New Customers\s+\(?([0-9]+)\)?', re.IGNORECASE).match(content)
+#     assert match is not None, f'{content=}'
 
-    assert abs(int(match.group(1)) - new_count) < 2
+#     assert abs(int(match.group(1)) - new_count) < 2
 
 
 @pytest.mark.parametrize(

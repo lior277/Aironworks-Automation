@@ -63,11 +63,11 @@ class OutlookPage:
         self.page.goto('https://outlook.office.com/mail/')
 
     @allure.step('OutlookPage: login to outlook')
-    def login(self):
-        self.page.fill('[name="loginfmt"]', AppConfigs.MSLIVE_USER)
+    def login(self, user=AppConfigs.MSLIVE_USER, pwd=AppConfigs.MSLIVE_PWD):
+        self.page.fill('[name="loginfmt"]', user)
         self.page.click('[type="submit"]')
 
-        self.page.fill('input[type="password"]', AppConfigs.MSLIVE_PWD)
+        self.page.fill('input[type="password"]', pwd)
         self.page.locator('[data-report-event="Signin_Submit"]').click()
         self.page.locator('[type="submit"]').click()
         try:
@@ -84,6 +84,13 @@ class OutlookPage:
         self.page.locator(
             '[aria-labelledby="favoritesRoot"] [data-folder-name="inbox"]'
         ).click()
+
+    @allure.step('OutlookPage: navigate to shared inbox')
+    def navigate_to_shared_inbox(self):
+        self.page.get_by_role('treeitem', name=AppConfigs.MSLIVE_SHARED_USER).click()
+        self.page.get_by_role('treeitem', name=AppConfigs.MSLIVE_SHARED_USER).locator(
+            '../..'
+        ).get_by_role('treeitem', name='Inbox').click()
 
     def verify_login(self):
         totp = pyotp.TOTP(AppConfigs.MSLIVE_TOTP)

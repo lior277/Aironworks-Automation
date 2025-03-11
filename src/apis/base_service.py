@@ -60,7 +60,9 @@ class BaseService:
         response = self.__request(
             method='POST', url_or_request=PSApi.REFRESH_TOKEN.get_endpoint()
         )
-        if response.status != 200:
+        if response.status != 200 and response.status != 202:
+            print('Response:', response.status)
+            print('Response body:', response.body())
             raise Exception('Failed to refresh token')
 
     def _post(
