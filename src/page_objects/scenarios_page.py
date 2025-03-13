@@ -15,6 +15,7 @@ from src.page_objects.const import (
 )
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.execute_campaign_page import ExecuteCampaignPage
+from src.page_objects.request_ai_scenario_page import RequestAiScenarioPage
 
 
 class ScenariosPage(BasePage):
@@ -24,6 +25,9 @@ class ScenariosPage(BasePage):
             self.page.get_by_label('Choose Edit Mode')
         )
         self.create_scenario_button = page.get_by_role('button', name='Create Scenario')
+        self.request_ai_generated_button = page.get_by_role('button').filter(
+            has_text='Request an AI Generated Scenario'
+        )
         self.visible_tab = page.get_by_role('tab', name='Visible')
         self.hide_scenario = page.get_by_role('button', name='Hide', exact=True)
         self.execute = page.get_by_role('button', name='Create Campaign')
@@ -86,6 +90,11 @@ class ScenariosPage(BasePage):
     def navigate_create_scenario(self):
         self.create_scenario_button.click()
         self.scenario_name.wait_for()
+
+    @allure.step('ScenariosPage: navigate to request AI generated scenario')
+    def navigate_request_ai_generated_scenario(self):
+        self.request_ai_generated_button.click()
+        return RequestAiScenarioPage(self.page)
 
     @allure.step('ScenariosPage: filter by name')
     def filter_by_name(self, name):

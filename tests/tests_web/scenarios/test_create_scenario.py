@@ -232,3 +232,25 @@ def test_create_attachment_scenario_with_unsupported_file_extension(
 ):
     scenarios_page.navigate_create_scenario()
     scenarios_page.select_content_type(scenario)
+
+
+@pytest.mark.smoke
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            id='test create AI generated scenario customer admin',
+            marks=allure.testcase('31786'),
+        )
+    ],
+)
+def test_request_ai_generated_scenario(user: UserModel, scenarios_page: ScenariosPage):
+    request_ai_scenario_page = scenarios_page.navigate_request_ai_generated_scenario()
+    request_ai_scenario_page.generate_scenario(
+        '1', '4 Advanced', 'English', 'Internal', 'Department'
+    )
+    scenarios_page.save_button.click()
+    assert scenarios_page.ensure_alert_message_is_visible(
+        'AI generated scenario is successfully created'
+    )
