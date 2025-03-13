@@ -251,4 +251,4 @@ def test_request_ai_generated_scenario(user: UserModel, scenarios_page: Scenario
         '1', '4 Advanced', 'English', 'Internal', 'Department'
     )
     scenarios_page.save_button.click()
-    assert scenarios_page.ensure_alert_message_is_visible('Created new scenario')
+    scenarios_page.ensure_alert_message_is_visible('Created new scenario')
