@@ -1,5 +1,6 @@
 import random
 import string
+import time
 from datetime import datetime
 from time import sleep
 
@@ -103,6 +104,7 @@ class OutlookPage:
     def goto_message(self, message: str):
         self.search_mail_input.fill(message)
         self.search_button.click()
+        time.sleep(1)
         self.mail_icon.first.click()
 
     @allure.step('OutlookPage: open addin')

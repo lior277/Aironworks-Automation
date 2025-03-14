@@ -33,7 +33,7 @@ def run_education_campaign_on_employee(
 
     assert 'id' in result.json()
     mail = mailtrap.wait_for_mail(
-        AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email)
+        AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email), timeout=120
     )
     return mail
 
