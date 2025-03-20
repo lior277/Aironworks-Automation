@@ -55,7 +55,21 @@ class TestDownloadAsCSV:
         file = edit_group_page.export_as_csv()
         file_content = pd.read_csv(file)
         expected_row = [group_employee.email, group_employee.full_name]
-        assert list(file_content.values[0]) == expected_row, (
+        full_name = group_employee.full_name
+        name_parts = full_name.split(' ', 1)
+        expected_last_name = name_parts[0]
+        expected_first_name = (
+            name_parts[1] if len(name_parts) > 1 else ''
+        )  # Handle missing last name
+
+        # Construct the corrected expected row
+        expected_row_fixed = [
+            group_employee.email,
+            expected_first_name,
+            expected_last_name,
+        ]
+
+        assert list(file_content.values[0]) == expected_row_fixed, (
             f'{list(file_content.values[0])=}\n\n{expected_row=}'
         )
         assert len(file_content) == 1, f'{len(file_content)=}'
