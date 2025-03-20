@@ -22,7 +22,7 @@ from src.page_objects.content_library.content_library_page import ContentLibrary
 def test_filter_company_by_visibility(user, content_library_page: ContentLibraryPage):
     content_library_page.set_visibility_filter('QA Accounts')
 
-    expect(content_library_page.cards).to_have_count(1)
+    expect(content_library_page.cards).to_have_count(2)
 
 
 @pytest.mark.parametrize(

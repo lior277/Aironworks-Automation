@@ -111,7 +111,7 @@ class EmployeeDirectoryPage(BasePage):
                     self.overwrite_existing_button.click()
                 else:
                     self.add_new_employees_only_button.click()
-                expect(self.loading).to_be_visible()
+                expect(self.uploading_file).to_be_visible()
                 expect(self.upload_employees_component.locator).not_to_be_visible(
                     timeout=30000
                 )

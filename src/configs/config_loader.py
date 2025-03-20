@@ -34,6 +34,7 @@ class AppConfigs:
     SCENARIO_PDF_NAME = _env_config['scenario_pdf_name']
     SCENARIO_DOCX_NAME = _env_config['scenario_docx_name']
     EXAMPLE_EDUCATION_CONTENT = _env_config['example_education_content']
+    CLONE_EDUCATION_CONTENT = _env_config['clone_education_content']
     LINKS_DOMAIN = _env_config['links_domain']
     SENDER_DOMAIN = _env_config['sender_domain']
     SAMPLE_CAMPAIGN = _env_config['sample_campaign']
