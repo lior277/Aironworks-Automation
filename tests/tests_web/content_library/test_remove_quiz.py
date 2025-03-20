@@ -3,8 +3,9 @@ import pytest
 from playwright.sync_api import expect
 
 from src.apis.api_factory import api
+from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
-from src.models.education.education_content_model import EducationContentModel, Item
+from src.models.education.education_content_model import Item
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario.clone_education_content_model_factory import (
     CloneEducationContentModelFactory,
@@ -32,23 +33,25 @@ def cloned_education_content(
         else api_request_context_customer_admin
     )
     education = api.education(request_context)
-    response = education.get_content_pagination()
-    expect(response).to_be_ok()
-    content = EducationContentModel.from_dict(response.json())
-    response = education.get_content_pagination(limit=content.total)
-    expect(response).to_be_ok()
-    content = EducationContentModel.from_dict(response.json())
-    out = [
-        item
-        for item in content.items
-        if item.title != 'Test Content for QA'
-        and len(item.parts) > 1
-        and 'QUESTION' != item.parts[0].kind
-        for part in item.parts
-        if 'QUESTION' in part.kind and 'SINGLE' in part.question_type
-    ]
+    # response = education.get_content_pagination()
+    # expect(response).to_be_ok()
+    # content = EducationContentModel.from_dict(response.json())
+    # response = education.get_content_pagination(limit=content.total)
+    # expect(response).to_be_ok()
+    # content = EducationContentModel.from_dict(response.json())
+    # out = [
+    #     item
+    #     for item in content.items
+    #     if item.title != 'Test Content for QA'
+    #     and len(item.parts) > 1
+    #     and 'QUESTION' != item.parts[0].kind
+    #     for part in item.parts
+    #     if 'QUESTION' in part.kind and 'SINGLE' in part.question_type
+    # ]
 
-    response = education.get_education_content_details(out[0].id)
+    response = education.get_education_content_details(
+        AppConfigs.CLONE_EDUCATION_CONTENT
+    )
     expect(response).to_be_ok()
     education_content_details = Item.from_dict(response.json())
     education_content_to_clone = (

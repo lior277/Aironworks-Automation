@@ -43,8 +43,7 @@ class EditGroupPage(BasePage):
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
         )
-        self.export_button = self.page.locator('[aria-label="Export"]')
-        self.download_csv_button = self.page.get_by_text('Download as CSV')
+        self.export_button = self.page.get_by_role('button', name='Export CSV')
 
     @allure.step('EditGroupPage: edit group')
     def edit_group(
@@ -82,7 +81,6 @@ class EditGroupPage(BasePage):
         path = tempfile.mktemp(suffix='.csv')
         with self.page.expect_download() as download_info:
             self.export_button.click()
-            self.download_csv_button.click()
         download_event = download_info.value
         download_event.save_as(path)
         return path
