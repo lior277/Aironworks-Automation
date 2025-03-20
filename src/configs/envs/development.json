@@ -12,6 +12,7 @@
   "scenario_pdf_name": "Scenario PDF",
   "scenario_docx_name": "Scenario Docx",
   "example_education_content": "adfa12a7956d41b68f0debb61c354d7c",
+  "clone_education_content": "adfa12a7956d41b68f0debb61c354d7c",
   "links_domain": "localhost:3001",
   "sender_domain": "moondev.tokyo",
   "sample_campaign": "1a45ab2f154341b4890635ae24087f42",
