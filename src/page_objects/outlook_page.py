@@ -51,6 +51,7 @@ class OutlookPage:
         self.report_incident_cancel_button = self.app_frame.get_by_role(
             'button', name='Cancel'
         )
+        self.close_button = self.app_frame.get_by_role('button', name='Close')
         self.login_button = self.app_frame.get_by_role('button', name='Login')
         self.allow_button = self.app_frame.get_by_role('button', name='Allow')
         self.addin_name_button = self.page.get_by_label(
@@ -143,6 +144,10 @@ class OutlookPage:
         # Generate Random description
         self.report_description.fill(random_description)
         self.report_incident_submit_button.click()
+
+    @allure.step('OutlookPage: close gamification')
+    def close_gamification(self):
+        self.close_button.click()
 
     @allure.step('OutlookPage: provide feedback')
     def provide_feedback(self):
