@@ -68,6 +68,7 @@ Content-Transfer-Encoding: quoted-printable
 def test_assessment_outlook(user, outlook_page, mailtrap):
     # goto specific messagex
     outlook_page.open_addin()
+    outlook_page.check_addin_loaded()
     outlook_page.perform_assessment()
     expect(
         outlook_page.app_frame.get_by_text(
@@ -96,6 +97,7 @@ def test_assessment_outlook(user, outlook_page, mailtrap):
 def test_assessment_outlook_shared(user, outlook_page_shared, mailtrap):
     # goto specific messagex
     outlook_page_shared.open_addin()
+    outlook_page_shared.check_addin_loaded()
     outlook_page_shared.perform_assessment()
     expect(
         outlook_page_shared.app_frame.get_by_text(
@@ -124,6 +126,7 @@ def test_assessment_outlook_shared(user, outlook_page_shared, mailtrap):
 def test_report_outlook(user, outlook_page, mailtrap):
     # goto specific message
     outlook_page.open_addin()
+    outlook_page.check_addin_loaded()
     outlook_page.report_incident()
     expect(
         outlook_page.app_frame.get_by_text('You’ve successfully reported an incident')
@@ -149,6 +152,7 @@ def test_report_outlook(user, outlook_page, mailtrap):
 def test_report_outlook_shared(user, outlook_page_shared, mailtrap):
     # goto specific message
     outlook_page_shared.open_addin()
+    outlook_page_shared.check_addin_loaded()
     outlook_page_shared.report_incident()
     expect(
         outlook_page_shared.app_frame.get_by_text(

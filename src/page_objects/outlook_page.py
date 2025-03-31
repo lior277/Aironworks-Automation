@@ -123,6 +123,17 @@ class OutlookPage:
         except PlaywrightTimeoutError:
             print('Addin already logged in')
 
+    def check_addin_loaded(self):
+        try:
+            self.perform_assessment_button.wait_for(timeout=10000)
+            self.report_incident_button.wait_for(timeout=10000)
+            if self.perform_assessment_button.is_visible(
+                timeout=10000
+            ) and self.report_incident_button.is_visible(timeout=10000):
+                return True
+        except PlaywrightTimeoutError:
+            self.open_addin()
+
     @allure.step('OutlookPage: perform assessment')
     def login_addin(self):
         self.login_button.click()
