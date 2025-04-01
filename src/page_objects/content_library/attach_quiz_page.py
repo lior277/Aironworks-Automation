@@ -27,3 +27,4 @@ class AddQuizPage(BasePage):
             self.answer_two_input.fill(quiz.questions[0].answers[1].answer)
             self.apply_button.click()
             self.ensure_alert_message_is_visible(quiz_attached_text)
+            self.ensure_alert_message_is_not_visible(quiz_attached_text)

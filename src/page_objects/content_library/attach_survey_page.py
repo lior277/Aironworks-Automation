@@ -27,3 +27,4 @@ class AddSurveyPage(BasePage):
             self.answer_two_input.fill(survey.questions[0].answers[1])
             self.apply_button.click()
             self.ensure_alert_message_is_visible(survey_attached_text)
+            self.ensure_alert_message_is_not_visible()
