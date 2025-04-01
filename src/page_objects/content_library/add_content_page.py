@@ -76,11 +76,13 @@ class AddContentPage(BasePage):
     def add_quiz(self, education_content: ContentLibraryEntity):
         self.quiz_form.attach_quiz_button.click()
         AddQuizPage(self.page).apply_quiz(education_content.quiz)
+        expect(self.quiz_form.edit_quiz_button).to_be_visible()
 
     @allure.step('AddContentPage: add survey {education_content}')
     def add_survey(self, education_content: ContentLibraryEntity):
         self.survey_form.attach_survey_button.click()
         AddSurveyPage(self.page).apply_survey(education_content.survey)
+        expect(self.survey_form.edit_survey_button).to_be_visible()
 
 
 class GeneralInformationComponent:
@@ -157,13 +159,14 @@ class ContentVisibilityComponent:
 class QuizComponent:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.attach_quiz_button = self.locator.get_by_role('button')
+        self.attach_quiz_button = self.locator.get_by_role('button', name='Attach Quiz')
 
 
 class QuizFormComponent:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.attach_quiz_button = self.locator.get_by_role('button')
+        self.attach_quiz_button = self.locator.get_by_role('button', name='Attach Quiz')
+        self.edit_quiz_button = self.locator.get_by_role('button', name='Edit Quiz')
 
 
 class SurveyComponent:
@@ -175,4 +178,7 @@ class SurveyComponent:
 class SurveyFormComponent:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.attach_survey_button = self.locator.get_by_role('button')
+        self.attach_survey_button = self.locator.get_by_role(
+            'button', name='Attach Survey'
+        )
+        self.edit_survey_button = self.locator.get_by_role('button', name='Edit Survey')

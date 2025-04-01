@@ -33,6 +33,12 @@ class BasePage:
         expect(self.alert_message.filter(has_text=text)).to_be_visible(timeout=timeout)
         time.sleep(1)
 
+    @allure.step('BasePage: ensure alert message is not visible')
+    def ensure_alert_message_is_not_visible(self, timeout=30_000):
+        self.page.mouse.move(-100, -100)
+        self.page.click('//div[@id="root"]')
+        self.alert_message.wait_for(state='hidden')
+
     @allure.step('BasePage: wait for loading state')
     def wait_for_loading_state(self, timeout=20000):
         if self.loading.first.is_visible(timeout=timeout):
