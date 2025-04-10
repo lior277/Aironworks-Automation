@@ -14,9 +14,7 @@ from src.utils.mailtrap import find_email
 from src.utils.waiter import wait_for_lro
 
 
-@pytest.mark.parametrize(
-    'user', [UserModelFactory.customer_admin(), UserModelFactory.customer_admin()]
-)
+@pytest.mark.parametrize('user', [UserModelFactory.customer_admin()])
 @pytest.mark.smoke
 @allure.testcase('31554')
 def test_report_can_be_resolved(

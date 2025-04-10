@@ -26,6 +26,15 @@ class GroupsPage(BasePage):
             'button', name='Upload Groups'
         )
         self.create_group_button = self.page.get_by_role('button', name='Create Group')
+        self.create_single_group_option = self.page.get_by_role(
+            'menuitem', name='Create Single Group'
+        )
+        self.bulk_create_from_field_option = self.page.get_by_role(
+            'menuitem', name='Bulk Create from Field'
+        )
+        self.upload_from_csv_option = self.page.get_by_role(
+            'menuitem', name='Upload from CSV'
+        )
         self.search_input = self.page.get_by_role('insertion')
         self.upload_groups_component = UploadGroupsComponent(
             self.page.get_by_role(role='dialog')
@@ -48,13 +57,15 @@ class GroupsPage(BasePage):
         employees_email: list[str] = None,
     ):
         self.create_group_button.click()
+        self.create_single_group_option.click()
         create_group_page = CreateGroupPage(self.page)
         create_group_page.create_group(group_name, managers_email, employees_email)
         self.ensure_alert_message_is_visible(group_created_text)
 
     @allure.step('GroupsPage: upload file {file_path}')
     def upload_file(self, file_path: str):
-        self.upload_groups_button.click()
+        self.create_group_button.click()
+        self.upload_from_csv_option.click()
         expect(self.upload_groups_component.locator).to_be_visible()
         with self.page.expect_file_chooser() as fc:
             self.upload_groups_component.upload_button.click()
@@ -72,7 +83,8 @@ class GroupsPage(BasePage):
 
     @allure.step('GroupsPage: download csv file')
     def download_csv_file(self):
-        self.upload_groups_button.click()
+        self.create_group_button.click()
+        self.upload_from_csv_option.click()
         expect(self.upload_groups_component.locator).to_be_visible()
         path = tempfile.mktemp(suffix='.csv')
         with self.page.expect_download() as download_info:
