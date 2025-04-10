@@ -154,10 +154,27 @@ def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
     refresh_token = f'{user.email}_refresh_token'
     token = f'{user.email}_token'
     if os.getenv(refresh_token):
-        sign_in_page.page.set_extra_http_headers(
-            {
-                'Cookie': f'refresh_token={os.environ[refresh_token]}; token={os.environ[token]}'
-            }
+        url = AppConfigs.BASE_URL
+        if user.is_admin:
+            url = AppConfigs.ADMIN_BASE_URL
+        Log.info(f'{url=}')
+        sign_in_page.page.context.add_cookies(
+            [
+                {
+                    'name': 'refresh_token',
+                    'value': os.environ[refresh_token],
+                    'url': url,
+                    'secure': True,
+                    'httpOnly': True,
+                },
+                {
+                    'name': 'token',
+                    'value': os.environ[token],
+                    'url': url,
+                    'secure': True,
+                    'httpOnly': True,
+                },
+            ]
         )
         response = sign_in_page.navigate(admin=user.is_admin)
         sign_in_page.wait_for_page_loaded(user.is_admin)
