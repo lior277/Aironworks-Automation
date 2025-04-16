@@ -11,7 +11,12 @@ from src.page_objects.education_campaign.const import (
 class EducationCampaignDetailsPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.delete_button = self.page.get_by_text('Delete Campaign')
+        self.manage_campaign_button = self.page.get_by_role(
+            'button', name='Manage Campaign'
+        )
+        self.delete_cmapaign_option = self.page.get_by_role(
+            'menuitem', name='Delete Campaign'
+        )
         self.title_txt = self.page.get_by_role('heading', level=4)
         self.delete_campaign_title = self.page.get_by_role('heading', level=2)
         self.delete_campaign_body = self.page.locator(selector='.MuiDialogContent-root')
@@ -20,7 +25,9 @@ class EducationCampaignDetailsPage(BasePage):
 
     @allure.step('EducationCampaignDetailsPage: delete education campaign')
     def delete_campaign(self):
-        self.delete_button.click()
+        self.manage_campaign_button.click()
+        expect(self.delete_cmapaign_option).to_be_visible()
+        self.delete_cmapaign_option.click()
         self.delete_campaign_title.wait_for()
         expect(self.delete_campaign_body).to_have_text(confirm_deletion_body_text)
         self.confirm_delete_button.click()

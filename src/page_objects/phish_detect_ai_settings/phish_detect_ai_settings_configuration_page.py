@@ -13,9 +13,21 @@ from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_page imp
 class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.show_preview_button = self.page.get_by_role('button', name='Show Preview')
+
+        self.show_preview_button_email_sub_text = self.page.locator(
+            "//div[@data-testid='phisshing-assessment-configuration-subTextBlock']/.."
+        ).get_by_role('button', name='Show Preview')
+        self.show_preview_button_email_waiting_page = self.page.locator(
+            "//div[@data-testid='waitingPageConfiguration']/.."
+        ).get_by_role('button', name='Show Preview')
+        self.show_preview_button_email_phishing_report = self.page.locator(
+            "//div[@data-testid='phishing-assessment-configuration-completionReportCustomizationBlock']/.."
+        ).get_by_role('button', name='Show Preview')
+        self.show_preview_button_email_real_report = self.page.locator(
+            "//div[@data-testid='phishing-assessment-configuration-completionRealReportCustomizationBlock']/.."
+        ).get_by_role('button', name='Show Preview')
         self.button_visibility_component = ButtonVisibilityComponent(
-            self.page.locator("//p[text()='Button Visibility']/../..")
+            self.page.locator("//p[text()='Email Extension UI Configuration']/../..")
         )
         self.completion_report_custom_text_component = (
             CompletionReportCustomTextComponent(
@@ -54,7 +66,7 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
     @allure.step('PhishDetectAISettingsConfiguration: open preview window')
     def open_preview_window(self):
         if not self.assessment_preview_window.locator.is_visible():
-            self.show_preview_button.click()
+            self.show_preview_button_email_sub_text.click()
             self.assessment_preview_window.locator.wait_for()
 
     @allure.step('PhishDetectAISettingsConfiguration: check settings in preview window')
@@ -152,10 +164,10 @@ class ButtonVisibilityComponent:
         self.locator = locator
         self.perform_assessment_enabled_button = self.locator.locator(
             '[data-testid="phisshing-assessment-configuration-performAssessmentButton"]'
-        ).get_by_label('Enabled')
+        ).get_by_role('button', name='Enabled')
         self.perform_assessment_disabled_button = self.locator.locator(
             '[data-testid="phisshing-assessment-configuration-performAssessmentButton"]'
-        ).get_by_label('Disabled')
+        ).get_by_role('button', name='Disabled')
         self.assessment_button_text_input = self.locator.locator(
             '[id="assessment_button_text-label"]'
         )
@@ -165,10 +177,10 @@ class ButtonVisibilityComponent:
 
         self.report_incident_enabled_button = self.locator.locator(
             '[data-testid="phisshing-assessment-configuration-reportIncidentButton"]'
-        ).get_by_label('Enabled')
+        ).get_by_role('button', name='Enabled')
         self.report_incident_disabled_button = self.locator.locator(
             '[data-testid="phisshing-assessment-configuration-reportIncidentButton"]'
-        ).get_by_label('Disabled')
+        ).get_by_role('button', name='Disabled')
         self.incident_button_text_input = self.locator.locator(
             '[id="incident_button_text-label"]'
         )

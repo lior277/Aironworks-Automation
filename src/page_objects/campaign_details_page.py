@@ -17,7 +17,7 @@ class CampaignDetailsPage(BasePage):
         self.url = self.default_url + 'admin/dashboard/attacks/executions/'
         self.table_campaign_attacks_summary = Table(
             page.locator(
-                '//button[text()="Preview"]//ancestor::div[contains(@class,"MuiDataGrid-pinnedColumns")]/preceding-sibling::div//div[@role="row"]'
+                '//button[@id="more-button"]//ancestor::div[contains(@class,"MuiDataGrid-pinnedColumns")]/preceding-sibling::div//div[@role="row"]'
             ),
             CampaignAttacksSummary,
         )
