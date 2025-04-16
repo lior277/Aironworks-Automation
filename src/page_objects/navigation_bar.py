@@ -136,7 +136,7 @@ class NavigationBar:
         self.navigate_phish_detect_ai_settings_general_page()
         ui_configuration_page = PhishDetectAISettingsConfiguration(self.page)
         ui_configuration_page.ui_configuration_tab.click()
-        ui_configuration_page.show_preview_button.wait_for()
+        ui_configuration_page.show_preview_button_email_sub_text.wait_for()
         return ui_configuration_page
 
     @allure.step('NavigationBar: Navigate to email statistics page')
