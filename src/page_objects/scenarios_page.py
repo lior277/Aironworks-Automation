@@ -1,4 +1,5 @@
 import re
+import time
 from typing import Literal
 
 import allure
@@ -56,6 +57,7 @@ class ScenariosPage(BasePage):
         self.url_suffix = self.page.get_by_role('textbox', name='URL Suffix')
 
         self.next = self.page.get_by_role('button', name='Next')
+        self.show_preview_button = self.page.get_by_role('button', name='Show Preview')
         self.html_content = self.page.get_by_label('Editor editing area: main')
         self.save = self.page.get_by_role('button', name='Save')
         self.sender_domain_dropdown = DropDown(
@@ -155,7 +157,14 @@ class ScenariosPage(BasePage):
             or clone_mode == ScenarioCloneMode.NEW_BODY
         ):
             expect(self.html_content).to_be_empty()
-            self.html_content.fill(scenario.html_content)
+            self.html_content.fill(scenario.html_content + scenario.custom_text)
+            self.show_preview_button.click()
+            time.sleep(10)
+            self.preview_text = self.page.locator(
+                'iframe[title="my frame"]'
+            ).content_frame.locator('body')
+            expect(self.preview_text).to_contain_text(scenario.custom_text)
+            self.page.keyboard.press('Escape')
         self.save.click()
         self.wait_for_progress_bar_disappears(timeout=30_000)
 
