@@ -1,4 +1,5 @@
 import allure
+import faker
 import pytest
 from playwright.sync_api import expect
 
@@ -6,16 +7,17 @@ from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 
+fake = faker.Faker()
+
 
 @pytest.mark.smoke
 @pytest.mark.web
 @pytest.mark.parametrize(
-    'user, header_key, header_value',
+    'user, header_key',
     [
         pytest.param(
             UserModelFactory.customer_admin(),
             'X-AIRONWORKS-SECRET-HEADER',
-            'This is test header for Aironworks',
             marks=allure.testcase('C31866'),
         )
     ],
@@ -24,13 +26,13 @@ def test_email_sending(
     training_settings_email_sending_page,
     user: UserModel,
     header_key,
-    header_value,
     request,
     mailtrap,
     employee,
 ):
+    header_value = fake.sentence()
     training_settings_email_sending_page.enable_email_header_settings(
-        header_key, header_value
+        header_key, header_value=header_value
     )
     scenarios_page = (
         training_settings_email_sending_page.navigation_bar.navigate_scenarios()
