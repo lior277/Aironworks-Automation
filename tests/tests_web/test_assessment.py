@@ -69,16 +69,18 @@ def test_assessment_outlook(user, outlook_page, mailtrap):
     outlook_page.check_addin_loaded()
     outlook_page.perform_assessment()
     expect(
+        outlook_page.app_frame.get_by_text('Thank you for reporting the email!')
+    ).to_be_visible(timeout=60 * 1000)
+    expect(
         outlook_page.app_frame.get_by_text(
-            'You’ve correctly reported a suspicious email'
+            'Performing email risk assessment is an important cybersecurity practice'
         )
     ).to_be_visible(timeout=60 * 1000)
-    outlook_page.close_gamification()
     mail = mailtrap.wait_for_mail(
         AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
         find_email(
             '68fa80bce3-28fbb0@inbox.mailtrap.io',
-            'Security level Moderate-Low. Suspicious Email Report (Attachment included)',
+            'Security level Low. Suspicious Email Report (Attachment included)',
         ),
         timeout=240,
     )
@@ -98,16 +100,18 @@ def test_assessment_outlook_shared(user, outlook_page_shared, mailtrap):
     outlook_page_shared.check_addin_loaded()
     outlook_page_shared.perform_assessment()
     expect(
+        outlook_page_shared.app_frame.get_by_text('Thank you for reporting the email!')
+    ).to_be_visible(timeout=60 * 1000)
+    expect(
         outlook_page_shared.app_frame.get_by_text(
-            'You’ve correctly reported a suspicious email'
+            'Performing email risk assessment is an important cybersecurity practice'
         )
     ).to_be_visible(timeout=60 * 1000)
-    outlook_page_shared.close_gamification()
     mail = mailtrap.wait_for_mail(
         AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
         find_email(
             '68fa80bce3-28fbb0@inbox.mailtrap.io',
-            'Security level Moderate-Low. Suspicious Email Report (Attachment included)',
+            'Security level Low. Suspicious Email Report (Attachment included)',
         ),
         timeout=240,
     )
@@ -126,10 +130,14 @@ def test_report_outlook(user, outlook_page, mailtrap):
     outlook_page.open_addin()
     outlook_page.check_addin_loaded()
     outlook_page.report_incident()
+    expect(outlook_page.app_frame.get_by_text('Report have been sent')).to_be_visible(
+        timeout=60 * 1000
+    )
     expect(
-        outlook_page.app_frame.get_by_text('You’ve successfully reported an incident')
+        outlook_page.app_frame.get_by_text(
+            'Reporting an incident is a critical cybersecurity practice that helps mitigate risks and prevent further impact.'
+        )
     ).to_be_visible(timeout=60 * 1000)
-    outlook_page.close_gamification()
     mail = mailtrap.wait_for_mail(
         AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
         find_email(
@@ -153,11 +161,13 @@ def test_report_outlook_shared(user, outlook_page_shared, mailtrap):
     outlook_page_shared.check_addin_loaded()
     outlook_page_shared.report_incident()
     expect(
+        outlook_page_shared.app_frame.get_by_text('Report have been sent')
+    ).to_be_visible(timeout=60 * 1000)
+    expect(
         outlook_page_shared.app_frame.get_by_text(
-            'You’ve successfully reported an incident'
+            'Reporting an incident is a critical cybersecurity practice that helps mitigate risks and prevent further impact.'
         )
     ).to_be_visible(timeout=60 * 1000)
-    outlook_page_shared.close_gamification()
     mail = mailtrap.wait_for_mail(
         AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
         find_email(
