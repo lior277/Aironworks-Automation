@@ -10,14 +10,16 @@ fake = faker.Faker()
 class ScenarioModelFactory:
     @staticmethod
     def scenario(
+        vector: str = 'Email',
         campaign_type: CampaignType = CampaignType.PHISHING_LINK,
         target_details: TargetDetails = None,
         file_path: str = None,
-        html_content="""{{attack_url}}""",
+        html_content="""{{attack_url}}  """,
         custom_text=generate_faker_multiline_text(lines=5),
     ) -> ScenarioModel:
         return ScenarioModel(
             name='QA Test Scenario ' + fake.name(),
+            vector=vector,
             sender_address=fake.pystr().lower(),
             sender_name=fake.name(),
             subject=fake.sentence(),

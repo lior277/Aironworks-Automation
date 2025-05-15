@@ -7,6 +7,7 @@ from src.models.scenario import CampaignType, TargetDetails
 @dataclass
 class ScenarioModel:
     name: str
+    vector: str
     sender_address: str
     sender_name: str
     subject: str
