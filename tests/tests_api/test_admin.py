@@ -116,6 +116,7 @@ def test_email_notification_match_setting(
 
     regex_string = (
         en_config['custom_attack_notification']
+        .replace('="', '=3D"')
         .replace('{{employee.name}}', '(?P<employee_name>[a-zA-Z]+)')
         .replace(
             '{{portal_url}}',

@@ -55,9 +55,10 @@ def test_education_campaign_notification_match_settings(
 
     message: Message = message_from_bytes(source)
     payload = message.get_payload()
-
+    print('abc:' + payload)
     regex_string = (
         en_config['education_content_publication_email']
+        .replace('="', '=3D"')
         .replace('{{employee.name}}', '(?P<employee_name>[a-zA-Z]+)')
         .replace(
             '{{portal_url}}',
@@ -65,7 +66,7 @@ def test_education_campaign_notification_match_settings(
         )
         + '(<img.*/>)?\n'
     )
-
+    print('cba:', regex_string)
     regex = re.compile(regex_string, re.MULTILINE)
 
     match = regex.match(payload.replace('=\n', ''))
