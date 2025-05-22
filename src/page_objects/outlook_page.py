@@ -104,7 +104,8 @@ class OutlookPage:
     @allure.step('OutlookPage: goto message id')
     def goto_message(self, message: str):
         self.search_mail_input.fill(message)
-        self.search_button.click()
+        self.page.keyboard.press('Enter')
+        # self.search_button.click()
         time.sleep(1)
         self.mail_icon.first.click()
 
