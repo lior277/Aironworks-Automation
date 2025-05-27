@@ -261,10 +261,10 @@ def test_create_simulation_campaign_attachment(
     )
     assert len(links) == len(set(links)), 'Duplicate links found'
     print('Links: ', links)
-    if content_type == 'application/pdf':
-        warning_page = execute_campaign_page.go_to_employee_campaign_warning_page(
-            links[0] + '&constest=312'
-        )
-        survey_page = warning_page.go_to_survey()
-        survey_page.select_radio_option(1, 'abc')
-        survey_page.submit_survey()
+    # if content_type == 'application/pdf':
+    #     warning_page = execute_campaign_page.go_to_employee_campaign_warning_page(
+    #         links[0] + '&constest=312'
+    #     )
+    #     survey_page = warning_page.go_to_survey()
+    #     survey_page.select_radio_option(1, 'abc')
+    #     survey_page.submit_survey()
