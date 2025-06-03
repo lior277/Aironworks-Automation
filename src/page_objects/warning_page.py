@@ -29,20 +29,21 @@ class SurveyPage(BasePage):
         self.review_answer_title = self.page.get_by_role(
             'heading', name='Review Answers'
         )
-        self.submit_button = self.page.get_by_role('button', name='Submit')
-        self.send_button = self.page.get_by_role('button', name='Send')
+        self.complete_button = self.page.get_by_role('button', name='Complete')
+        self.confirm_button = self.page.get_by_role('button', name='Confirm')
         self.edit_button = self.page.get_by_role('button', name='Edit')
         self.thankyou_message = self.page.get_by_role('paragraph')
 
-    def select_radio_option(self, question_number: int, option):
+    def select_radio_option(self, question_number: int, option: int):
         expect(
-            self.question_sections.nth(question_number - 1).get_by_role(
-                'radio', name=f'{option}'
-            )
+            self.question_sections.nth(question_number - 1)
+            .get_by_role('textbox', name=f'Answer {option}')
+            .locator('//following::div//input')
+            .nth(0)
         ).to_be_visible()
         self.question_sections.nth(question_number - 1).get_by_role(
-            'radio', name=f'{option}'
-        ).click()
+            'textbox', name=f'{option}'
+        ).locator('//following::div//input').nth(0).click()
 
     def select_checkbox_option(self, question_number: int, option):
         self.question_sections.nth(question_number + 1).get_by_role(
@@ -55,7 +56,7 @@ class SurveyPage(BasePage):
         ).fill(answer)
 
     def submit_survey(self):
-        self.submit_button.click()
+        self.complete_button.click()
         self.page.wait_for_load_state()
-        self.send_button.click()
+        self.confirm_button.click()
         # assert self.thankyou_message.is_visible()
