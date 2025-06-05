@@ -54,7 +54,8 @@ Content-Transfer-Encoding: quoted-printable
     reported_message = employee_reports_page.get_report(
         re.compile('.*' + message + '.*')
     )
-    reported_message.get_by_role('button', name='Resolve').click()
+    reported_message.get_by_role('button', name='more').click()
+    employee_reports_page.page.get_by_role('menuitem', name='Mark as Resolved').click()
     employee_reports_page.page.wait_for_load_state(timeout=5)
 
     expect(reported_message).to_have_count(0)
