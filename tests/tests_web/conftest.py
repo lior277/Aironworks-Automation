@@ -36,6 +36,7 @@ from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 from src.page_objects.groups.groups_page import GroupsPage
 from src.page_objects.login_page import SignInPage
+from src.page_objects.operations.operations_list_page import OperationsListPage
 from src.page_objects.outlook_page import OutlookPage
 from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_configuration_page import (
     PhishDetectAISettingsConfiguration,
@@ -314,6 +315,11 @@ def training_settings_email_sending_page(
     dashboard_page: DashboardPage,
 ) -> EmailSendingPage:
     return dashboard_page.navigation_bar.navigate_training_settings_email_sending_page()
+
+
+@pytest.fixture
+def operations_list_page(dashboard_page: DashboardPage) -> OperationsListPage:
+    return dashboard_page.navigation_bar.navigate_operation_list_page()
 
 
 @pytest.fixture(scope='function')

@@ -3,6 +3,7 @@ from pathlib import Path
 from src.utils.file_tool import convert_bytes
 
 created_new_scenario_text = 'Created new scenario'
+deleted_scenario_text = 'Attack has been successfully deleted'
 update_succeeded_text = 'Update succeeded'
 failed_upload_file_text = 'Failed to upload file'
 unrecognized_file_format_text = 'Unrecognized file format'
