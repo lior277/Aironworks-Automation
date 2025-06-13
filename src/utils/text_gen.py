@@ -24,3 +24,7 @@ def generate_faker_multiline_text(lines=5, empty_line_prob=0.3):
         result.append(indent + sprinkled)
 
     return '\n'.join(result)
+
+
+def generate_random_text(length=50):
+    return ''.join(random.choice(string.ascii_letters) for _ in range(length))

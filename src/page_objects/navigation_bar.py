@@ -16,6 +16,7 @@ from src.page_objects.employee_directory.employee_directory_page import (
 )
 from src.page_objects.employee_reports_page import EmployeeReportsPage
 from src.page_objects.groups.groups_page import GroupsPage
+from src.page_objects.operations.operations_list_page import OperationsListPage
 from src.page_objects.phish_detect_ai_settings.const import phishing_assessment_title
 from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_configuration_page import (
     PhishDetectAISettingsConfiguration,
@@ -57,6 +58,7 @@ class NavigationBar:
         self.email_filter_settings_button = page.get_by_role(
             'link', name='Email Filter Settings'
         )
+        self.operations_button = page.get_by_role('link', name='Operations')
 
     @allure.step('NavigationBar: Navigate to scenarios')
     def navigate_scenarios(self):
@@ -167,3 +169,10 @@ class NavigationBar:
         email_sending_page.select_tab('Email Sending')
         email_sending_page.wait_for_progress_bar_disappears()
         return email_sending_page
+
+    @allure.step('NavigationBar: Navigate to operation list page')
+    def navigate_operation_list_page(self):
+        self.operations_button.click()
+        operation_list_page = OperationsListPage(self.page)
+        operation_list_page.wait_for_progress_bar_disappears()
+        return operation_list_page

@@ -10,6 +10,7 @@ from src.models.scenario_model import ScenarioModel
 from src.page_objects.base_page import BasePage
 from src.page_objects.const import (
     created_new_scenario_text,
+    deleted_scenario_text,
     invalid_file_type_text,
     marked_attack_non_draft_message,
     scenario_file_name_helper_text,
@@ -87,6 +88,13 @@ class ScenariosPage(BasePage):
             self.page.locator('[id="data_entry_kind"]'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
+        self.first_scenario = (
+            self.page.get_by_role('list').locator('//div[@role="button"]').nth(1)
+        )
+        self.delete_button = self.page.get_by_role('button', name='Delete')
+        self.confirm_delete_button = self.page.get_by_role(
+            'generic', name='Delete Attack'
+        ).get_by_role('button', name='Delete')
 
     @allure.step('ScenariosPage: navigate to create scenario')
     def navigate_create_scenario(self):
@@ -170,6 +178,13 @@ class ScenariosPage(BasePage):
 
     def get_visible_results(self):
         return self.scenarios_list.get_by_role('button').all()
+
+    @allure.step('ScenariosPage: Delete scenario')
+    def delete_scenario(self):
+        self.first_scenario.click()
+        self.delete_button.click()
+        self.delete_button.click()
+        self.ensure_alert_message_is_visible(deleted_scenario_text)
 
     @allure.step('ScenariosPage: Create scenario {scenario}')
     def create_scenario(self, scenario: ScenarioModel):
