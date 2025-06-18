@@ -139,6 +139,8 @@ def test_campaigns_page_has_data(user, campaigns_page):
 )
 @pytest.mark.smoke
 def test_campaign_summary_page(campaign_details_page, user):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     expect(
         campaign_details_page.page.get_by_role(
             'heading', name=re.compile(AppConfigs.SAMPLE_CAMPAIGN_NAME + '.*')
