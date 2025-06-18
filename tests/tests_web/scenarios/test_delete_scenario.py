@@ -1,6 +1,7 @@
 import allure
 import pytest
 
+from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.page_objects.scenarios_page import ScenariosPage
@@ -18,4 +19,6 @@ from src.page_objects.scenarios_page import ScenariosPage
 )
 @pytest.mark.smoke
 def test_create_scenario(user: UserModel, scenarios_page: ScenariosPage):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     scenarios_page.delete_scenario()
