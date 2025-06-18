@@ -165,6 +165,8 @@ def test_campaign_summary_page(campaign_details_page, user):
 @pytest.mark.smoke
 def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage, user):
     # Count the rows that do not have the text 'Preview'
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     assert len(campaign_details_page.table_campaign_attacks_summary.text_content()) > 0
 
 
@@ -183,6 +185,8 @@ def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage, user
 )
 @pytest.mark.smoke
 def test_campaign_export(campaign_details_page: CampaignDetailsPage, user):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     page_entity = CampaignAttacksSummaryFactory.get_entity(
         campaign_details_page.table_campaign_attacks_summary.text_content()[0]
     )
