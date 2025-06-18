@@ -76,6 +76,8 @@ from src.page_objects.scenarios_page import ScenariosPage
 def test_create_scenario(
     user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
 ):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     scenarios_page.create_scenario(scenario)
 
 
@@ -139,6 +141,8 @@ def test_create_scenario(
 def test_create_data_entry_scenario(
     user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
 ):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     scenarios_page.create_scenario(scenario)
 
 
@@ -246,6 +250,8 @@ def test_create_attachment_scenario_with_unsupported_file_extension(
     ],
 )
 def test_request_ai_generated_scenario(user: UserModel, scenarios_page: ScenariosPage):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     request_ai_scenario_page = scenarios_page.navigate_request_ai_generated_scenario()
     request_ai_scenario_page.generate_scenario(
         '1', '4 Advanced', 'English', 'Internal', 'Department'

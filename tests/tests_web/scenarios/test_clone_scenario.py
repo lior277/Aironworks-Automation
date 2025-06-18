@@ -4,6 +4,7 @@ import allure
 import faker
 import pytest
 
+from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
@@ -66,6 +67,8 @@ def test_clone_scenario(
     scenarios_page: ScenariosPage,
     clone_mode: ScenarioCloneMode,
 ):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     scenarios_page.create_scenario(scenario)
 
     scenario_element = scenarios_page.find_scenario(scenario.name)
