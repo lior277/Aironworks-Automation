@@ -1,7 +1,6 @@
 import allure
 import pytest
 
-from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.email_filter.email_domain_model import EmailDomainModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
@@ -391,6 +390,4 @@ def test_remove_domain_from_safe_list_from_vendor(
     add_to_safe_list_selected,
     request,
 ):
-    if AppConfigs.ENV.startswith('development'):
-        pytest.skip('Test is not ready for development env')
     vendor_details_page.select_domain_remove_from_safe_list()

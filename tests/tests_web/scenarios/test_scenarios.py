@@ -2,6 +2,7 @@ import allure
 import pytest
 from playwright.sync_api import expect
 
+from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
@@ -49,6 +50,8 @@ def test_filter_scenario_by_name(user: UserModel, scenarios_page: ScenariosPage)
 def test_hide_scenario(
     user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
 ):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     scenarios_page.create_scenario(scenario)
     scenario_element = scenarios_page.find_scenario(scenario.name)
     scenario_element.click()

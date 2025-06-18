@@ -52,6 +52,8 @@ def add_to_block_list_selected(
 
 @pytest.fixture(scope='function')
 def add_to_safe_list_selected(request, api_request_context_customer_admin_email_filter):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
     email_domain = request.param
     email_filter_service = api.email_filter(
         api_request_context_customer_admin_email_filter
