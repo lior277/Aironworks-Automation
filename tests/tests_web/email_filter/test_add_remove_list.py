@@ -385,9 +385,9 @@ def test_remove_sender_from_safe_list_from_vendor(
 )
 def test_remove_domain_from_safe_list_from_vendor(
     is_emailfilter_enabled,
+    add_to_safe_list_selected,
     vendor_details_page,
     user: UserModel,
-    add_to_safe_list_selected,
     request,
 ):
     vendor_details_page.select_domain_remove_from_safe_list()
