@@ -25,6 +25,7 @@ class Filter:
         sleep(2)
         self.filter_select.select_option(filter_name)
         expect(self.filter_select).to_have_value(value=filter_name.lower())
+        sleep(2)
         self.filter_value.fill(value)
         self.loader.wait_for(state='hidden')
         sleep(1)  # TODO ask FE team to add some kind of spinner
