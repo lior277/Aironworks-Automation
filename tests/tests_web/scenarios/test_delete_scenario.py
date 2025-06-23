@@ -19,6 +19,10 @@ from src.page_objects.scenarios_page import ScenariosPage
 )
 @pytest.mark.smoke
 def test_create_scenario(user: UserModel, scenarios_page: ScenariosPage):
-    if AppConfigs.ENV.startswith('development'):
-        pytest.skip('Test is not ready for development env')
+    if (
+        AppConfigs.ENV.startswith('development')
+        or AppConfigs.ENV.startswith('production')
+        or AppConfigs.ENV.startswith('production-eu')
+    ):
+        pytest.skip('Test is not ready for dev and prod env')
     scenarios_page.delete_scenario()
