@@ -114,9 +114,9 @@ class OutlookPage:
         self.apps_locator.wait_for(timeout=10000)
         expect(self.apps_locator).to_be_visible()
         self.apps_locator.click()
-        sleep(2)  # just to make sure all apps were displayed
+        sleep(5)  # just to make sure all apps were displayed
         self.addin_name_button.wait_for()
-        self.addin_name_button.click()
+        self.addin_name_button.click(force=True)
         try:
             self.login_button.wait_for(timeout=10000)
             if self.login_button.is_visible(timeout=10000):
@@ -132,7 +132,8 @@ class OutlookPage:
                 timeout=10000
             ) and self.report_incident_button.is_visible(timeout=10000):
                 return True
-        except PlaywrightTimeoutError:
+        except PlaywrightTimeoutError as e:
+            print('Error:' + str(e))
             self.open_addin()
 
     @allure.step('OutlookPage: perform assessment')
