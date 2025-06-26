@@ -240,21 +240,91 @@ def test_create_attachment_scenario_with_unsupported_file_extension(
 
 @pytest.mark.smoke
 @pytest.mark.parametrize(
-    'user',
+    'user, number_of_scenarios, level, language, sender, real_name, additional_info',
     [
         pytest.param(
             UserModelFactory.customer_admin(),
+            '1',
+            '4 Advanced',
+            'English',
+            'Internal',
+            'Department',
+            None,
             id='test create AI generated scenario customer admin',
-            marks=allure.testcase('31786'),
-        )
+            marks=[allure.testcase('31786'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            '2',
+            '3 Intermediate',
+            'English',
+            'External',
+            'Company',
+            None,
+            id='test create AI generated scenario customer admin',
+            marks=[allure.testcase('31786'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            '3',
+            '2 Basic',
+            'English',
+            'Internal',
+            'Impersonal',
+            None,
+            id='test create AI generated scenario customer admin',
+            marks=[allure.testcase('31786'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            '1',
+            '1 Easy',
+            'Japanese',
+            'Internal',
+            'Department',
+            None,
+            id='test create AI generated scenario customer admin',
+            marks=[allure.testcase('31786'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            '2',
+            '3 Intermediate',
+            'Japanese',
+            'External',
+            'Impersonal',
+            None,
+            id='test create AI generated scenario customer admin',
+            marks=[allure.testcase('31786'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            '3',
+            '5 Sophisticated',
+            'English',
+            'Internal',
+            'Person',
+            None,
+            id='test create AI generated scenario customer admin',
+            marks=[allure.testcase('31786'), pytest.mark.xdist_group(name='agent1')],
+        ),
     ],
 )
-def test_request_ai_generated_scenario(user: UserModel, scenarios_page: ScenariosPage):
+def test_request_ai_generated_scenario(
+    user: UserModel,
+    scenarios_page: ScenariosPage,
+    number_of_scenarios,
+    level,
+    language,
+    sender,
+    real_name,
+    additional_info,
+):
     if AppConfigs.ENV.startswith('development'):
         pytest.skip('Test is not ready for development env')
     request_ai_scenario_page = scenarios_page.navigate_request_ai_generated_scenario()
     request_ai_scenario_page.generate_scenario(
-        '1', '4 Advanced', 'English', 'Internal', 'Department'
+        number_of_scenarios, level, language, sender, real_name
     )
     scenarios_page.save_button.click()
     scenarios_page.ensure_alert_message_is_visible('Created new scenario')
