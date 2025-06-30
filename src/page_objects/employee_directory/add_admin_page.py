@@ -1,3 +1,5 @@
+from time import sleep
+
 import allure
 from playwright.sync_api import Page
 
@@ -75,6 +77,7 @@ class AddAdminPage(BasePage):
     @allure.step('AddAdminPage: assign admin role to employee with email {email}')
     def assign_admin_role(self, email: str):
         self.search_by_email.fill(email)
+        sleep(5)
         self.rows_checkbox.nth(0).click()
         self.confirm_button.click()
         self.wait_for_progress_bar_disappears()
