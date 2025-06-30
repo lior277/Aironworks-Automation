@@ -14,7 +14,7 @@ class BasePage:
         self.employeeBaseUrl = AppConfigs.EMPLOYEE_BASE_URL
         self.adminBaseUrl = AppConfigs.ADMIN_BASE_URL
         self.empty_state = self.page.get_by_test_id('empty-state')
-        self.save_button = self.page.get_by_text('Save')
+        self.save_button = self.page.get_by_role('button', name='Save')
         self.loading = self.page.get_by_text('Loading', exact=True)
         self.uploading_file = self.page.get_by_text('Loading')
         self.progress_bar = self.page.get_by_role('progressbar')
