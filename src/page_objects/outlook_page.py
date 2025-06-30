@@ -52,9 +52,9 @@ class OutlookPage:
         self.close_button = self.app_frame.get_by_role('button', name='Close')
         self.login_button = self.app_frame.get_by_role('button', name='Login')
         self.allow_button = self.app_frame.get_by_role('button', name='Allow')
-        self.addin_name_button = self.page.get_by_label(
+        self.addin_name_button = self.page.get_by_role('listbox').get_by_label(
             AppConfigs.ADDIN_NAME, exact=True
-        ).first
+        )
         self.search_mail_input = self.page.locator('//input[@id="topSearchInput"]')
         self.search_button = self.page.get_by_role('button', name='Search', exact=True)
 
