@@ -61,7 +61,15 @@ Content-Transfer-Encoding: quoted-printable
     expect(reported_message).to_have_count(0)
 
 
-@pytest.mark.parametrize('user', [pytest.param(UserModelFactory.customer_admin())])
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            marks=pytest.mark.xdist_group(name='agent1'),
+        )
+    ],
+)
 @allure.testcase('5846')
 @pytest.mark.smoke
 def test_assessment_outlook(user, outlook_page, mailtrap):
@@ -92,7 +100,15 @@ def test_assessment_outlook(user, outlook_page, mailtrap):
     outlook_page.provide_feedback()
 
 
-@pytest.mark.parametrize('user', [pytest.param(UserModelFactory.customer_admin())])
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            marks=pytest.mark.xdist_group(name='agent1'),
+        )
+    ],
+)
 @allure.testcase('5846')
 @pytest.mark.smoke
 def test_assessment_outlook_shared(user, outlook_page_shared, mailtrap):
@@ -123,7 +139,15 @@ def test_assessment_outlook_shared(user, outlook_page_shared, mailtrap):
     outlook_page_shared.provide_feedback()
 
 
-@pytest.mark.parametrize('user', [pytest.param(UserModelFactory.customer_admin())])
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            marks=pytest.mark.xdist_group(name='agent1'),
+        )
+    ],
+)
 @allure.testcase('5847')
 @pytest.mark.smoke
 def test_report_outlook(user, outlook_page, mailtrap):
@@ -153,7 +177,15 @@ def test_report_outlook(user, outlook_page, mailtrap):
     assert 'Incident Report' in mail['subject']
 
 
-@pytest.mark.parametrize('user', [pytest.param(UserModelFactory.customer_admin())])
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            marks=pytest.mark.xdist_group(name='agent1'),
+        )
+    ],
+)
 @allure.testcase('5847')
 @pytest.mark.smoke
 def test_report_outlook_shared(user, outlook_page_shared, mailtrap):
