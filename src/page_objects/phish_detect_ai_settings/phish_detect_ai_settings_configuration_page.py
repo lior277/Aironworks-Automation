@@ -1,3 +1,5 @@
+from time import sleep
+
 import allure
 from playwright.sync_api import Locator, Page, expect
 
@@ -68,6 +70,7 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
         if not self.assessment_preview_window.locator.is_visible():
             self.show_preview_button_email_sub_text.click()
             self.assessment_preview_window.locator.wait_for()
+            sleep(2)
 
     @allure.step('PhishDetectAISettingsConfiguration: check settings in preview window')
     def check_settings_in_preview(self, settings: OutlookConfigData):
