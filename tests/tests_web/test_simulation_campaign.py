@@ -65,6 +65,36 @@ def test_create_simulation_campaign(
     'user',
     [
         pytest.param(
+            UserModelFactory.customer_admin(),
+            id='Customer Admin',
+            marks=allure.testcase('31545'),
+        )
+    ],
+)
+@pytest.mark.smoke
+def test_modify_simulation_campaign(
+    user: UserModel,
+    employee,
+    mailtrap,
+    first_campaign_details_page: CampaignDetailsPage,
+):
+    modify_campaign_page = (
+        first_campaign_details_page.navigate_to_modify_campaign_page()
+    )
+    modify_campaign_page.edit_campaign(employee.email)
+    mail = mailtrap.wait_for_mail(
+        AppConfigs.EMPLOYEE_INBOX_ID, find_email(employee.email), timeout=240
+    )
+
+    assert mail is not None, (
+        f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
+    )
+
+
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
             UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31547')
         ),
         pytest.param(
