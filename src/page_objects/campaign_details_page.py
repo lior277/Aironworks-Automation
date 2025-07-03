@@ -5,6 +5,7 @@ from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.table_element import Table
+from src.page_objects.modify_campaign_page import ModifyCampaignPage
 
 
 class CampaignDetailsPage(BasePage):
@@ -20,6 +21,12 @@ class CampaignDetailsPage(BasePage):
                 '//button[@id="more-button"]//ancestor::div[contains(@class,"MuiDataGrid-pinnedColumns")]/preceding-sibling::div//div[@role="row"]'
             ),
             CampaignAttacksSummary,
+        )
+        self.manage_campaign_button = self.page.get_by_role(
+            'button', name='Manage Campaign'
+        )
+        self.modify_campaign_option = self.page.get_by_role(
+            'menuitem', name='Modify Campaign'
         )
 
     @allure.step(
@@ -41,6 +48,12 @@ class CampaignDetailsPage(BasePage):
         download_event = download_info.value
         download_event.save_as(path)
         return path
+
+    @allure.step('CampaignDetailsPage: navigate to modify campaign page')
+    def navigate_to_modify_campaign_page(self):
+        self.manage_campaign_button.click()
+        self.modify_campaign_option.click()
+        return ModifyCampaignPage(self.page)
 
 
 class CampaignAttacksSummary:

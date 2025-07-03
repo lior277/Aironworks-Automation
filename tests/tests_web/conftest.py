@@ -273,6 +273,12 @@ def campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
 
 
 @pytest.fixture
+def first_campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
+    campaigns_page = dashboard_page.navigation_bar.navigate_campaigns()
+    return campaigns_page.click_first_ongoing_campaign()
+
+
+@pytest.fixture
 def groups_page(dashboard_page: DashboardPage) -> GroupsPage:
     return dashboard_page.navigation_bar.navigate_groups_page()
 
