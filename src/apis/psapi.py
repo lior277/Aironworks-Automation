@@ -6,7 +6,7 @@ class PSApi(Enum):
     UPLOAD_URL = '/upload/url'
 
     UPLOAD_EMPLOYEE_INFO = '/company/upload_employee_info'
-    UPLOAD_EMPLOYEE_INFO_STATUS = '/company/upload_employee_info/{op_id}'
+    UPLOAD_EMPLOYEE_INFO_STATUS = '/lro/{op_id}'
     EMPLOYEE_LIST = '/company/employee_list'
     EMPLOYEE_LIST_IDS = '/company/employee_list_ids'
     EMPLOYEE_UPDATE = '/company/employee_update'
@@ -57,6 +57,11 @@ class PSApi(Enum):
     GET_GROUP = '/groups/get_group'
     GROUPS_LIST = '/groups/list_groups'
     DELETE_GROUP = '/groups/delete_group'
+
+    # Operations
+    OPERATIONS_LIST = '/admin/operations'
+    CREATE_OPERATION = '/admin/operation'
+    OPERATION_DETAIL = '/admin/operation/{operation_id}'
 
     # Token
     REFRESH_TOKEN = '/auth/refresh'
