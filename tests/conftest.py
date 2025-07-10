@@ -78,6 +78,19 @@ def api_request_context_addin(
     request_context = playwright.request.new_context(
         base_url=base_url, extra_http_headers=headers
     )
+    login_service = api.login(request_context)
+    expect(login_service.login_sso(token)).to_be_ok()
+    login_info_response = login_service.info()
+    expect(login_info_response).to_be_ok()
+    login_info = login_info_response.json()
+    assert 'user' in login_info
+    assert 'roles' in login_info['user']
+    print('abc:', login_info['user']['roles'])
+    for role in login_info['user']['roles']:
+        if role['name'] == 'employee_user':
+            role_id = role['id']
+            break
+    expect(login_service.pick_role(role_id)).to_be_ok()
     yield request_context
     request_context.dispose()
 

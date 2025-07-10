@@ -16,6 +16,7 @@ class PSApi(Enum):
     COMPANY_EMPLOYEE_COUNT = '/company/employee_count'
 
     LOGIN = '/auth/login'
+    LOGIN_SSO = '/auth/login_sso'
     INFO = '/auth/info'
     PICK_ROLE = '/auth/pick_role'
     REGISTER = '/auth/register'

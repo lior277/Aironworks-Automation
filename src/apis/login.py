@@ -26,6 +26,12 @@ class LoginService(BaseService):
             },
         )
 
+    @allure.step('LoginService: submit login sso')
+    def login_sso(self, token) -> APIResponse:
+        return self._post(
+            PSApi.LOGIN_SSO.get_endpoint(), data={'kind': 'GG', 'token': token}
+        )
+
     @allure.step('LoginService: get self info')
     def info(self) -> APIResponse:
         return self._get(PSApi.INFO.get_endpoint())
