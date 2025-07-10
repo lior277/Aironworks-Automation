@@ -21,7 +21,9 @@ from src.utils.mailtrap import find_email
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31544')
+            UserModelFactory.aw_admin(),
+            id='AW Admin',
+            marks=[allure.testcase('31544'), pytest.mark.xdist_group(name='agent1')],
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
@@ -67,7 +69,7 @@ def test_create_simulation_campaign(
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=allure.testcase('31545'),
+            marks=[allure.testcase('31545'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
 )
@@ -95,12 +97,14 @@ def test_modify_simulation_campaign(
     'user',
     [
         pytest.param(
-            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31547')
+            UserModelFactory.aw_admin(),
+            id='AW Admin',
+            marks=[allure.testcase('31547'), pytest.mark.xdist_group(name='agent1')],
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=allure.testcase('31548'),
+            marks=[allure.testcase('31548'), pytest.mark.xdist_group(name='agent1')],
         ),
     ],
 )
