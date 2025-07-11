@@ -12,7 +12,7 @@ class AddinApi(Enum):
     INFO = '/assessment/info'
     ASSESSMENT = '/assessment/assessment'
     INCIDENT = '/assessment/incident'
-    ASSESSMENT_REPORT = '/assessment/assessment_report'
+    ASSESSMENT_REPORT = '/assessment/assessment'
 
 
 class AssessmentService(BaseService):
