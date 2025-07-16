@@ -40,7 +40,7 @@ def set_outlook_default_setting(request, api_request_context_customer_admin):
                 completion_report_custom_text='Congratulations! You have successfully completed the assessment.',
             ),
             id='Test assessment_button visibility settings in phish detect ai',
-            marks=allure.testcase('31798'),
+            marks=[allure.testcase('31798'), pytest.mark.xdist_group('agent1')],
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
@@ -50,7 +50,7 @@ def set_outlook_default_setting(request, api_request_context_customer_admin):
                 completion_report_custom_text='Congratulations! You have successfully completed the assessment.',
             ),
             id='Test incident_button visibility settings in phish detect ai',
-            marks=allure.testcase('31799'),
+            marks=[allure.testcase('31799'), pytest.mark.xdist_group('agent1')],
         ),
     ],
 )
