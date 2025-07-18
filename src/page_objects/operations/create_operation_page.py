@@ -25,13 +25,16 @@ class CreateOperationPage(BasePage):
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
         )
-        self.campaign_checkbox = self.page.get_by_role('checkbox', name='Select row')
+        self.campaign_checkbox = self.page.get_by_role(
+            'checkbox', name='Select row'
+        ).first
 
     @allure.step('CreateOperationPage: create operation')
     def create_operation(self, operation: OperationModel):
         print(f'Create operation: {operation.operation_name}')
         self.operation_name_input.fill(operation.operation_name)
         self.filter_campaign_by_name(operation.campaign_name)
+        expect(self.campaign_checkbox).to_have_count(1)
         self.campaign_checkbox.check()
         self.create_operation_button.click()
         expect(self.alert_message).to_have_text(create_successful_text)
