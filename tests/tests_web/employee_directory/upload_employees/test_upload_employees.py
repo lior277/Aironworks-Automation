@@ -87,12 +87,12 @@ class TestUploadEmployees:
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 True,
-                marks=allure.testcase('31665'),
+                marks=[allure.testcase('31665'), pytest.mark.xdist_group('agent1')],
             ),
             pytest.param(
                 UserModelFactory.customer_admin_upload(),
                 False,
-                marks=allure.testcase('31662'),
+                marks=[allure.testcase('31662'), pytest.mark.xdist_group('agent1')],
             ),
             pytest.param(
                 UserModelFactory.encrypted_customer_admin(),
@@ -102,6 +102,7 @@ class TestUploadEmployees:
                     pytest.mark.skipif(
                         os.getenv('ENV') != 'staging', reason='Staging only'
                     ),
+                    pytest.mark.xdist_group('agent2'),
                 ],
             ),
             pytest.param(
@@ -112,6 +113,7 @@ class TestUploadEmployees:
                     pytest.mark.skipif(
                         os.getenv('ENV') != 'staging', reason='Staging only'
                     ),
+                    pytest.mark.xdist_group('agent2'),
                 ],
             ),
         ],
