@@ -1,3 +1,5 @@
+import time
+
 import allure
 from playwright.sync_api import Locator, Page, expect
 
@@ -48,8 +50,10 @@ class CreateGroupPage(BasePage):
             self.add_managers_button.click()
             for email in managers_email:
                 self.filter.filter_by('Email', email)
-                # self.filter_tooltip.click()
-                # self.filter_tooltip.wait_for(state='hidden')
+                time.sleep(3)
+                self.filter.button.hover()
+                self.filter_tooltip.click()
+                self.filter_tooltip.wait_for(state='hidden')
                 manager = self.table_choose_employees.get_row_by_column_value(
                     'email', email
                 )
