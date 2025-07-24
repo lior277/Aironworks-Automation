@@ -39,12 +39,12 @@ class EmailFilterService(BaseService):
 
     @allure.step('EmailFilterService: list safe emails/domains')
     def list_safe_emails_domains(self) -> APIResponse:
-        params = {'page_size': 15, 'offset': 0}
+        params = {'page_size': 100, 'offset': 0}
         return self._get(PSApi.SAFE_LIST.get_endpoint().format(), params=params)
 
     @allure.step('EmailFilterService: list blocked emails/domains')
     def list_blocked_emails_domains(self) -> APIResponse:
-        params = {'page_size': 15, 'offset': 0}
+        params = {'page_size': 100, 'offset': 0}
         return self._get(PSApi.BLOCKED_LIST.get_endpoint().format(), params=params)
 
     @allure.step('EmailFilterService: list safe emails/domains')

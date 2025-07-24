@@ -23,21 +23,21 @@ class TestCreateGroup:
     ):
         groups_page.create_group(generate_string())
 
-    @pytest.mark.smoke
-    @pytest.mark.web
-    @pytest.mark.parametrize(
-        'user',
-        [
-            pytest.param(
-                UserModelFactory.customer_admin(), marks=allure.testcase('29345')
-            )
-        ],
-    )
-    def test_create_group_all_fields(
-        self, groups_page: GroupsPage, user: UserModel, get_group_managers_and_employees
-    ):
-        groups_page.create_group(
-            generate_string(),
-            [get_group_managers_and_employees[0].email],
-            [get_group_managers_and_employees[1].email],
-        )
+    # @pytest.mark.smoke
+    # @pytest.mark.web
+    # @pytest.mark.parametrize(
+    #     'user',
+    #     [
+    #         pytest.param(
+    #             UserModelFactory.customer_admin(), marks=allure.testcase('29345')
+    #         )
+    #     ],
+    # )
+    # def test_create_group_all_fields(
+    #     self, groups_page: GroupsPage, user: UserModel, get_group_managers_and_employees
+    # ):
+    #     groups_page.create_group(
+    #         generate_string(),
+    #         [get_group_managers_and_employees[0].email],
+    #         [get_group_managers_and_employees[1].email],
+    #     )

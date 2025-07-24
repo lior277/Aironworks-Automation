@@ -28,7 +28,7 @@ from src.utils.mailtrap import find_email
         pytest.param(
             UserModelFactory.customer_admin(),
             id='Customer Admin',
-            marks=allure.testcase('31545'),
+            marks=[allure.testcase('31545'), pytest.mark.xdist_group(name='agent1')],
         ),
     ],
 )
