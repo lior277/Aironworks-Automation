@@ -126,13 +126,13 @@ def test_add_to_block_list_from_sender(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'gitlab@mg.gitlab.com',
+            'info@e.atlassian.com',
             False,
             marks=[allure.testcase('C31823'), pytest.mark.xdist_group(name='agent1')],
         ),
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            'gitlab@mg.gitlab.com',
+            'info@e.atlassian.com',
             True,
             marks=[allure.testcase('C31823'), pytest.mark.xdist_group(name='agent1')],
         ),
@@ -158,7 +158,7 @@ def test_add_to_safe_list_from_sender(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            marks=allure.testcase('C31802'),
+            marks=[allure.testcase('C31802'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
 )
@@ -179,7 +179,7 @@ def test_remove_from_block_list(
     [
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
-            marks=allure.testcase('C31828'),
+            marks=[allure.testcase('C31828'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
 )
@@ -202,7 +202,7 @@ def test_remove_from_safe_list(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'pham.duc@aironworks.com',
-            marks=allure.testcase('C31836'),
+            marks=[allure.testcase('C31836'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
     indirect=['vendor_details_page'],
@@ -228,7 +228,7 @@ def test_add_sender_to_block_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Eight',
             '8card.net',
-            marks=allure.testcase('C31837'),
+            marks=[allure.testcase('C31837'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
     indirect=['vendor_details_page'],
@@ -254,7 +254,7 @@ def test_add_domain_to_block_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'gonen@aironworks.com',
-            marks=allure.testcase('C31838'),
+            marks=[allure.testcase('C31838'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
     indirect=['vendor_details_page'],
@@ -280,7 +280,7 @@ def test_add_sender_to_safe_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Gmail',
             'gmail.com',
-            marks=allure.testcase('C31839'),
+            marks=[allure.testcase('C31839'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
     indirect=['vendor_details_page'],
@@ -306,7 +306,7 @@ def test_add_domain_to_safe_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'ani@aironworks.com',
-            marks=allure.testcase('C31840'),
+            marks=[allure.testcase('C31840'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
     indirect=['vendor_details_page', 'add_to_block_list_selected'],
@@ -330,7 +330,7 @@ def test_remove_sender_from_block_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Gitlab',
             'gitlab.com',
-            marks=allure.testcase('C31841'),
+            marks=[allure.testcase('C31841'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
     indirect=['vendor_details_page', 'add_to_block_list_selected'],
@@ -354,7 +354,7 @@ def test_remove_domain_from_block_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
             'taiga@aironworks.com',
-            marks=allure.testcase('C31842'),
+            marks=[allure.testcase('C31842'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
     indirect=['vendor_details_page', 'add_to_safe_list_selected'],
@@ -378,7 +378,7 @@ def test_remove_sender_from_safe_list_from_vendor(
             UserModelFactory.customer_admin_email_filter(),
             'Notion',
             'notion.so',
-            marks=allure.testcase('C31843'),
+            marks=[allure.testcase('C31843'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
     indirect=['vendor_details_page', 'add_to_safe_list_selected'],
