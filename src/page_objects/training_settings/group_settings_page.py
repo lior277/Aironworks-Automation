@@ -13,34 +13,34 @@ class GroupSettingsPage(TrainingSettingsPage):
         super().__init__(page)
         self.group_settings_tab = self.page.get_by_role('tab', name='Group Settings')
         self.edit_employees_enable_button = self.page.locator(
-            '//p[text()="Edit Employees"]/../..'
+            '//p[text()="Edit Employees"]/../../..'
         ).get_by_role('button', name='Enabled')
         self.edit_employees_disable_button = self.page.locator(
-            '//p[text()="Edit Employees"]/../..'
+            '//p[text()="Edit Employees"]/../../..'
         ).get_by_role('button', name='Disabled')
         self.launch_campaigns_enable_button = self.page.locator(
-            '//p[text()="Launch Campaigns"]/../..'
+            '//p[text()="Launch Campaigns"]/../../..'
         ).get_by_role('button', name='Enabled')
         self.launch_campaigns_disable_button = self.page.locator(
-            '//p[text()="Launch Campaigns"]/../..'
+            '//p[text()="Launch Campaigns"]/../../..'
         ).get_by_role('button', name='Disabled')
         self.read_campaigns_data_enable_button = self.page.locator(
-            '//p[text()="Read Campaigns Data"]/../..'
+            '//p[text()="Read Campaigns Data"]/../../..'
         ).get_by_role('button', name='Enabled')
         self.read_campaigns_data_disable_button = self.page.locator(
-            '//p[text()="Read Campaigns Data"]/../..'
+            '//p[text()="Read Campaigns Data"]/../../..'
         ).get_by_role('button', name='Disabled')
         self.resend_emails_enable_button = self.page.locator(
-            '//p[text()="Resend Emails"]/../..'
+            '//p[text()="Resend Emails"]/../../..'
         ).get_by_role('button', name='Enabled')
         self.resend_emails_disable_button = self.page.locator(
-            '//p[text()="Resend Emails"]/../..'
+            '//p[text()="Resend Emails"]/../../..'
         ).get_by_role('button', name='Disabled')
         self.read_gamification_data_enable_button = self.page.locator(
-            '//p[text()="Read Gamification Data"]/../..'
+            '//p[text()="Read Gamification Data"]/../../..'
         ).get_by_role('button', name='Enabled')
         self.read_gamification_data_disable_button = self.page.locator(
-            '//p[text()="Read Gamification Data"]/../..'
+            '//p[text()="Read Gamification Data"]/../../..'
         ).get_by_role('button', name='Disabled')
         self.save_button = self.page.get_by_role('button', name='Save')
         self.discard_button = self.page.get_by_role('button', name='Discard')

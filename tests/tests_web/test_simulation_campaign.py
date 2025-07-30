@@ -150,7 +150,7 @@ def test_create_simulation_campaign_scheduled(
 )
 @pytest.mark.smoke
 def test_campaigns_page_has_data(user, campaigns_page):
-    tables = campaigns_page.page.get_by_test_id('executions-table')
+    tables = campaigns_page.page.get_by_test_id('table')
     expect(tables).to_have_count(2)
     campaigns_page.wait_for_tables_load()
     tables = tables.all()
