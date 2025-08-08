@@ -12,7 +12,9 @@ from src.page_objects.entity.education_campaign_entity import EducationCampaignE
 class EducationCampaignPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.title = page.get_by_role('heading', level=2, name='Education Campaigns')
+        self.title = page.get_by_role(
+            'heading', level=4, name='Education Campaigns'
+        ).nth(1)
         self.table = Table(
             page.locator('//div[contains(@class,"MuiDataGrid-row")]'),
             EducationCampaignsTableComponent,

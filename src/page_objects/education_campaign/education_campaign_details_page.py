@@ -17,7 +17,7 @@ class EducationCampaignDetailsPage(BasePage):
         self.delete_cmapaign_option = self.page.get_by_role(
             'menuitem', name='Delete Campaign'
         )
-        self.title_txt = self.page.get_by_role('heading', level=4)
+        self.title_txt = self.page.get_by_role('heading', level=4).nth(1)
         self.delete_campaign_title = self.page.get_by_role('heading', level=2)
         self.delete_campaign_body = self.page.locator(selector='.MuiDialogContent-root')
         self.confirm_delete_button = self.page.get_by_text('Yes, Delete Campaign')
