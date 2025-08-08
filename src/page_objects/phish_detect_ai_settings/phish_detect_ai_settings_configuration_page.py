@@ -6,6 +6,7 @@ from playwright.sync_api import Locator, Page, expect
 from src.models.phish_detect_ui_settings.outlook_localized_config import (
     OutlookConfigData,
 )
+from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.phish_detect_ai_settings.const import updated_settings_text
 from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_page import (
     PhishDetectAISettings,
@@ -46,6 +47,10 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
                 "//p[text()='PhishDectectAI Assessment Preview']/../../.."
             )
         )
+        self.platform_dropdown = DropDown(
+            link_locator=self.page.get_by_role('button', name='Platform'),
+            option_list_locator=self.page.locator('[role="option"]'),
+        )
 
     @allure.step('PhishDetectAISettingsConfiguration: change settings')
     def change_settings(self, settings: OutlookConfigData):
@@ -74,92 +79,56 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
 
     @allure.step('PhishDetectAISettingsConfiguration: check settings in preview window')
     def check_settings_in_preview(self, settings: OutlookConfigData):
+        self.check_settings(settings)
+        self.platform_dropdown.select_item_by_text('Gmail')
+        self.check_settings(settings)
+
+    @allure.step('PhishDetectAISettingsConfiguration: check settings')
+    def check_settings(self, settings: OutlookConfigData):
         self.open_preview_window()
         if settings.assessment_button:
             expect(
-                self.assessment_preview_window.get_outlook_button(
+                self.assessment_preview_window.get_button(
                     settings.assessment_button_text
                 )
             ).to_be_visible()
             expect(
-                self.assessment_preview_window.get_outlook_button_description(
+                self.assessment_preview_window.get_button_description(
                     settings.assessment_button_description
                 )
             ).to_be_visible()
-            expect(
-                self.assessment_preview_window.get_gmail_button(
-                    settings.assessment_button_text
-                )
-            ).to_be_visible()
-            expect(
-                self.assessment_preview_window.get_gmail_button_description(
-                    settings.assessment_button_description
-                )
-            ).to_be_visible()
+
         else:
             expect(
-                self.assessment_preview_window.get_outlook_button(
+                self.assessment_preview_window.get_button(
                     settings.assessment_button_text
                 )
             ).not_to_be_visible()
             expect(
-                self.assessment_preview_window.get_outlook_button_description(
-                    settings.assessment_button_description
-                )
-            ).not_to_be_visible()
-            expect(
-                self.assessment_preview_window.get_gmail_button(
-                    settings.assessment_button_text
-                )
-            ).not_to_be_visible()
-            expect(
-                self.assessment_preview_window.get_gmail_button_description(
+                self.assessment_preview_window.get_button_description(
                     settings.assessment_button_description
                 )
             ).not_to_be_visible()
 
         if settings.incident_button:
             expect(
-                self.assessment_preview_window.get_outlook_button(
-                    settings.incident_button_text
-                )
+                self.assessment_preview_window.get_button(settings.incident_button_text)
             ).to_be_visible()
             expect(
-                self.assessment_preview_window.get_outlook_button_description(
-                    settings.incident_button_description
-                )
-            ).to_be_visible()
-            expect(
-                self.assessment_preview_window.get_gmail_button(
-                    settings.incident_button_text
-                )
-            ).to_be_visible()
-            expect(
-                self.assessment_preview_window.get_gmail_button_description(
+                self.assessment_preview_window.get_button_description(
                     settings.incident_button_description
                 )
             ).to_be_visible()
         else:
             expect(
-                self.assessment_preview_window.get_outlook_button(
-                    settings.incident_button_text
-                )
+                self.assessment_preview_window.get_button(settings.incident_button_text)
             ).not_to_be_visible()
             expect(
-                self.assessment_preview_window.get_outlook_button_description(
+                self.assessment_preview_window.get_button_description(
                     settings.incident_button_description
                 )
             ).not_to_be_visible()
-            expect(
-                self.assessment_preview_window.get_gmail_button(
-                    settings.incident_button_text
-                )
-            ).not_to_be_visible()
-            expect(
-                self.assessment_preview_window.get_gmail_button_description(
-                    settings.incident_button_description
-                )
-            ).not_to_be_visible()
+        self.page.keyboard.press('Escape')
 
 
 class ButtonVisibilityComponent:
@@ -212,27 +181,11 @@ class SaveComponent:
 class AssessmentPreview:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.outlook_section = self.locator.locator(
-            "//p[contains(text(),'Outlook')]/.."
-        )
-        self.gmail_section = self.locator.locator("//p[contains(text(),'Gmail')]/..")
 
-    @allure.step('AssessmentPreview: get outlook button')
-    def get_outlook_button(self, button_text: str):
-        return self.outlook_section.get_by_role('button', name=button_text)
+    @allure.step('AssessmentPreview: get button')
+    def get_button(self, button_text: str):
+        return self.locator.get_by_role('button', name=button_text)
 
-    @allure.step('AssessmentPreview: get outlook description')
-    def get_outlook_button_description(self, button_description: str):
-        return self.outlook_section.locator(
-            f'//p[contains(text(),"{button_description}")]'
-        )
-
-    @allure.step('AssessmentPreview: get gmail button')
-    def get_gmail_button(self, button_text: str):
-        return self.gmail_section.get_by_role('button', name=button_text)
-
-    @allure.step('AssessmentPreview: get gmail description')
-    def get_gmail_button_description(self, button_description: str):
-        return self.gmail_section.locator(
-            f'//p[contains(text(),"{button_description}")]'
-        )
+    @allure.step('AssessmentPreview: get description')
+    def get_button_description(self, button_description: str):
+        return self.locator.locator(f'//p[contains(text(),"{button_description}")]')
