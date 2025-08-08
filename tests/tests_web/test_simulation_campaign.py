@@ -245,14 +245,14 @@ def test_campaign_export(campaign_details_page: CampaignDetailsPage, user):
             'application/pdf',
             AppConfigs.SCENARIO_PDF_NAME,
             id='Customer Admin',
-            marks=allure.testcase('31545'),
+            marks=[allure.testcase('31545'), pytest.mark.xdist_group(name='agent1')],
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             AppConfigs.SCENARIO_DOCX_NAME,
             id='Customer Admin',
-            marks=allure.testcase('31545'),
+            marks=[allure.testcase('31545'), pytest.mark.xdist_group(name='agent1')],
         ),
     ],
 )
