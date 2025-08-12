@@ -1,6 +1,7 @@
 import allure
 from playwright.sync_api import Page, expect
 
+from src.page_objects.ai_agent_page import AIAgentPage
 from src.page_objects.campaigns_page import CampaignsPage
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
 from src.page_objects.education_campaign.education_campaign_page import (
@@ -60,6 +61,7 @@ class NavigationBar:
             'link', name='Email Filter Settings'
         )
         self.operations_button = page.get_by_role('link', name='Operations')
+        self.ai_agent_button = page.get_by_role('link', name='AI Agent')
 
     @allure.step('NavigationBar: Navigate to scenarios')
     def navigate_scenarios(self):
@@ -185,3 +187,10 @@ class NavigationBar:
         operation_list_page = OperationsListPage(self.page)
         operation_list_page.wait_for_progress_bar_disappears()
         return operation_list_page
+
+    @allure.step('NavigationBar: Navigate to ai agent page')
+    def navigate_ai_agent_page(self):
+        self.ai_agent_button.click()
+        ai_agent_page = AIAgentPage(self.page)
+        ai_agent_page.wait_for_progress_bar_disappears()
+        return ai_agent_page
