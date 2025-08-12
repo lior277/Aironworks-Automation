@@ -8,6 +8,7 @@ from playwright.sync_api import Browser, Page, expect
 from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.education.education_campaign_model import EducationCampaignDetailsModel
+from src.page_objects.ai_agent_page import AIAgentPage
 from src.page_objects.campaign_details_page import CampaignDetailsPage
 from src.page_objects.campaigns_page import CampaignsPage
 from src.page_objects.content_library.add_content_page import AddContentPage
@@ -336,6 +337,11 @@ def training_settings_group_settings_page(
     return (
         dashboard_page.navigation_bar.navigate_training_settings_group_settings_page()
     )
+
+
+@pytest.fixture
+def ai_agent_page(dashboard_page: DashboardPage) -> AIAgentPage:
+    return dashboard_page.navigation_bar.navigate_ai_agent_page()
 
 
 @pytest.fixture(scope='function')
