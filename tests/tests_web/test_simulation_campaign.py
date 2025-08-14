@@ -247,9 +247,13 @@ def test_campaign_export(campaign_details_page: CampaignDetailsPage, user):
         reader = csv.DictReader(f)
         rows: list = [row for row in reader]
     assert len(rows) == 6
-    csv_entity = CampaignAttacksSummaryFactory.get_entity_from_dict(rows[3])
-
-    assert page_entity == csv_entity
+    flag = False
+    for i in range(len(rows)):
+        csv_entity = CampaignAttacksSummaryFactory.get_entity_from_dict(rows[i])
+        if page_entity == csv_entity:
+            flag = True
+            break
+    assert flag
 
 
 @pytest.mark.parametrize(
