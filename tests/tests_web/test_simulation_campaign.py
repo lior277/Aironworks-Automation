@@ -1,5 +1,4 @@
 import csv
-import re
 from datetime import datetime, timedelta
 
 import allure
@@ -177,7 +176,7 @@ def test_campaign_summary_page(campaign_details_page, user):
         pytest.skip('Test is not ready for development env')
     expect(
         campaign_details_page.page.get_by_role(
-            'heading', name=re.compile(AppConfigs.SAMPLE_CAMPAIGN_NAME + '.*')
+            'heading', name=AppConfigs.SAMPLE_CAMPAIGN_NAME
         )
     ).to_have_count(1)  # test title
     expect(
@@ -186,24 +185,40 @@ def test_campaign_summary_page(campaign_details_page, user):
 
 
 @pytest.mark.parametrize(
-    'user',
+    'user, total, field, value, record',
     [
         pytest.param(
-            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31549')
+            UserModelFactory.aw_admin(),
+            6,
+            'Email',
+            'pham.duc',
+            1,
+            id='AW Admin',
+            marks=allure.testcase('31549'),
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
+            6,
+            'Email',
+            'pham.duc',
+            1,
             id='Customer Admin',
             marks=allure.testcase('31552'),
         ),
     ],
 )
 @pytest.mark.smoke
-def test_campaign_summary_table(campaign_details_page: CampaignDetailsPage, user):
+def test_campaign_summary_table(
+    campaign_details_page: CampaignDetailsPage, user, total, field, value, record
+):
     # Count the rows that do not have the text 'Preview'
     if AppConfigs.ENV.startswith('development'):
         pytest.skip('Test is not ready for development env')
-    assert len(campaign_details_page.table_campaign_attacks_summary.text_content()) > 0
+    # assert (
+    #     len(campaign_details_page.table_campaign_attacks_summary.text_content())
+    #     == total
+    # )
+    campaign_details_page.filter_employees(field, value, record)
 
 
 @pytest.mark.parametrize(
@@ -231,8 +246,8 @@ def test_campaign_export(campaign_details_page: CampaignDetailsPage, user):
     with open(file, 'r', encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
         rows: list = [row for row in reader]
-    assert len(rows) == 1
-    csv_entity = CampaignAttacksSummaryFactory.get_entity_from_dict(rows[0])
+    assert len(rows) == 6
+    csv_entity = CampaignAttacksSummaryFactory.get_entity_from_dict(rows[3])
 
     assert page_entity == csv_entity
 

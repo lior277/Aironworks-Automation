@@ -23,13 +23,23 @@ class Table(Generic[T]):
                 out.append(structure_object)
         return out
 
+    def get_row_count(self) -> int:
+        return len(self._Table__locator.all())
+
     def text_content(self) -> list[list[str]]:
         all_context = []
         for element in self.get_content():
             out = []
+            for i in range(20):
+                self._Table__locator.page.keyboard.press('ArrowLeft')
             for fild in vars(element).values():
+                count = 0
+                while not fild.is_visible() and count < 20:
+                    self._Table__locator.page.keyboard.press('ArrowRight')
+                    count += 1
                 fild.scroll_into_view_if_needed()
                 out.append(fild.text_content(timeout=0))
+                fild.click()
             all_context.append(out)
         return all_context
 

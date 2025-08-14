@@ -275,6 +275,15 @@ def campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
 
 
 @pytest.fixture
+def view_education_campaign_details_page(
+    dashboard_page: DashboardPage,
+) -> EducationCampaignDetailsPage:
+    return EducationCampaignDetailsPage(dashboard_page.page).open(
+        campaign_id=AppConfigs.SAMPLE_EDUCATION_CAMPAIGN
+    )
+
+
+@pytest.fixture
 def first_campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
     campaigns_page = dashboard_page.navigation_bar.navigate_campaigns()
     return campaigns_page.click_first_ongoing_campaign()

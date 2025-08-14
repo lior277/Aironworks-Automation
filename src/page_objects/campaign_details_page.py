@@ -4,6 +4,7 @@ import allure
 from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
+from src.page_objects.data_types.filter import Filter
 from src.page_objects.data_types.table_element import Table
 from src.page_objects.modify_campaign_page import ModifyCampaignPage
 
@@ -27,6 +28,12 @@ class CampaignDetailsPage(BasePage):
         )
         self.modify_campaign_option = self.page.get_by_role(
             'menuitem', name='Modify Campaign'
+        )
+        self.attack_filter = Filter(
+            self.page.locator('//button[contains(text(),"Filters")]'),
+            self.page.get_by_label('Columns', exact=True),
+            self.page.locator('[placeholder="Filter value"]'),
+            self.page.locator('[data-testid="LoadIcon"]'),
         )
 
     @allure.step(
@@ -54,6 +61,13 @@ class CampaignDetailsPage(BasePage):
         self.manage_campaign_button.click()
         self.modify_campaign_option.click()
         return ModifyCampaignPage(self.page)
+
+    @allure.step('CampaignDetailsPage: filter target employee')
+    def filter_employees(self, field: str, value: str, number_record: int):
+        self.attack_filter.filter_by(field, value)
+        expect(self.table_campaign_attacks_summary._Table__locator).to_have_count(
+            number_record, timeout=10000
+        )
 
 
 class CampaignAttacksSummary:
