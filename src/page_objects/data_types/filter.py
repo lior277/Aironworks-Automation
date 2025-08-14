@@ -1,3 +1,4 @@
+import re
 from time import sleep
 
 from playwright.sync_api import Locator, expect
@@ -24,7 +25,7 @@ class Filter:
             self.button.click()
         sleep(2)
         self.filter_select.select_option(filter_name)
-        expect(self.filter_select).to_have_value(value=filter_name.lower())
+        expect(self.filter_select).to_have_value(value=re.compile(filter_name.lower()))
         sleep(2)
         self.filter_value.fill(value)
         self.loader.wait_for(state='hidden')
