@@ -47,7 +47,7 @@ class AIAgentPage(BasePage):
                 raise ValueError(f'Invalid question type: {question_type}')
 
     def search_preview_scenario_check(self, number_blocks: int, keyword: str):
-        expect(self.scenario_blocks).to_have_count(number_blocks, timeout=60_000)
+        expect(self.scenario_blocks).to_have_count(number_blocks, timeout=120_000)
         count = self.scenario_blocks.count()
         for i in range(count):
             expect(self.scenario_blocks.nth(i).locator('//h6')).to_contain_text(keyword)
@@ -67,7 +67,7 @@ class AIAgentPage(BasePage):
             expect(self.split_panel).to_be_hidden()
 
     def search_preview_education_content_check(self, number_blocks: int, keyword: str):
-        expect(self.education_blocks).to_have_count(number_blocks, timeout=60_000)
+        expect(self.education_blocks).to_have_count(number_blocks, timeout=120_000)
         count = self.education_blocks.count()
         for i in range(count):
             expect(

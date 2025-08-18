@@ -12,6 +12,7 @@ invalid_file_type_text = 'Invalid file type'
 marked_attack_non_draft_message = 'Marked attack as non-draft'
 scenario_file_name_helper_text = 'Characters supported: Word characters (letters and digits), hyphens (-), underscores (_), and periods (.)'
 modify_campaign_successfully_text = 'Campaign has been successfully updated'
+id_number_copied_text = 'Report ID Number copied to clipboard.'
 
 
 def get_file_size_error_message(file_path: str):

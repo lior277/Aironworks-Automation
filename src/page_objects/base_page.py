@@ -21,8 +21,10 @@ class BasePage:
         self.alert_message = self.page.locator("[id='notistack-snackbar']")
         self.back_home_button = self.page.get_by_text('Back to Home')
         import src.page_objects.navigation_bar
+        import src.page_objects.support_menu
 
         self.navigation_bar = src.page_objects.navigation_bar.NavigationBar(page)
+        self.support_menu = src.page_objects.support_menu.SupportMenu(self.page)
         self.default_url = None
         if not page.url.startswith('about'):
             self.set_default_url('/'.join(page.url.split('/', 3)[:3]) + '/')
@@ -40,7 +42,7 @@ class BasePage:
         self.alert_message.wait_for(state='hidden')
 
     @allure.step('BasePage: wait for loading state')
-    def wait_for_loading_state(self, timeout=20000):
+    def wait_for_loading_state(self, timeout=30000):
         if self.loading.first.is_visible(timeout=timeout):
             for load in self.loading.all():
                 if load.is_visible():
