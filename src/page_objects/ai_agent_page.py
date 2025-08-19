@@ -89,7 +89,7 @@ class AIAgentPage(BasePage):
             expect(self.split_panel).to_be_hidden()
 
     def search_preview_campaign_check(self, number_blocks: int):
-        expect(self.campaign_blocks).to_have_count(number_blocks, timeout=1200_000)
+        expect(self.campaign_blocks).to_have_count(number_blocks, timeout=120_000)
         count = self.campaign_blocks.count()
         for i in range(count):
             expect(
