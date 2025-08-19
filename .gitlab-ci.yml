@@ -13,6 +13,7 @@ variables:
       - staging
       - production
       - production-eu
+      - production-us
 
 workflow:
   rules:
