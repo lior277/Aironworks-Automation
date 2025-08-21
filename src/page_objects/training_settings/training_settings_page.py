@@ -12,7 +12,9 @@ class TrainingSettingsPage(BasePage):
         )
         self.email_sending = self.page.get_by_role('tab', name='Email Sending')
         self.warning = self.page.get_by_role('tab', name='Warning')
-        self.group_settings = self.page.get_by_role('tab', name='Group Settings')
+        self.group_settings = self.page.get_by_role(
+            'tab', name='Group Manager Permissions'
+        )
         self.save_button = self.page.get_by_role('button', name='Save')
         self.discard_button = self.page.get_by_role('button', name='Discard')
 
@@ -30,7 +32,7 @@ class TrainingSettingsPage(BasePage):
             case 'Warning':
                 self.warning.click()
                 self.wait_for_progress_bar_disappears()
-            case 'Group Settings':
+            case 'Group Manager Permissions':
                 self.group_settings.click()
                 self.wait_for_progress_bar_disappears()
             case _:
