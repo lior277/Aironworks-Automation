@@ -2,7 +2,9 @@ import allure
 import pytest
 
 from src.models.factories.auth.user_model_factory import UserModelFactory
-from src.models.training_settings.group_settings_config import GroupSettingsConfig
+from src.models.training_settings.group_manager_permissions_config import (
+    GroupManagerPermissionsConfig,
+)
 
 
 @pytest.mark.parametrize(
@@ -10,7 +12,7 @@ from src.models.training_settings.group_settings_config import GroupSettingsConf
     [
         pytest.param(
             UserModelFactory.customer_admin(),
-            GroupSettingsConfig(
+            GroupManagerPermissionsConfig(
                 edit_employees_feature=True,
                 launch_campaigns_feature=False,
                 read_campaigns_data_feature=False,
@@ -22,7 +24,7 @@ from src.models.training_settings.group_settings_config import GroupSettingsConf
         ),
         pytest.param(
             UserModelFactory.customer_admin(),
-            GroupSettingsConfig(
+            GroupManagerPermissionsConfig(
                 edit_employees_feature=True,
                 launch_campaigns_feature=True,
                 read_campaigns_data_feature=True,
@@ -34,7 +36,11 @@ from src.models.training_settings.group_settings_config import GroupSettingsConf
         ),
     ],
 )
-def test_modify_group_settings(
-    training_settings_group_settings_page, user, settings: GroupSettingsConfig
+def test_modify_group_manager_permissions(
+    training_settings_group_manager_permissions_page,
+    user,
+    settings: GroupManagerPermissionsConfig,
 ):
-    training_settings_group_settings_page.modify_group_settings(settings)
+    training_settings_group_manager_permissions_page.test_modify_group_manager_permissions(
+        settings
+    )

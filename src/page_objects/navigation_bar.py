@@ -27,7 +27,9 @@ from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_general_
 )
 from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.training_settings.email_sending_page import EmailSendingPage
-from src.page_objects.training_settings.group_settings_page import GroupSettingsPage
+from src.page_objects.training_settings.group_manager_permissions_page import (
+    GroupManagerPermissionsPage,
+)
 from src.page_objects.training_settings.training_settings_page import (
     TrainingSettingsPage,
 )
@@ -174,12 +176,12 @@ class NavigationBar:
         return email_sending_page
 
     @allure.step('NavigationBar: Navigate to training settings: group settings page')
-    def navigate_training_settings_group_settings_page(self):
+    def navigate_training_settings_group_manager_permissions_page(self):
         self.training_settings_button.click()
-        group_settings_page = GroupSettingsPage(self.page)
-        group_settings_page.select_tab('Group Settings')
-        group_settings_page.wait_for_progress_bar_disappears()
-        return group_settings_page
+        group_manager_permissions_page = GroupManagerPermissionsPage(self.page)
+        group_manager_permissions_page.select_tab('Group Manager Permissions')
+        group_manager_permissions_page.wait_for_progress_bar_disappears()
+        return group_manager_permissions_page
 
     @allure.step('NavigationBar: Navigate to operation list page')
     def navigate_operation_list_page(self):

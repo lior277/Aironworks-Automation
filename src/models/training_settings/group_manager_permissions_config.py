@@ -5,7 +5,7 @@ from src.models.base_dataclass import BaseDataClass
 
 
 @dataclass
-class GroupSettingsConfig(BaseDataClass):
+class GroupManagerPermissionsConfig(BaseDataClass):
     edit_employees_feature: Optional[bool] = None
     launch_campaigns_feature: Optional[bool] = None
     read_campaigns_data_feature: Optional[bool] = None

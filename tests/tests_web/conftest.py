@@ -47,7 +47,9 @@ from src.page_objects.phish_detect_ai_settings.phish_detect_ai_settings_general_
 )
 from src.page_objects.scenarios_page import ScenariosPage
 from src.page_objects.training_settings.email_sending_page import EmailSendingPage
-from src.page_objects.training_settings.group_settings_page import GroupSettingsPage
+from src.page_objects.training_settings.group_manager_permissions_page import (
+    GroupManagerPermissionsPage,
+)
 from src.utils.log import Log
 from src.utils.sendgrid import SendGrid
 from src.utils.waiter import wait_for
@@ -340,12 +342,10 @@ def operations_list_page(dashboard_page: DashboardPage) -> OperationsListPage:
 
 
 @pytest.fixture
-def training_settings_group_settings_page(
+def training_settings_group_manager_permissions_page(
     dashboard_page: DashboardPage,
-) -> GroupSettingsPage:
-    return (
-        dashboard_page.navigation_bar.navigate_training_settings_group_settings_page()
-    )
+) -> GroupManagerPermissionsPage:
+    return dashboard_page.navigation_bar.navigate_training_settings_group_manager_permissions_page()
 
 
 @pytest.fixture

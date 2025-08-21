@@ -1,17 +1,21 @@
 import allure
 from playwright.sync_api import Page
 
-from src.models.training_settings.group_settings_config import GroupSettingsConfig
+from src.models.training_settings.group_manager_permissions_config import (
+    GroupManagerPermissionsConfig,
+)
 from src.page_objects.training_settings.const import updated_settings_text
 from src.page_objects.training_settings.training_settings_page import (
     TrainingSettingsPage,
 )
 
 
-class GroupSettingsPage(TrainingSettingsPage):
+class GroupManagerPermissionsPage(TrainingSettingsPage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.group_settings_tab = self.page.get_by_role('tab', name='Group Settings')
+        self.group_manager_permissions_tab = self.page.get_by_role(
+            'tab', name='Group Manager Permissions'
+        )
         self.edit_employees_enable_button = self.page.locator(
             '//p[text()="Edit Employees"]/../../..'
         ).get_by_role('button', name='Enabled')
@@ -46,7 +50,9 @@ class GroupSettingsPage(TrainingSettingsPage):
         self.discard_button = self.page.get_by_role('button', name='Discard')
 
     @allure.step('Group Settings: Modify Group Settings')
-    def modify_group_settings(self, settings: GroupSettingsConfig):
+    def test_modify_group_manager_permissions(
+        self, settings: GroupManagerPermissionsConfig
+    ):
         if settings.edit_employees_feature:
             self.edit_employees_enable_button.click()
         else:
