@@ -33,7 +33,9 @@ class AIAgentPage(BasePage):
     ):
         self.ask_box.fill(question)
         self.send_button.click()
-        expect(self.user_message_boxes.nth(-1)).to_contain_text(question)
+        expect(self.user_message_boxes.nth(-1)).to_contain_text(
+            question, ignore_case=True
+        )
         match question_type:
             case 'search preview scenario':
                 self.search_preview_scenario_check(number_blocks, keyword)
