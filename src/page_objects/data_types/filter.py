@@ -23,13 +23,13 @@ class Filter:
         Log.info(f'Filter by {filter_name} column and {value} value')
         if not self.filter_select.is_visible():
             self.button.click()
-        sleep(2)
+        sleep(3)
         self.filter_select.select_option(filter_name)
         expect(self.filter_select).to_have_value(value=re.compile(filter_name.lower()))
-        sleep(2)
+        sleep(5)
         self.filter_value.fill(value)
         self.loader.wait_for(state='hidden')
-        sleep(1)  # TODO ask FE team to add some kind of spinner
+        sleep(2)  # TODO ask FE team to add some kind of spinner
         expect(self.filter_value).to_have_value(value=value)
         if click_after:
             self.button.click()

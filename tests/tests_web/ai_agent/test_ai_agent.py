@@ -11,9 +11,9 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
     [
         pytest.param(
             UserModelFactory.customer_admin(),
-            'List me 3 scenarios that is email attack with "Duc" in the name',
+            'List me 3 scenarios that is email attack with "education" in the name',
             'search preview scenario',
-            'Duc',
+            'education',
             3,
             marks=[allure.testcase('C31803'), pytest.mark.xdist_group(name='agent1')],
         ),
