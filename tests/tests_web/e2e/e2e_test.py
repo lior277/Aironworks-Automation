@@ -1,6 +1,7 @@
 import allure
 import pytest
 
+from src.configs.config_loader import AppConfigs
 from src.models.auth.signup_model import EmailSignupModel
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.signup_model_factory import SignupModelFactory
@@ -27,6 +28,8 @@ def test_new_user_create_group(
     sign_in_page: SignInPage,
     request: pytest.FixtureRequest,
 ):
+    if AppConfigs.env != 'staging':
+        pytest.skip('This test is only for staging environment')
     sign_in_page.navigate()
     signup_page = sign_in_page.navigate_to_sign_up_page()
     signup_page.sign_up_with_email(company)
