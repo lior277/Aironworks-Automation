@@ -4,6 +4,7 @@ from playwright.sync_api import Page, expect
 from src.page_objects.ai_agent_page import AIAgentPage
 from src.page_objects.campaigns_page import CampaignsPage
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
+from src.page_objects.customers_page import CustomersPage
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
@@ -38,6 +39,11 @@ from src.page_objects.training_settings.training_settings_page import (
 class NavigationBar:
     def __init__(self, page: Page):
         self.page = page
+        self.user_menu = self.page.locator(
+            '//p[contains(text(),"Admin")]//parent::button'
+        )
+        self.logout_button = self.page.get_by_role('menuitem', name='Log Out')
+        self.customers_button = page.get_by_role('link', name='Customers')
         self.scenarios_button = page.get_by_role('link', name='Scenarios')
         self.training_settings_button = page.get_by_role(
             'link', name='Training Settings', exact=True
@@ -196,3 +202,16 @@ class NavigationBar:
         ai_agent_page = AIAgentPage(self.page)
         ai_agent_page.wait_for_progress_bar_disappears()
         return ai_agent_page
+
+    @allure.step('NavigationBar: Navigate to customers page')
+    def navigate_customers_page(self):
+        self.customers_button.click()
+        customers_page = CustomersPage(self.page)
+        customers_page.wait_for_progress_bar_disappears()
+        return customers_page
+
+    @allure.step('NavigationBar: log out')
+    def log_out(self):
+        self.user_menu.click()
+        expect(self.logout_button).to_be_visible()
+        self.logout_button.click()
