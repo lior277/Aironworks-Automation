@@ -10,6 +10,7 @@ from src.page_objects.base_page import BasePage
 from src.page_objects.customers_page import CustomersPage
 from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.outlook_page import OutlookPage
+from src.page_objects.signup_page import SignupPage
 
 
 class SignInPage(BasePage):
@@ -23,6 +24,7 @@ class SignInPage(BasePage):
         self.button_sign_in = page.get_by_role(
             'button', name=re.compile('sign in$', re.IGNORECASE)
         )
+        self.link_sign_up = page.get_by_role('link', name='Sign Up')
 
     @allure.step('SignInPage: open page')
     def navigate(self, admin=False) -> Response:
@@ -56,6 +58,12 @@ class SignInPage(BasePage):
         self.input_email.fill(user.email)
         self.input_password.fill(user.password)
         self.button_sign_in.click()
+        return DashboardPage(self.page)
+
+    @allure.step('SignInPage: navigate to sign up page')
+    def navigate_to_sign_up_page(self):
+        self.link_sign_up.click()
+        return SignupPage(self.page)
 
     def wait_for_page_loaded(self, is_admin: bool):
         if is_admin:

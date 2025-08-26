@@ -8,6 +8,7 @@ from playwright.sync_api import Browser, Page, expect
 from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.education.education_campaign_model import EducationCampaignDetailsModel
+from src.models.factories.auth.signup_model_factory import SignupModelFactory
 from src.page_objects.ai_agent_page import AIAgentPage
 from src.page_objects.campaign_details_page import CampaignDetailsPage
 from src.page_objects.campaigns_page import CampaignsPage
@@ -201,6 +202,29 @@ def dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
         os.environ[refresh_token] = get_cookie_value(cookies, 'refresh_token')
         os.environ[token] = get_cookie_value(cookies, 'token')
     return DashboardPage(sign_in_page.page)
+
+
+@pytest.fixture(scope='function')
+def new_user_dashboard_page(sign_in_page: SignInPage, user: UserModel) -> DashboardPage:
+    company = SignupModelFactory.random_customer_ui()
+    sign_in_page.navigate()
+    signup_page = sign_in_page.navigate_to_sign_up_page()
+    signup_page.sign_up_with_email(company)
+    new_user = UserModel(
+        email=company.email,
+        password=company.password,
+        is_admin=False,
+        company=company.company_name,
+    )
+    sign_in_page.navigate(admin=True)
+    dashboard_page = sign_in_page.fill_sign_in_form(user)
+    customers_page = dashboard_page.navigation_bar.navigate_customers_page()
+    customers_page.navigate_to_new_customers_page()
+    customers_page.approve_customer(new_user.company)
+    customers_page.navigation_bar.log_out()
+    sign_in_page.navigate(admin=False)
+    dashboard_page = sign_in_page.fill_sign_in_form(new_user)
+    return dashboard_page
 
 
 @pytest.fixture(scope='function')

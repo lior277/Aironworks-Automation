@@ -52,7 +52,9 @@ class AIAgentPage(BasePage):
         expect(self.scenario_blocks).to_have_count(number_blocks, timeout=120_000)
         count = self.scenario_blocks.count()
         for i in range(count):
-            expect(self.scenario_blocks.nth(i).locator('//h6')).to_contain_text(keyword)
+            expect(self.scenario_blocks.nth(i).locator('//h6')).to_contain_text(
+                keyword, ignore_case=False
+            )
             expect(
                 self.scenario_blocks.nth(i).get_by_role(
                     'button', name='Preview Scenario'
