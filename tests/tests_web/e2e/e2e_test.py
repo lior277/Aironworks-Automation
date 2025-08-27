@@ -28,7 +28,7 @@ def test_new_user_create_group(
     sign_in_page: SignInPage,
     request: pytest.FixtureRequest,
 ):
-    if AppConfigs.env != 'staging':
+    if AppConfigs.ENV != 'staging':
         pytest.skip('This test is only for staging environment')
     sign_in_page.navigate()
     signup_page = sign_in_page.navigate_to_sign_up_page()
