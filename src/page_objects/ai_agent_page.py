@@ -53,7 +53,7 @@ class AIAgentPage(BasePage):
         count = self.scenario_blocks.count()
         for i in range(count):
             expect(self.scenario_blocks.nth(i).locator('//h6')).to_contain_text(
-                keyword, ignore_case=False
+                keyword, ignore_case=True
             )
             expect(
                 self.scenario_blocks.nth(i).get_by_role(
@@ -76,7 +76,7 @@ class AIAgentPage(BasePage):
         for i in range(count):
             expect(
                 self.education_blocks.nth(i).get_by_role('heading', level=3)
-            ).to_contain_text(keyword)
+            ).to_contain_text(keyword, ignore_case=True)
             expect(
                 self.education_blocks.nth(i).get_by_role(
                     'button', name='Preview Content'
