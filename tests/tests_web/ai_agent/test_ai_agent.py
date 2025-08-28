@@ -11,7 +11,7 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
     [
         pytest.param(
             UserModelFactory.customer_admin(),
-            'List me 3 scenarios that is email attack with "education" in the name',
+            'List me 3 scenarios that is email attack with "education" in the title',
             'search preview scenario',
             'education',
             3,
