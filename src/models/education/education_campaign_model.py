@@ -19,7 +19,7 @@ class EducationCampaignDetailsModel(BaseDataClass):
     assignments_submitted: int
     average_score: str
     average_total: float
-    content: Content
+    contents: [Content]
     end_date: float
     execution_id: str
     id: str
