@@ -1,6 +1,6 @@
 import json
 from dataclasses import fields
-from typing import Any, List, Type, TypeVar, get_type_hints
+from typing import Any, List, Type, TypeVar, get_args, get_origin, get_type_hints
 
 T = TypeVar('T')
 
@@ -34,8 +34,14 @@ class BaseDataClass:
                 }
             )
         elif isinstance(data, list):
-            elem_type = cls.__args__[0]
-            return [from_dict(elem_type, item) for item in data]
+            # Check if cls is a generic type (e.g., List[int])
+            origin = get_origin(cls)
+            if origin is list:  # Check if cls is a List type
+                elem_type = get_args(cls)[0]  # Get the type of list elements
+                return [from_dict(elem_type, item) for item in data]
+            else:
+                # Fallback for raw list or unexpected type
+                return [from_dict(type(item), item) for item in data]
         else:
             return data
 
@@ -64,7 +70,13 @@ def from_dict(data_class: Type[T], data: Any) -> T:
             **{f: from_dict(field_types[f], data[f]) for f in data if f in field_types}
         )
     elif isinstance(data, list):
-        elem_type = data_class.__args__[0]
-        return [from_dict(elem_type, item) for item in data]
+        # Check if data_class is a generic List type
+        origin = get_origin(data_class)
+        if origin is list:  # If data_class is a List type (e.g., List[int])
+            elem_type = get_args(data_class)[0]  # Get the type of list elements
+            return [from_dict(elem_type, item) for item in data]
+        else:
+            # Fallback for raw list or unexpected type
+            return [from_dict(type(item), item) for item in data]
     else:
         return data

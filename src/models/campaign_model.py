@@ -9,7 +9,7 @@ class CampaignModel:
     employees: List[int]
     attack_url: str = None
     start_date: str = None
-    custom_reminder: int = None
+    # custom_reminder: int = None
     content_id: str = None
     special: List[str] = field(default_factory=list)
     company_id: Optional[int] = None

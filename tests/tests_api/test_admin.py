@@ -54,8 +54,8 @@ def run_campaign_on_employee(
     def validate_campaign_status():
         campaign_status = admin_service.get_attack_execution(campaign_id=campaign_id)
         expect(campaign_status).to_be_ok()
-
-        return campaign_status.json()['execution']
+        print(campaign_status.json())
+        return campaign_status.json()['attack_info']
 
     assert wait_for(validate_campaign_status, 60)
 
