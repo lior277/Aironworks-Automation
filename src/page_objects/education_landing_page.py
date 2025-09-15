@@ -34,8 +34,9 @@ class EducationLandingPage:
         expect(self.submit_button).to_be_visible()
         with self.page.expect_request_finished():
             self.submit_button.click()
-
+        # self.embedded_content.owner.wait_for()
         expect(self.embedded_content.owner).to_be_visible()
+        # time.sleep(60_000)
         expect(self.embedded_content.owner).to_have_attribute(
             'src', re.compile('https://.*')
         )
