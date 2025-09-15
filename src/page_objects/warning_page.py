@@ -1,3 +1,5 @@
+import time
+
 from playwright.sync_api import Page, expect
 
 from src.page_objects.base_page import BasePage
@@ -41,6 +43,9 @@ class SurveyPage(BasePage):
             .locator('//following::div//input')
             .nth(0)
         ).to_be_visible()
+        time.sleep(5)
+        if (self.page.get_by_role('button', name='Close')).is_visible():
+            self.page.get_by_role('button', name='Close').click()
         self.question_sections.nth(question_number - 1).get_by_role(
             'textbox', name=f'{option}'
         ).locator('//following::div//input').nth(0).click()

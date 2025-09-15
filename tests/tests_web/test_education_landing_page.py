@@ -1,5 +1,6 @@
 import json
 import re
+import time
 
 import allure
 import pytest
@@ -69,8 +70,11 @@ def test_submit_quiz(api_request_context_customer_admin, mailtrap, employee, new
 
     expect(page.page.get_by_text('Ongoing Content')).to_be_visible()
     expect(page.embedded_content.owner).to_be_visible()
-
+    time.sleep(5)
+    if (page.page.get_by_role('button', name='Close')).is_visible():
+        page.page.get_by_role('button', name='Close').click()
     # Select the first question option
+    page.page.locator('#field_control_0').first.scroll_into_view_if_needed()
     page.page.locator('#field_control_0').first.click()
     page.confirm_quiz()
     if AppConfigs.ENV == 'development':
