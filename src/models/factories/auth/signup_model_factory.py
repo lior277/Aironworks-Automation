@@ -23,7 +23,7 @@ class SignupModelFactory:
     def random_customer_ui(cls, referral=None):
         return EmailSignupModel(
             email=get_random_email(),
-            password=fake.password(),
+            password=fake.password(special_chars=True),
             language='English',
             first_name=fake.first_name(),
             last_name=fake.last_name(),
