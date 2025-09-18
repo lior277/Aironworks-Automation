@@ -37,7 +37,7 @@ class SurveyPage(BasePage):
         self.thankyou_message = self.page.get_by_role('paragraph')
 
     def select_radio_option(self, question_number: int, option: int):
-        time.sleep(5)
+        self.page.wait_for_timeout(10000)
         if (self.page.get_by_role('button', name='Close')).is_visible():
             self.page.get_by_role('button', name='Close').click()
         expect(
