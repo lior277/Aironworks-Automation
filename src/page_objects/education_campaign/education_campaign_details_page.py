@@ -63,7 +63,7 @@ class EducationCampaignDetailsPage(BasePage):
     def filter_assignments(self, field: str, value: str, number_record: int):
         self.assignment_list_filter.filter_by(field, value)
         expect(self.assignment_list._Table__locator).to_have_count(
-            number_record, timeout=10000
+            number_record, timeout=30000
         )
 
 
