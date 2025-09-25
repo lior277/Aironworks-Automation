@@ -26,7 +26,7 @@ def run_education_campaign_on_employee(
             start_date=datetime.now().timestamp(),
             end_date=(datetime.now() + timedelta(days=1)).timestamp(),
             employee_ids=[employee.employee_id],
-            content_id=AppConfigs.EXAMPLE_EDUCATION_CONTENT,
+            content_ids=[AppConfigs.EXAMPLE_EDUCATION_CONTENT],
         )
     )
     expect(result).to_be_ok()
