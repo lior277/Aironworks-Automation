@@ -21,7 +21,7 @@ class EducationCampaignModelFactory:
 
     @staticmethod
     def get_education_campaign_from_education_content(
-        education_content_id: str, employee_ids: list[int]
+        education_content_ids: list[str], employee_ids: list[int]
     ) -> EducationCampaignModel:
         return EducationCampaignModel(
             title='Automation Campaign '
@@ -32,5 +32,5 @@ class EducationCampaignModelFactory:
             start_date=datetime.now().timestamp(),
             end_date=(datetime.now() + timedelta(days=1)).timestamp(),
             employee_ids=employee_ids,
-            content_id=education_content_id,
+            content_ids=education_content_ids,
         )

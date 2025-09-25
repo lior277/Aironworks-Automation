@@ -15,7 +15,7 @@ class EducationCampaignModel:
     title: str
     start_date: float  # timestamp
     end_date: float
-    content_id: str
+    content_ids: List[str]
     score_required: int = 0
     company_id: int = None
     all_employees: bool = False

@@ -49,7 +49,7 @@ def education_campaign(
     education = api.education(api_request_context_customer_admin)
     education_campaign = (
         EducationCampaignModelFactory.get_education_campaign_from_education_content(
-            AppConfigs.EXAMPLE_EDUCATION_CONTENT, [employee.employee_id]
+            [AppConfigs.EXAMPLE_EDUCATION_CONTENT], [employee.employee_id]
         )
     )
     result = education.start_campaign(education_campaign)
