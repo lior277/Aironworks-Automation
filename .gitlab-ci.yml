@@ -151,51 +151,6 @@ allure_job: &allure_job
   script:
     - mkdir -p $(pwd)/allure-report
     - allure generate -c allure-results -o allure-report # from allure-results to allure-report
-  artifacts:
-    paths:
-      - ./allure-results
-      - ./allure-report
-    expire_in: 30 days
-
-pages:
-  resource_group: pages
-  cache:
-    key: gitlab-pages
-    paths: [public]
-  tags:
-    - saas-linux-small-amd64
-  rules:
-    # run on MR:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      variables:
-        CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
-        ENV_NAME: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
-    # run on main branch
-    - if: $CI_COMMIT_BRANCH == "main"
-      variables:
-        CURRENT_CONTENT_PATH: $ENV/$CI_PIPELINE_ID
-        ENV_NAME: $ENV
-  stage: deploy
-  script:
-    - mkdir -p public/$CURRENT_CONTENT_PATH;
-    - cp -TRv ./allure-report/ "public/$CURRENT_CONTENT_PATH";
-    - ls -1t public/$CURRENT_CONTENT_PATH/../
-    - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +3
-    - ls -1t public/$CURRENT_CONTENT_PATH/../ | tail -n +3 | xargs -I {} rm -rf public/$CURRENT_CONTENT_PATH/../{} | true
-    - ls -1t public/$CURRENT_CONTENT_PATH/../
-    - echo "CI_PAGES_URL $CI_PAGES_URL/$CURRENT_CONTENT_PATH/index.html"
-  variables:
-    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-    AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-  environment:
-    name: pages/$ENV_NAME
-    action: start
-    url: https://aironworks-testing-aironworks-ae7ce2bc510d8152758ae21ead56b7478.gitlab.io//$CURRENT_CONTENT_PATH/index.html
-    on_stop: pages-clean-preview
-  artifacts:
-    paths:
-      - public
 
 upload_to_s3:
   stage: deploy
@@ -206,6 +161,10 @@ upload_to_s3:
     key: gitlab-pages
     paths: [public]
   rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
+        ENV_NAME: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
     # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
@@ -220,6 +179,10 @@ upload_to_s3:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
     AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+  environment:
+    name: pages/$ENV_NAME
+    action: start
+    url: https://test-results.aironworks.com/playwright/$CURRENT_CONTENT_PATH/index.html
 
 post_test_results:
   stage: deploy
@@ -272,31 +235,3 @@ set_pipeline_status:
   script: |
     source .exit_code
     exit $EXIT_CODE
-
-pages-clean-preview:
-  resource_group: pages
-  stage: deploy
-  image: alpine:3.18
-  when: manual
-  allow_failure: true
-  rules:
-    # run on MR:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      variables:
-        CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
-        ENV_NAME: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
-    # run on main branch
-    - if: $CI_COMMIT_BRANCH == "main"
-      variables:
-        CURRENT_CONTENT_PATH: $ENV
-        ENV_NAME: $ENV
-  cache:
-    key: gitlab-pages
-    paths: [public]
-  variables:
-    GIT_STRATEGY: none # git files not available after branch deletion
-  script:
-    - rm -rfv public/$CURRENT_CONTENT_PATH
-  environment:
-    name: pages/$ENV_NAME
-    action: stop
