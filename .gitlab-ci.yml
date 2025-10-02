@@ -223,7 +223,6 @@ set_pipeline_status:
   stage: deploy
   dependencies:
     - run-tests
-    - pages
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
