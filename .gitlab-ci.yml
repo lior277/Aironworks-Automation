@@ -168,6 +168,7 @@ post_test_results:
   stage: deploy
   dependencies:
     - upload_to_s3
+    - run-tests
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
