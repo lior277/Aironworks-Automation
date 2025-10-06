@@ -15,27 +15,27 @@ class RequestAiScenarioPage(BasePage):
         )
         self.cancel_button = page.get_by_role('button', name='Cancel')
         self.vector_dropdown = DropDown(
-            link_locator=self.page.get_by_role('button', name='Vector'),
+            link_locator=self.page.get_by_role('combobox', name='Vector'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.scenarios_requested_dropdown = DropDown(
-            link_locator=self.page.get_by_role('button', name='Scenarios Requested'),
+            link_locator=self.page.get_by_role('combobox', name='Scenarios Requested'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.attack_level_dropdown = DropDown(
-            link_locator=self.page.get_by_role('button', name='Attack Level'),
+            link_locator=self.page.get_by_role('combobox', name='Attack Level'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.language_dropdown = DropDown(
-            link_locator=self.page.get_by_role('button', name='Language', exact=True),
+            link_locator=self.page.get_by_role('combobox', name='Language', exact=True),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.sender_dropdown = DropDown(
-            link_locator=self.page.get_by_role('button', name='Sender'),
+            link_locator=self.page.get_by_role('combobox', name='Sender'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.real_name_used_dropdown = DropDown(
-            link_locator=self.page.get_by_role('button', name='Real Name Used'),
+            link_locator=self.page.get_by_role('combobox', name='Real Name Used'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.additional_info_text_area = page.get_by_role(

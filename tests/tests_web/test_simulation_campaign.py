@@ -46,7 +46,7 @@ def test_create_simulation_campaign(
         execute_campaign_page.pick_company(AppConfigs.QA_COMPANY_NAME)
     execute_campaign_page.pick_employees.click()
     expect(execute_campaign_page.employee_table.table).to_be_visible()
-    execute_campaign_page.employee_table.set_filter_column('email', employee.email)
+    execute_campaign_page.filter.filter_by('Email', employee.email)
 
     execute_campaign_page.employee_table.get_employee_row(employee.email).select_row()
     execute_campaign_page.review_button.click()
@@ -125,7 +125,7 @@ def test_create_simulation_campaign_scheduled(
     execute_campaign_page.select_time(formatted_time)
     execute_campaign_page.pick_employees.click()
     expect(execute_campaign_page.employee_table.table).to_be_visible()
-    execute_campaign_page.employee_table.set_filter_column('email', employee.email)
+    execute_campaign_page.filter.filter_by('Email', employee.email)
 
     execute_campaign_page.employee_table.get_employee_row(employee.email).select_row()
     execute_campaign_page.review_button.click()
@@ -296,11 +296,11 @@ def test_create_simulation_campaign_attachment(
         execute_campaign_page.pick_company(AppConfigs.QA_COMPANY_NAME)
     execute_campaign_page.pick_employees.click()
     expect(execute_campaign_page.employee_table.table).to_be_visible()
-    execute_campaign_page.employee_table.set_filter_column('email', employee.email)
+    execute_campaign_page.filter.filter_by('Email', employee.email)
 
     execute_campaign_page.employee_table.get_employee_row(employee.email).select_row()
 
-    execute_campaign_page.employee_table.set_filter_column('email', employee2.email)
+    execute_campaign_page.filter.filter_by('Email', employee2.email)
 
     execute_campaign_page.employee_table.get_employee_row(employee2.email).select_row()
     execute_campaign_page.review_button.click()

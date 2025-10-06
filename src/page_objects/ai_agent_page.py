@@ -15,18 +15,18 @@ class AIAgentPage(BasePage):
             '//div[contains(@class, "css-12ia9as")]'
         )
         self.scenario_blocks = self.ai_message_boxes.nth(-1).locator(
-            '//div[contains(@class, "css-1j4f5kh")]'
+            '//div[contains(@class, "css-ho5eg0")]'
         )
         self.education_blocks = self.ai_message_boxes.nth(-1).locator(
             '//div[contains(@class, "css-2cfzeo")]'
         )
         self.campaign_blocks = self.ai_message_boxes.nth(-1).locator(
-            '//div[contains(@class, "css-1j4f5kh")]'
+            '//div[contains(@class, "css-ho5eg0")]'
         )
         self.education_campaign_blocks = self.ai_message_boxes.nth(-1).locator(
-            '//div[contains(@class, "css-1j4f5kh")]'
+            '//div[contains(@class, "css-ho5eg0")]'
         )
-        self.split_panel = self.page.locator('//div[contains(@class, "css-h7rpb7")]')
+        self.split_panel = self.page.locator('//div[contains(@class, "css-c60s8t")]')
 
     def ask_ai_agent(
         self, question: str, question_type: str, keyword: str, number_blocks=3

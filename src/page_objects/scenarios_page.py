@@ -64,13 +64,13 @@ class ScenariosPage(BasePage):
         self.sender_domain_dropdown = DropDown(
             link_locator=self.page.locator(
                 '//h6[text()="Source Details"]/..'
-            ).get_by_role('button', name='Domain'),
+            ).get_by_role('combobox', name='Domain'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.link_domain_dropdown = DropDown(
             link_locator=self.page.locator(
                 '//h6[text()="Base Attack URL"]/..'
-            ).get_by_role('button', name='Domain'),
+            ).get_by_role('combobox', name='Domain'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.phishing_link_button = self.page.locator('[value="LINK"]')
@@ -85,7 +85,7 @@ class ScenariosPage(BasePage):
         )
         self.file_name_helper_text = self.page.locator('[id="file-name-helper-text"]')
         self.data_entry_dropdown = DropDown(
-            self.page.locator('[id="data_entry_kind"]'),
+            self.page.get_by_role('combobox', name='Login Page Type'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.first_scenario = (

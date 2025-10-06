@@ -6,7 +6,6 @@ from playwright.sync_api import APIRequestContext, Playwright, expect
 from src.apis.api_factory import api
 from src.apis.steps.common_steps import create_employees_wait
 from src.configs.config_loader import AppConfigs
-from src.models.company.employee_count_model import EmployeeCountModel
 from src.models.company.employee_delete_model import EmployeeDeleteModel
 from src.models.company.employee_list_ids_model import EmployeeListIdsModel
 from src.models.company.employee_list_model import EmployeeItemModel, EmployeeListModel
@@ -75,8 +74,18 @@ def get_employee(
     create_employees_wait(api_request_context_customer_admin, employee, overwrite=False)
     response = company_service.employee_count()
     expect(response).to_be_ok()
-    employee_count_model = EmployeeCountModel.from_dict(response.json())
-    response = company_service.get_employee_list(employee_count_model.employee_role)
+    # employee_count_model = EmployeeCountModel.from_dict(response.json())
+    filters = {
+        'items': [
+            {
+                'columnField': 'email',
+                'operatorValue': 'contains',
+                'value': employee[0].email.lower(),
+            }
+        ],
+        'linkOperator': 'and',
+    }
+    response = company_service.get_employee_list(50, filters)
     expect(response).to_be_ok()
     employee_list = EmployeeListModel.from_dict(response.json())
     employee_item = next(

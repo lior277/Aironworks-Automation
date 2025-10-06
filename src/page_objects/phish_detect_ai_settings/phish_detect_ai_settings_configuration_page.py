@@ -48,7 +48,7 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
             )
         )
         self.platform_dropdown = DropDown(
-            link_locator=self.page.get_by_role('button', name='Platform'),
+            link_locator=self.page.get_by_role('combobox', name='Platform'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
 

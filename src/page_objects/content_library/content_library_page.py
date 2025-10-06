@@ -61,6 +61,15 @@ class ContentLibraryPage(BasePage):
         card.title.click()
         return ContentLibraryDetailsPage(self.page)
 
+    @allure.step('ContentLibraryPage: open content library details page')
+    def open_content_library_details_page_by_name(self, name: str):
+        self.set_name_filter(name)
+        self.wait_for_progress_bar_disappears()
+        assert len(self.table_cards.get_content()) > 0
+        card = self.table_cards.get_row_by_column_value('title', name)
+        card.title.click()
+        return ContentLibraryDetailsPage(self.page)
+
     @allure.step('ContentLibraryPage: open add content page')
     def open_add_content_page(self, content_type: ContentType) -> AddContentPage:
         self.add_content_button.click()

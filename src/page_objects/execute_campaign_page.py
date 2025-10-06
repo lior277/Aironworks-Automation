@@ -1,5 +1,7 @@
 import allure
 
+from src.page_objects.data_types.filter import Filter
+
 from .base_page import BasePage
 from .employee_table_component import EmployeeTableComponent
 from .warning_page import WarningPage
@@ -18,6 +20,13 @@ class ExecuteCampaignPage(BasePage):
             'Number of targets in this campaign:'
         ).locator('span')
         self.employee_table = EmployeeTableComponent(page.get_by_test_id('table'), page)
+        self.filter = Filter(
+            self.page.locator('//button[contains(text(),"Filters")]'),
+            self.page.get_by_role('combobox', name='Columns'),
+            self.page.locator('[placeholder="Filter value"]'),
+            self.page.locator('[data-testid="LoadIcon"]'),
+            self.page.get_by_role('presentation'),
+        )
 
         self.scheduled_text = page.get_by_role('alert').locator(
             'div[contains(., "You are about to execute a scheduled attack on:")]'
