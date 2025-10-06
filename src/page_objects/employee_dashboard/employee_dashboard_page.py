@@ -15,7 +15,7 @@ from src.page_objects.employee_dashboard.report_history_details_page import (
 class EmployeeDashboardPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.greeting_text = self.page.locator('//p[contains(@class,"css-q07viv")]')
+        self.greeting_text = self.page.locator('.css-1jy8bn1')
         self.level_section = LevelSection(self.page.get_by_label('levelStatus'))
         self.achievements_section = AchievementsSection(
             self.page.get_by_label('achievements')
@@ -81,13 +81,13 @@ class LevelSection:
 class AchievementsSection:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.title = self.locator.locator('//p[contains(@class,"css-tswwb7")]')
+        self.title = self.locator.locator('.css-uo5n8w')
 
 
 class PreviousPhishingSimulationsSection:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.title = self.locator.locator('//p[contains(@class,"css-tswwb7")]')
+        self.title = self.locator.locator('.css-uo5n8w')
         self.view_details_button = self.locator.get_by_role('link', name='View Details')
         self.score_board = self.locator.get_by_label('score')
         self.links_clicked = self.locator.get_by_label('LINKS CLICKED')
@@ -117,7 +117,7 @@ class PreviousPhishingSimulationsSection:
 class CompletedEducationCampaignsSection:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.title = self.locator.locator('//p[contains(@class,"css-tswwb7")]')
+        self.title = self.locator.locator('.css-uo5n8w')
         self.view_details_button = self.locator.get_by_role('link', name='View Details')
         self.campaigns_link = self.locator.get_by_label(
             'Link to education campaign'
@@ -137,7 +137,7 @@ class CompletedEducationCampaignsSection:
 class ReportHistorySection:
     def __init__(self, locator: Locator):
         self.locator = locator
-        self.title = self.locator.locator('//p[contains(@class,"css-tswwb7")]')
+        self.title = self.locator.locator('.css-uo5n8w')
         self.view_details_button = self.locator.get_by_role('link', name='View Details')
         self.all_time_reports = self.locator.get_by_label('All Time')
         self.this_month_reports = self.locator.get_by_label('This Month')

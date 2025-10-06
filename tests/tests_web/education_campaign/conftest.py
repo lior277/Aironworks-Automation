@@ -24,7 +24,7 @@ def get_education_content(
     response = education.get_content_pagination()
     expect(response).to_be_ok()
     content = EducationContentModel.from_dict(response.json())
-    response = education.get_content_pagination(limit=content.total)
+    response = education.get_content_pagination(limit=50)
     expect(response).to_be_ok()
     content = EducationContentModel.from_dict(response.json())
     if user.is_admin:

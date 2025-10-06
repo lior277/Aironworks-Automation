@@ -45,9 +45,7 @@ class GroupsPage(BasePage):
 
         self.search_input = self.page.get_by_role('textbox')
 
-        self.groups_table = Table(
-            self.page.locator('.MuiGrid-item'), GroupTableComponent
-        )
+        self.groups_table = Table(self.page.locator('.css-g3uult'), GroupTableComponent)
 
     @allure.step('GroupsPage: create {group_name} group')
     def create_group(

@@ -1,3 +1,4 @@
+import time
 from typing import Callable, Generic, TypeVar
 
 from playwright.sync_api import Locator
@@ -69,3 +70,4 @@ class Table(Generic[T]):
             for load in self.loading.all():
                 if load.is_visible():
                     load.wait_for(timeout=timeout, state='hidden')
+        time.sleep(2)

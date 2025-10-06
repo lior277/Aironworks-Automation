@@ -21,9 +21,10 @@ class CreateOperationPage(BasePage):
         self.show_filters_button = self.page.get_by_role('button', name='Show filters')
         self.filter = Filter(
             self.page.locator('//button[contains(text(),"Filters")]'),
-            self.page.locator('select', has_text='Campaign Name'),
+            self.page.get_by_role('combobox', name='Campaign Name'),
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
+            self.page.get_by_role('presentation'),
         )
         self.campaign_checkbox = self.page.get_by_role(
             'checkbox', name='Select row'
@@ -40,6 +41,6 @@ class CreateOperationPage(BasePage):
         expect(self.alert_message).to_have_text(create_successful_text)
 
     def filter_campaign_by_name(self, campaign_name: str):
-        self.filter.filter_by('campaign_name', campaign_name)
+        self.filter.filter_by('Campaign Name', campaign_name)
         self.wait_for_loading_state()
         self.bread_crumb.hover()

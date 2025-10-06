@@ -21,7 +21,7 @@ class SignupPage(BasePage):
             'textbox', name='Confirm Password'
         )
         self.language_dropdown = DropDown(
-            link_locator=self.page.get_by_role('button', name='Language'),
+            link_locator=self.page.get_by_role('combobox', name='Company Language'),
             option_list_locator=self.page.locator('[role="option"]'),
         )
         self.button_continue = page.get_by_role('button', name='Continue')

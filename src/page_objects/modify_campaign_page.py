@@ -19,14 +19,15 @@ class ModifyCampaignPage(BasePage):
         )
         self.filter = Filter(
             self.page.locator('//button[contains(text(),"Filters")]'),
-            self.page.locator('select', has_text='Email'),
+            self.page.get_by_role('combobox', name='Columns'),
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
+            self.page.get_by_role('presentation'),
         )
         self.employee_checkbox = self.page.get_by_role('checkbox', name='Select row')
 
     def filter_by_email(self, email: str):
-        self.filter.filter_by('email', email)
+        self.filter.filter_by('Email', email)
         self.wait_for_loading_state()
         self.bread_crumb.hover()
 
@@ -40,5 +41,5 @@ class ModifyCampaignPage(BasePage):
     def fill_completion_date(self):
         now = datetime.now()
         future_date = now + timedelta(days=2)
-        formatted_date = future_date.strftime('%m/%d/%Y %I:%M %p').lower()
+        formatted_date = future_date.strftime('%m/%d/%Y %I:%M').lower()
         self.completion_date_textbox.fill(formatted_date)

@@ -27,15 +27,16 @@ class EducationCampaignDetailsPage(BasePage):
         self.cancel_button = self.page.get_by_text('Cancel')
         self.assignment_list = Table(
             self.page.locator(
-                '//h6[text()="Assignments List"]//following-sibling::div//div[@role="cell"]//parent::div[@role="row"]'
+                '//h6[text()="Assignments List"]//following-sibling::div//div[@role="rowgroup"]/div'
             ),
             AssignmentList,
         )
         self.assignment_list_filter = Filter(
-            self.page.locator('//button[contains(text(),"Filters")]'),
-            self.page.get_by_label('Columns', exact=True),
+            self.page.get_by_role('button', name='Show filters').nth(0),
+            self.page.get_by_role('combobox', name='Columns'),
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
+            self.page.get_by_role('presentation'),
         )
 
     @allure.step('EducationCampaignDetailsPage: delete education campaign')

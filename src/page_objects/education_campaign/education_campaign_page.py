@@ -2,6 +2,7 @@ import allure
 from playwright.sync_api import Locator, Page
 
 from src.page_objects.base_page import BasePage
+from src.page_objects.content_library.create_campaign_page import CreateCampaignPage
 from src.page_objects.data_types.table_element import Table
 from src.page_objects.education_campaign.education_campaign_details_page import (
     EducationCampaignDetailsPage,
@@ -16,15 +17,22 @@ class EducationCampaignPage(BasePage):
             'heading', level=4, name='Education Campaigns'
         ).nth(1)
         self.table = Table(
-            page.locator('//div[contains(@class,"MuiDataGrid-row")]'),
+            page.get_by_role('rowgroup').locator(
+                '//div[contains(@class,"MuiDataGrid-row")]'
+            ),
             EducationCampaignsTableComponent,
+        )
+        self.create_education_campaign_button = self.page.get_by_role(
+            'button', name='Create Education Campaign'
         )
 
     @allure.step('EducationCampaignPage: education campaigns')
     def get_education_campaigns(self) -> list[EducationCampaignEntity]:
+        self.table.wait_for_loading(timeout=5000)
         out = []
         for row in self.table.get_content():
             out.append(row.to_entity())
+            print('campaign:', row.to_entity())
         return out
 
     @allure.step('EducationCampaignPage: get education campaigns by {title} title')
@@ -50,6 +58,11 @@ class EducationCampaignPage(BasePage):
         details_page.title_txt.wait_for(timeout=5000, state='visible')
         return details_page
 
+    @allure.step('EducationCampaignPage: open create education campaign page')
+    def open_create_campaign_page(self):
+        self.create_education_campaign_button.click()
+        return CreateCampaignPage(self.page)
+
 
 class EducationCampaignsTableComponent:
     def __init__(self, locator: Locator):
@@ -61,7 +74,7 @@ class EducationCampaignsTableComponent:
         self.start_date = self.locator.locator('[data-field="start_date"]')
         self.end_date = self.locator.locator('[data-field="end_date"]')
         self.assignments_count = self.locator.locator(
-            '[data-field="assignments_count"]'
+            '[data-field="assignments_count"][role="gridcell"]'
         )
         self.company_name = self.locator.locator('[data-field="company.name"]')
 

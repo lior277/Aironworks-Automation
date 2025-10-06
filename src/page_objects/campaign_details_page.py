@@ -18,9 +18,7 @@ class CampaignDetailsPage(BasePage):
         ).locator('..//button[text()="Export CSV"]')
         self.url = self.default_url + 'admin/dashboard/attacks/executions/'
         self.table_campaign_attacks_summary = Table(
-            page.locator(
-                '//button[@id="more-button"]//ancestor::div[contains(@class,"MuiDataGrid-pinnedColumns")]/preceding-sibling::div//div[@role="row"]'
-            ),
+            page.locator('//button[@id="more-button"]//ancestor::div[@role="row"]'),
             CampaignAttacksSummary,
         )
         self.manage_campaign_button = self.page.get_by_role(
@@ -31,9 +29,10 @@ class CampaignDetailsPage(BasePage):
         )
         self.attack_filter = Filter(
             self.page.locator('//button[contains(text(),"Filters")]'),
-            self.page.get_by_label('Columns', exact=True),
+            self.page.get_by_role('combobox', name='Columns'),
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
+            self.page.get_by_role('presentation'),
         )
 
     @allure.step(

@@ -25,7 +25,7 @@ def remove_education_content(
         response = education_content_service.get_content_pagination()
         expect(response).to_be_ok()
         content = EducationContentModel.from_dict(response.json())
-        response = education_content_service.get_content_pagination(limit=content.total)
+        response = education_content_service.get_content_pagination(limit=50)
         expect(response).to_be_ok()
         content = EducationContentModel.from_dict(response.json())
         out = [item for item in content.items if item.title == education_content.title]

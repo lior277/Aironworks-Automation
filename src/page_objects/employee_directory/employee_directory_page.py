@@ -54,9 +54,10 @@ class EmployeeDirectoryPage(BasePage):
         self.show_filters_button = self.page.get_by_label('Show filters')
         self.filter = Filter(
             self.page.locator('//button[contains(text(),"Filters")]'),
-            self.page.locator('select', has_text='Email'),
+            self.page.get_by_role('combobox', name='Columns').nth(0),
             self.page.locator('[placeholder="Filter value"]'),
             self.page.locator('[data-testid="LoadIcon"]'),
+            self.page.get_by_role('presentation'),
         )
 
         self.add_new_employees_only_button = self.page.get_by_role(

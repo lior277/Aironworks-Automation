@@ -93,7 +93,8 @@ class HighRiskEmailsTab:
         self.locator = locator
         # High risk emails table
         self.high_risk_emails_table = Table(
-            self.locator.locator('.MuiDataGrid-row'), HighRiskEmailsTableComponent
+            self.locator.get_by_role('rowgroup').locator('.MuiDataGrid-row'),
+            HighRiskEmailsTableComponent,
         )
 
     def get_email_data(self):
@@ -137,7 +138,8 @@ class SendersTab:
 
         # Company tab
         self.company_table = Table(
-            self.locator.locator('.MuiDataGrid-row'), SendersTableComponent
+            self.locator.get_by_role('rowgroup').locator('.MuiDataGrid-row'),
+            SendersTableComponent,
         )
 
         # Employee tab
@@ -204,16 +206,39 @@ class SendersTableComponent:
             sender_name_text = ' '
         else:
             sender_name_text = self.sender_name.text_content()
+
+        sender_domain_text = self.email_address.text_content().split('@')[1].strip()
+        no_of_emails_received_text = self.no_of_emails_received.text_content()
+        no_of_employees_received_text = self.no_of_employees_received.text_content()
+        highest_risk_level_text = self.highest_risk_level.text_content()
+        average_risk_level_text = self.average_risk_level.text_content()
+        blocked_safe_status_text = self.blocked_safe_status.text_content()
+        first_contact_text = self.first_contact.text_content()
+        self.locator.page.get_by_role('columnheader', name='SENDER NAME').click()
+        while not self.last_contact.is_visible():
+            self.locator.page.keyboard.press('ArrowRight')
+        last_contact_text = self.last_contact.text_content()
+        # return {
+        #     'sender_name': sender_name_text.strip(),
+        #     'sender_domain': self.email_address.text_content().split('@')[1].strip(),
+        #     'no_of_emails_received': self.no_of_emails_received.text_content(),
+        #     'no_of_employees_received': self.no_of_employees_received.text_content(),
+        #     'highest_risk_level': self.highest_risk_level.text_content(),
+        #     'average_risk_level': self.average_risk_level.text_content(),
+        #     'blocked_safe_status': self.blocked_safe_status.text_content(),
+        #     'first_contacted': self.first_contact.text_content(),
+        #     'last_received': self.last_contact.text_content(),
+        # }
         return {
             'sender_name': sender_name_text.strip(),
-            'sender_domain': self.email_address.text_content().split('@')[1].strip(),
-            'first_contacted': self.first_contact.text_content(),
-            'last_received': self.last_contact.text_content(),
-            'no_of_emails_received': self.no_of_emails_received.text_content(),
-            'no_of_employees_received': self.no_of_employees_received.text_content(),
-            'highest_risk_level': self.highest_risk_level.text_content(),
-            'average_risk_level': self.average_risk_level.text_content(),
-            'blocked_safe_status': self.blocked_safe_status.text_content(),
+            'sender_domain': sender_domain_text,
+            'no_of_emails_received': no_of_emails_received_text,
+            'no_of_employees_received': no_of_employees_received_text,
+            'highest_risk_level': highest_risk_level_text,
+            'average_risk_level': average_risk_level_text,
+            'blocked_safe_status': blocked_safe_status_text,
+            'first_contacted': first_contact_text,
+            'last_received': last_contact_text,
         }
 
 
@@ -224,7 +249,8 @@ class VendorsTab:
             'textbox', name='Search by vendor name or domain'
         )
         self.vendors_table = Table(
-            self.locator.locator('.MuiDataGrid-row'), VendorsTableComponent
+            self.locator.get_by_role('rowgroup').locator('.MuiDataGrid-row'),
+            VendorsTableComponent,
         )
 
     def search_by_vendor_name_domain(self, search_text: str):
