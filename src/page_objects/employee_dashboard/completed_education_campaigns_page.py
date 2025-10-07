@@ -10,7 +10,9 @@ class CompletedEducationCampaignsPage(BasePage):
         self.dashboard_breadcrumbs = self.page.get_by_role('link', name='Dashboard')
         self.back_button = self.page.get_by_role('button', name='Back')
         self.completed_education_campaigns_table = Table(
-            self.page.locator('//*[contains(@class,"MuiDataGrid-row")]'),
+            self.page.get_by_role('rowgroup').locator(
+                '//div[contains(@class,"MuiDataGrid-row")]'
+            ),
             CompletedEducationCampaignsTableComponent,
         )
 
@@ -26,7 +28,7 @@ class CompletedEducationCampaignsPage(BasePage):
         row = self.completed_education_campaigns_table.get_row_by_index(0)
         if not row:
             raise Exception('No rows found in the table')
-        row.title.click()
+        row.completed_date.click()
 
 
 class CompletedEducationCampaignsTableComponent:
