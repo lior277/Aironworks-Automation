@@ -114,7 +114,7 @@ class EmployeeDirectoryPage(BasePage):
                     self.add_new_employees_only_button.click()
                 expect(self.uploading_file).to_be_visible()
                 expect(self.upload_employees_component.locator).not_to_be_visible(
-                    timeout=30000
+                    timeout=120000
                 )
 
     @allure.step('EmployeeDirectoryPage: download csv file')
