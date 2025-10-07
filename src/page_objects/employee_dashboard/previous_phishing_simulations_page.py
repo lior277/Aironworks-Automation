@@ -10,7 +10,9 @@ class PreviousPhishingSimulationsPage(BasePage):
         self.dashboard_breadcrumbs = self.page.get_by_role('link', name='Dashboard')
         self.back_button = self.page.get_by_role('button', name='Back')
         self.previous_phishing_simulations_table = Table(
-            self.page.locator('//*[contains(@class,"MuiDataGrid-row")]'),
+            self.page.get_by_role('rowgroup').locator(
+                '//div[contains(@class,"MuiDataGrid-row")]'
+            ),
             PreviousPhishingSimulationsTableComponent,
         )
         self.previous_phishing_simulations_preview_popup = self.page.get_by_role(
