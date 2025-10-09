@@ -72,6 +72,7 @@ class AddAdminPage(BasePage):
         self.last_name.fill(employee.last_name)
         self.email.fill(employee.email)
         self.language_dropdown.select_item_by_text(employee.language)
+        sleep(3)
         self.add_admin_button.click()
 
     @allure.step('AddAdminPage: assign admin role to employee with email {email}')
@@ -79,6 +80,7 @@ class AddAdminPage(BasePage):
         self.search_by_email.fill(email)
         sleep(5)
         self.rows_checkbox.nth(0).click()
+        sleep(3)
         self.confirm_button.click()
         self.wait_for_progress_bar_disappears()
         self.ensure_alert_message_is_visible(

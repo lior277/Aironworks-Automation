@@ -49,3 +49,20 @@ def test_new_user_create_group(
     dashboard_page = sign_in_page.fill_sign_in_form(new_user)
     groups_page = dashboard_page.navigation_bar.navigate_groups_page()
     groups_page.create_group(generate_string())
+
+
+@pytest.mark.parametrize(
+    'user', [pytest.param(UserModelFactory.customer_admin(), id='123')]
+)
+@pytest.mark.smoke
+@allure.testcase('31554')
+def test_new_user_create_multi_content_campaign(user, education_campaign_page):
+    create_campaign_page = education_campaign_page.open_create_campaign_page()
+    create_campaign_page.set_campaign_name('Test Campaign')
+    select_content_page = create_campaign_page.select_content()
+    select_content_page.set_name_filter('Multiple Quiz')
+    select_content_page.select_content('Multiple Quiz')
+    select_content_page.set_name_filter('Multiple Survey')
+    select_content_page.select_content('Multiple Survey')
+    select_content_page.complete_selection()
+    create_campaign_page.create_campaign()
