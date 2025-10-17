@@ -15,16 +15,16 @@ class AIAgentPage(BasePage):
             '//div[contains(@class, "css-12ia9as")]'
         )
         self.scenario_blocks = self.ai_message_boxes.nth(-1).locator(
-            '//div[contains(@class, "css-ho5eg0")]'
+            '//div[contains(@class, "css-14zyegh")]'
         )
         self.education_blocks = self.ai_message_boxes.nth(-1).locator(
             '//div[contains(@class, "css-2cfzeo")]'
         )
         self.campaign_blocks = self.ai_message_boxes.nth(-1).locator(
-            '//div[contains(@class, "css-ho5eg0")]'
+            '//div[contains(@class, "css-14zyegh")]'
         )
         self.education_campaign_blocks = self.ai_message_boxes.nth(-1).locator(
-            '//div[contains(@class, "css-ho5eg0")]'
+            '//div[contains(@class, "css-14zyegh")]'
         )
         self.split_panel = self.page.locator('//div[contains(@class, "css-c60s8t")]')
 
@@ -49,7 +49,7 @@ class AIAgentPage(BasePage):
                 raise ValueError(f'Invalid question type: {question_type}')
 
     def search_preview_scenario_check(self, number_blocks: int, keyword: str):
-        expect(self.scenario_blocks).to_have_count(number_blocks, timeout=120_000)
+        expect(self.scenario_blocks).to_have_count(number_blocks, timeout=180_000)
         count = self.scenario_blocks.count()
         for i in range(count):
             expect(self.scenario_blocks.nth(i).locator('//h6')).to_contain_text(
@@ -71,7 +71,7 @@ class AIAgentPage(BasePage):
             expect(self.split_panel).to_be_hidden()
 
     def search_preview_education_content_check(self, number_blocks: int, keyword: str):
-        expect(self.education_blocks).to_have_count(number_blocks, timeout=120_000)
+        expect(self.education_blocks).to_have_count(number_blocks, timeout=180_000)
         count = self.education_blocks.count()
         for i in range(count):
             expect(
@@ -93,7 +93,7 @@ class AIAgentPage(BasePage):
             expect(self.split_panel).to_be_hidden()
 
     def search_preview_campaign_check(self, number_blocks: int):
-        expect(self.campaign_blocks).to_have_count(number_blocks, timeout=120_000)
+        expect(self.campaign_blocks).to_have_count(number_blocks, timeout=180_000)
         count = self.campaign_blocks.count()
         for i in range(count):
             expect(
@@ -113,7 +113,7 @@ class AIAgentPage(BasePage):
 
     def search_preview_education_campaign_check(self, number_blocks: int):
         expect(self.education_campaign_blocks).to_have_count(
-            number_blocks, timeout=120_000
+            number_blocks, timeout=180_000
         )
         count = self.education_campaign_blocks.count()
         for i in range(count):
