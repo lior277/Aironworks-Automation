@@ -17,5 +17,8 @@
   "sender_domain": "expresstoday.net",
   "sample_campaign": "5e109487dfb740afbd293218ab6b7eaa",
   "sample_campaign_name": "QA Test Scenario",
-  "sample_education_campaign": "2116efc767b44d13baca65a5ff22d6f2"
+  "sample_education_campaign": "2116efc767b44d13baca65a5ff22d6f2",
+  "sample_quiz_content_library": "74899b5907e541a88a55df54ffe1b203",
+  "sample_survey_content_library": "524a4ca4addd40a6b39dda452f7e1838",
+  "sample_quiz_video_content_library": "93c4e7fdb06e4251b36c17e9788223b9"
 }

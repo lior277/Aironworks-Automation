@@ -17,5 +17,8 @@
   "sender_domain": "www.mailtides.net",
   "sample_campaign": "6bfa790a503442148b624affff8deb8d",
   "sample_campaign_name": "QA Test Scenario",
-  "sample_education_campaign": "d4da631c67a84710832f1a78e38350be"
+  "sample_education_campaign": "d4da631c67a84710832f1a78e38350be",
+  "sample_quiz_content_library": "86b6120c499043f881cffd2b168632eb",
+  "sample_survey_content_library": "e7d2931ad1d544f8bbd165af6ff54e51",
+  "sample_quiz_video_content_library": "5246a2c4492140edb246fec883da636a"
 }
