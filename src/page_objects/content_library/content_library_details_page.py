@@ -13,6 +13,7 @@ from src.page_objects.content_library.const import (
     content_successfully_updated_text,
     education_content_cloned_text,
 )
+from src.page_objects.content_library.edit_content_page import EditContentPage
 from src.page_objects.data_types.drop_down_element import DropDown
 from src.page_objects.entity.content_library_entity import ContentLibraryEntity
 
@@ -119,3 +120,8 @@ class ContentLibraryDetailsPage(BasePage):
     @allure.step('ContentLibraryDetailsPage: get content id')
     def get_content_id(self) -> str:
         return self.page.url.split('/')[-1]
+
+    @allure.step('ContentLibraryDetailsPage: open edit page')
+    def open_edit_page(self) -> EditContentPage:
+        self.edit_button.click()
+        return EditContentPage(self.page)

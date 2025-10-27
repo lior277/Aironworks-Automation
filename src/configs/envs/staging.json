@@ -17,5 +17,8 @@
   "sender_domain": "moondev.tokyo",
   "sample_campaign": "015789556cc74282aade912da2d62430",
   "sample_campaign_name": "[Test] General Scenario -",
-  "sample_education_campaign": "39fb28ec3a254638af905a33e54ec99d"
+  "sample_education_campaign": "39fb28ec3a254638af905a33e54ec99d",
+  "sample_quiz_content_library": "81452d783aaa4b29bc80228b86c02018",
+  "sample_survey_content_library": "eb2429357fe447a8bab92a730f138e86",
+  "sample_quiz_video_content_library": "3fd9958a01694e36a7e11344fac8f252"
 }

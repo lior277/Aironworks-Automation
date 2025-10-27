@@ -13,7 +13,11 @@ from src.page_objects.ai_agent_page import AIAgentPage
 from src.page_objects.campaign_details_page import CampaignDetailsPage
 from src.page_objects.campaigns_page import CampaignsPage
 from src.page_objects.content_library.add_content_page import AddContentPage
+from src.page_objects.content_library.content_library_details_page import (
+    ContentLibraryDetailsPage,
+)
 from src.page_objects.content_library.content_library_page import ContentLibraryPage
+from src.page_objects.content_library.edit_content_page import EditContentPage
 from src.page_objects.customers_page import CustomersPage
 from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.education_campaign.education_campaign_details_page import (
@@ -298,6 +302,54 @@ def campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
     return CampaignDetailsPage(dashboard_page.page).open(
         campaign_id=AppConfigs.SAMPLE_CAMPAIGN
     )
+
+
+@pytest.fixture(scope='function')
+def quiz_content_details_page(
+    dashboard_page: DashboardPage,
+) -> ContentLibraryDetailsPage:
+    return ContentLibraryDetailsPage(dashboard_page.page).open(
+        content_library_id=AppConfigs.SAMPLE_QUIZ_CONTENT_LIBRARY
+    )
+
+
+@pytest.fixture(scope='function')
+def survey_content_details_page(
+    dashboard_page: DashboardPage,
+) -> ContentLibraryDetailsPage:
+    return ContentLibraryDetailsPage(dashboard_page.page).open(
+        content_library_id=AppConfigs.SAMPLE_SURVEY_CONTENT_LIBRARY
+    )
+
+
+@pytest.fixture(scope='function')
+def quiz_video_content_details_page(
+    dashboard_page: DashboardPage,
+) -> ContentLibraryDetailsPage:
+    return ContentLibraryDetailsPage(dashboard_page.page).open(
+        content_library_id=AppConfigs.SAMPLE_QUIZ_VIDEO_CONTENT_LIBRARY
+    )
+
+
+@pytest.fixture(scope='function')
+def quiz_edit_content_page(
+    quiz_content_details_page: ContentLibraryPage,
+) -> EditContentPage:
+    return quiz_content_details_page.open_edit_page()
+
+
+@pytest.fixture(scope='function')
+def survey_edit_content_page(
+    survey_content_details_page: ContentLibraryPage,
+) -> EditContentPage:
+    return survey_content_details_page.open_edit_page()
+
+
+@pytest.fixture(scope='function')
+def quiz_video_edit_content_page(
+    quiz_video_content_details_page: ContentLibraryPage,
+) -> EditContentPage:
+    return quiz_video_content_details_page.open_edit_page()
 
 
 @pytest.fixture
