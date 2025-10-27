@@ -6,7 +6,7 @@ from src.page_objects.content_library.const import quiz_attached_text
 from src.page_objects.entity.content_library_entity import QuizEntity
 
 
-class AddQuizPage(BasePage):
+class AttachQuizPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.question_input = page.get_by_role('textbox', name='Untitled Question')

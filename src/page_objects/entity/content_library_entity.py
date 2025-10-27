@@ -3,8 +3,12 @@ import random
 import string
 from datetime import datetime
 
+import faker
+
 from src.configs.config_loader import AppFolders
 from src.page_objects.content_library.const import ContentType
+
+fake = faker.Faker()
 
 
 def get_random_title():
@@ -154,6 +158,30 @@ class ContentLibraryEntityFactory:
         )
 
     @staticmethod
+    def get_edited_quiz_content() -> ContentLibraryEntity:
+        return ContentLibraryEntity(
+            ContentType.QUIZ,
+            title=get_random_title(),
+            description=fake.sentence(nb_words=10),
+            sensitive_information=False,
+            topic='e2e Admin Topic - Quiz',
+            quiz=QuizEntity(
+                questions=[
+                    QuestionEntity(
+                        fake.sentence(nb_words=10),
+                        quiz_score='10',
+                        answers=[
+                            AnswerEntity(
+                                answer=fake.sentence(nb_words=10), correct=True
+                            ),
+                            AnswerEntity(answer='Answer 2'),
+                        ],
+                    )
+                ]
+            ),
+        )
+
+    @staticmethod
     def get_survey_content() -> ContentLibraryEntity:
         return ContentLibraryEntity(
             ContentType.SURVEY,
@@ -164,6 +192,23 @@ class ContentLibraryEntityFactory:
             survey=SurveyEntity(
                 questions=[
                     SurveyQuestionEntity('Question 1', answers=['Answer 1', 'Answer 2'])
+                ]
+            ),
+        )
+
+    @staticmethod
+    def get_edited_survey_content() -> ContentLibraryEntity:
+        return ContentLibraryEntity(
+            ContentType.SURVEY,
+            title=get_random_title(),
+            description=fake.sentence(nb_words=10),
+            sensitive_information=False,
+            topic='e2e Admin Topic - Survey',
+            survey=SurveyEntity(
+                questions=[
+                    SurveyQuestionEntity(
+                        fake.sentence(nb_words=10), answers=['Answer 1', 'Answer 2']
+                    )
                 ]
             ),
         )

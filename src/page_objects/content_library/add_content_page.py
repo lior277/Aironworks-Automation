@@ -3,7 +3,7 @@ from playwright.sync_api import Locator, Page, expect
 
 from src.models.auth.user_model import UserModel
 from src.page_objects.base_page import BasePage
-from src.page_objects.content_library.attach_quiz_page import AddQuizPage
+from src.page_objects.content_library.attach_quiz_page import AttachQuizPage
 from src.page_objects.content_library.attach_survey_page import AddSurveyPage
 from src.page_objects.content_library.const import (
     ContentType,
@@ -75,7 +75,7 @@ class AddContentPage(BasePage):
     @allure.step('AddContentPage: add quiz {education_content}')
     def add_quiz(self, education_content: ContentLibraryEntity):
         self.quiz_form.attach_quiz_button.click()
-        AddQuizPage(self.page).apply_quiz(education_content.quiz)
+        AttachQuizPage(self.page).apply_quiz(education_content.quiz)
         expect(self.quiz_form.edit_quiz_button).to_be_visible()
 
     @allure.step('AddContentPage: add survey {education_content}')
