@@ -1,5 +1,5 @@
 import allure
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Locator, Page, expect
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.content_library.add_content_page import (
@@ -46,6 +46,7 @@ class ContentLibraryDetailsPage(BasePage):
         self.content_visibility = ContentVisibilityComponent(
             self.page.get_by_label('Content visibility')
         )
+        self.edit_linked_popup = EditLinkedPopup(self.page.get_by_role('dialog'))
 
     @allure.step(
         'ContentLibraryDetailsPage: open details page for {content_library_id} content library'
@@ -124,4 +125,30 @@ class ContentLibraryDetailsPage(BasePage):
     @allure.step('ContentLibraryDetailsPage: open edit page')
     def open_edit_page(self) -> EditContentPage:
         self.edit_button.click()
+        if self.edit_linked_popup.proceed_with_cautious_button.is_visible():
+            self.edit_linked_popup.proceed_with_cautious()
         return EditContentPage(self.page)
+
+
+class EditLinkedPopup(BasePage):
+    def __init__(self, locator: Locator):
+        self.locator = locator
+        self.proceed_with_cautious_button = self.locator.get_by_role(
+            'button', name='Proceed With Caution'
+        )
+        self.clone_button = self.locator.get_by_role('button', name='Clone')
+        self.cancel_button = self.locator.get_by_role('button', name='Cancel')
+
+    @allure.step('EditLinkedPopup: proceed with cautious')
+    def proceed_with_cautious(self):
+        self.proceed_with_cautious_button.click()
+        return self
+
+    @allure.step('EditLinkedPopup: clone')
+    def clone(self):
+        self.clone_button.click()
+        return self
+
+    @allure.step('EditLinkedPopup: cancel')
+    def cancel(self):
+        self.cancel_button.click()
