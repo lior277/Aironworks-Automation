@@ -241,15 +241,18 @@ def test_campaign_export(campaign_details_page: CampaignDetailsPage, user):
     page_entity = CampaignAttacksSummaryFactory.get_entity(
         campaign_details_page.table_campaign_attacks_summary.text_content()[0]
     )
-
+    if page_entity.status == 'Mail Server Error':
+        page_entity.status = 'Error_Email'
     file = campaign_details_page.export_csv()
     with open(file, 'r', encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
         rows: list = [row for row in reader]
     assert len(rows) == 6
     flag = False
+    print('page_entity: ', page_entity)
     for i in range(len(rows)):
         csv_entity = CampaignAttacksSummaryFactory.get_entity_from_dict(rows[i])
+        print('csv_entity: ', csv_entity)
         if page_entity == csv_entity:
             flag = True
             break

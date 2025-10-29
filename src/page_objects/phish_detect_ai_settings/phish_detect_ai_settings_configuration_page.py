@@ -30,7 +30,7 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
             "//div[@data-testid='phishing-assessment-configuration-completionRealReportCustomizationBlock']/.."
         ).get_by_role('button', name='Show Preview')
         self.button_visibility_component = ButtonVisibilityComponent(
-            self.page.locator("//p[text()='Email Extension UI Configuration']/../..")
+            self.page.locator("//p[text()='Email Extension UI Configuration']/../../..")
         )
         self.completion_report_custom_text_component = (
             CompletionReportCustomTextComponent(
@@ -43,9 +43,7 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
             )
         )
         self.assessment_preview_window = AssessmentPreview(
-            self.page.locator(
-                "//p[text()='PhishDectectAI Assessment Preview']/../../.."
-            )
+            self.page.locator("//p[text()='Assessment Report Preview']/../../..")
         )
         self.platform_dropdown = DropDown(
             link_locator=self.page.get_by_role('combobox', name='Platform'),
