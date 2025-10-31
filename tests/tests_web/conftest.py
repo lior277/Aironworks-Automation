@@ -304,6 +304,13 @@ def campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
     )
 
 
+@pytest.fixture
+def big_campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
+    return CampaignDetailsPage(dashboard_page.page).open(
+        campaign_id=AppConfigs.SAMPLE_BIG_CAMPAIGN
+    )
+
+
 @pytest.fixture(scope='function')
 def quiz_content_details_page(
     dashboard_page: DashboardPage,

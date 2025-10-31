@@ -20,6 +20,7 @@ class CampaignDetailsPage(BasePage):
         self.table_campaign_attacks_summary = Table(
             page.locator('//button[@id="more-button"]//ancestor::div[@role="row"]'),
             CampaignAttacksSummary,
+            page.get_by_label('campaignAttacksSummaryTable'),
         )
         self.manage_campaign_button = self.page.get_by_role(
             'button', name='Manage Campaign'
