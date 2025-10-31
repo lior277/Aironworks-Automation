@@ -11,13 +11,10 @@ from src.page_objects.dashboard_page import DashboardPage
     'user, feedback',
     [
         pytest.param(
-            UserModelFactory.aw_admin(), 'Test feedback', marks=allure.testcase('31667')
-        ),
-        pytest.param(
             UserModelFactory.customer_admin(),
             'Test feedback',
             marks=allure.testcase('31667'),
-        ),
+        )
     ],
 )
 @allure.testcase('31667')

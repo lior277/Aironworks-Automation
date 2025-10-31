@@ -9,10 +9,16 @@ T = TypeVar('T')
 
 
 class Table(Generic[T]):
-    def __init__(self, locator: Locator, structure: Callable[[Locator], T]):
+    def __init__(
+        self,
+        locator: Locator,
+        structure: Callable[[Locator], T],
+        utility: Locator = None,
+    ):
         self._Table__structure = structure
         self._Table__locator = locator
         self.loading = self._Table__locator.get_by_text('Loading')
+        self.utility = utility
 
     def get_content(self) -> list[T]:
         out = []
@@ -71,3 +77,17 @@ class Table(Generic[T]):
                 if load.is_visible():
                     load.wait_for(timeout=timeout, state='hidden')
         time.sleep(2)
+
+    def go_to_next_page(self):
+        if self.utility:
+            self.utility.get_by_role('button', name='Go to next page').click()
+
+    def go_to_previous_page(self):
+        if self.utility:
+            self.utility.get_by_role('button', name='Go to previous page').click()
+
+    def get_page_count(self):
+        if self.utility:
+            return self.utility.locator(
+                '.MuiTablePagination-displayedRows'
+            ).text_content()

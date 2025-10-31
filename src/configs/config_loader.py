@@ -38,6 +38,7 @@ class AppConfigs:
     LINKS_DOMAIN = _env_config['links_domain']
     SENDER_DOMAIN = _env_config['sender_domain']
     SAMPLE_CAMPAIGN = _env_config['sample_campaign']
+    SAMPLE_BIG_CAMPAIGN = _env_config['sample_big_campaign']
     SAMPLE_QUIZ_CONTENT_LIBRARY = _env_config['sample_quiz_content_library']
     SAMPLE_SURVEY_CONTENT_LIBRARY = _env_config['sample_survey_content_library']
     SAMPLE_QUIZ_VIDEO_CONTENT_LIBRARY = _env_config['sample_quiz_video_content_library']

@@ -330,3 +330,48 @@ def test_create_simulation_campaign_attachment(
         survey_page = warning_page.go_to_survey()
         survey_page.select_radio_option(1, 1)
         survey_page.submit_survey()
+
+
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.aw_admin(), id='AW Admin', marks=allure.testcase('31547')
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            id='Customer Admin',
+            marks=allure.testcase('31546'),
+        ),
+    ],
+)
+@pytest.mark.smoke
+def test_campaign_target_list_change_page(
+    big_campaign_details_page: CampaignDetailsPage, user
+):
+    if AppConfigs.ENV.startswith('development'):
+        pytest.skip('Test is not ready for development env')
+    assert (
+        '1-15'
+        in big_campaign_details_page.table_campaign_attacks_summary.get_page_count()
+    )
+    big_campaign_details_page.table_campaign_attacks_summary.go_to_next_page()
+    assert (
+        '16-30'
+        in big_campaign_details_page.table_campaign_attacks_summary.get_page_count()
+    )
+    big_campaign_details_page.table_campaign_attacks_summary.go_to_next_page()
+    assert (
+        '31-45'
+        in big_campaign_details_page.table_campaign_attacks_summary.get_page_count()
+    )
+    big_campaign_details_page.table_campaign_attacks_summary.go_to_previous_page()
+    assert (
+        '16-30'
+        in big_campaign_details_page.table_campaign_attacks_summary.get_page_count()
+    )
+    big_campaign_details_page.table_campaign_attacks_summary.go_to_previous_page()
+    assert (
+        '1-15'
+        in big_campaign_details_page.table_campaign_attacks_summary.get_page_count()
+    )

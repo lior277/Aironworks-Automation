@@ -6,10 +6,8 @@ class SupportMenu:
     def __init__(self, page: Page):
         self.page = page
         self.support_menu_button = page.get_by_role('button', name='Open feedback form')
-        self.feedback_button = page.get_by_role(
-            'button', name='open feedback from menu'
-        )
-        self.support_chat_button = page.get_by_role('button', name='Open intercom')
+        self.feedback_button = page.get_by_role('menuitem', name='Share Feedback')
+        self.support_chat_button = page.get_by_role('menuitem', name='Ask Question')
         self.feedback_form = page.get_by_role('dialog', name='Feedback Form')
         self.feedback_form_title = self.feedback_form.get_by_role(
             'heading', name='Feedback Form'

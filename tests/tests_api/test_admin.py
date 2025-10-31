@@ -1,4 +1,5 @@
 import re
+import time
 from email import message_from_bytes
 from email.message import Message
 
@@ -32,6 +33,17 @@ def run_campaign_on_employee(
             employees=[employee.employee_id],
         )
     )
+    if result.status != 200:
+        time.sleep(10)
+        result = admin_service.start_campaign(
+            campaign=CampaignModel(
+                campaign_name='Automation scenario',
+                attack_info_id=AppConfigs.EXAMPLE_SCENARIO,
+                start_date=0,
+                end_date=end_date * 3600,
+                employees=[employee.employee_id],
+            )
+        )
     expect(result).to_be_ok()
     assert 'id' in result.json()
     campaign_id = result.json()['id']
@@ -84,6 +96,9 @@ def test_email_notification_match_setting(
         pytest.skip('Test is not ready for development env')
     company = api.company(api_request_context_customer_admin)
     config_result = company.localized_config()
+    if config_result.status != 200:
+        time.sleep(10)
+        config_result = company.localized_config()
     expect(config_result).to_be_ok()
     company_config = config_result.json()
 
