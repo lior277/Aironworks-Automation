@@ -61,7 +61,7 @@ class RequestAiScenarioPage(BasePage):
         self.real_name_used_dropdown.select_item_by_text(real_name)
         self.additional_info_text_area.fill(additional_info)
         self.generate_scenario_button.click()
-        self.wait_for_loading_state()
+        self.wait_for_progress_bar_disappears()
         self.preview_popup.choose_scenario_button.click()
         self.wait_for_loading_state()
 
