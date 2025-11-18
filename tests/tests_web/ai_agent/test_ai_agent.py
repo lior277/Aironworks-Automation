@@ -43,6 +43,7 @@ from src.models.factories.auth.user_model_factory import UserModelFactory
         ),
     ],
 )
+@pytest.mark.timeout(200)
 def test_ai_agent_search_preview(
     ai_agent_page, question, question_type, keyword, number_blocks
 ):

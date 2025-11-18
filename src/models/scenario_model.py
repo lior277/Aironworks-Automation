@@ -17,5 +17,6 @@ class ScenarioModel:
     link_domain: str = AppConfigs.LINKS_DOMAIN
     campaign_type: CampaignType = CampaignType.PHISHING_LINK
     custom_text: str = None
+    custom_text_web_sms: str = None
     target_details: TargetDetails = None
     file_path: str = None
