@@ -38,6 +38,10 @@ class ScenariosPage(BasePage):
 
         # scenario wizard
         self.scenario_name = self.page.get_by_role('textbox', name='Scenario Name')
+        self.vector_dropdown = DropDown(
+            link_locator=self.page.locator('//div[@id="vector"]'),
+            option_list_locator=self.page.locator('[role="option"]'),
+        )
         self.sender_address = self.page.get_by_role('textbox', name='Sender Address')
         self.sender_name = self.page.get_by_role('textbox', name='Sender Name')
         self.subject = self.page.get_by_role('textbox', name='Subject')
@@ -60,6 +64,7 @@ class ScenariosPage(BasePage):
         self.next = self.page.get_by_role('button', name='Next')
         self.show_preview_button = self.page.get_by_role('button', name='Show Preview')
         self.html_content = self.page.get_by_label('Editor editing area: main')
+        self.content = self.page.get_by_role('textbox', name='Content')
         self.save = self.page.get_by_role('button', name='Save')
         self.sender_domain_dropdown = DropDown(
             link_locator=self.page.locator(
@@ -141,12 +146,16 @@ class ScenariosPage(BasePage):
         self, scenario: ScenarioModel, clone_mode: ScenarioCloneMode = None
     ):
         self.scenario_name.fill(scenario.name)
-        self.sender_address.fill(scenario.sender_address)
-        self.sender_domain_dropdown.select_item_by_text(
-            scenario.sender_domain, loading_text='Loading...', timeout=15_000
-        )
+        self.vector_dropdown.select_item_by_text(scenario.vector)
+        if scenario.vector == 'Email':
+            self.sender_address.fill(scenario.sender_address)
+            self.sender_domain_dropdown.select_item_by_text(
+                scenario.sender_domain, loading_text='Loading...', timeout=15_000
+            )
+            self.subject.fill(scenario.subject)
+            self.select_content_type(scenario)
         self.sender_name.fill(scenario.sender_name)
-        self.subject.fill(scenario.subject)
+
         if scenario.target_details:
             self.select_target_details(scenario)
 
@@ -154,13 +163,13 @@ class ScenariosPage(BasePage):
             scenario.link_domain, loading_text='Loading...', timeout=15_000
         )
         self.url_suffix.fill(scenario.url_suffix)
-        self.select_content_type(scenario)
         self.next.click()
         if clone_mode:
             self.choose_edit_mode_window.select_clone_mode(clone_mode)
             self.wait_for_progress_bar_disappears()
         if (
-            scenario.html_content
+            scenario.vector == 'Email'
+            and scenario.html_content
             and not clone_mode
             or clone_mode == ScenarioCloneMode.NEW_BODY
         ):
@@ -172,6 +181,40 @@ class ScenariosPage(BasePage):
                 'iframe[title="my frame"]'
             ).content_frame.locator('body')
             expect(self.preview_text).to_contain_text(scenario.custom_text)
+            self.page.keyboard.press('Escape')
+        if scenario.vector == 'SMS' and scenario.html_content:
+            expect(self.content).to_be_empty()
+            self.content.fill(scenario.html_content + scenario.custom_text_web_sms)
+            self.show_preview_button.click()
+            time.sleep(10)
+            self.preview_text = (
+                self.page.get_by_role('dialog', name='SMS Attack Preview')
+                .locator('.css-1nqjmf3')
+                .get_by_role('paragraph')
+            )
+            trimmed_preview_text = re.sub(r'\s+', '', self.preview_text.text_content())
+            trimmed_custom_text = re.sub(r'\s+', '', scenario.custom_text_web_sms)
+            trimmed_custom_text = trimmed_custom_text.replace('←', '<-')
+            trimmed_preview_text = trimmed_preview_text.replace('←', '<-')
+            print(f'trimmed_preview_text: {trimmed_preview_text}')
+            print(f'trimmed_custom_text: {trimmed_custom_text}')
+            # expect(self.preview_text).to_contain_text(scenario.custom_text)
+            assert trimmed_custom_text in trimmed_preview_text
+            self.page.keyboard.press('Escape')
+        if scenario.vector == 'Web' and scenario.html_content:
+            expect(self.content).to_be_empty()
+            self.content.fill(scenario.html_content + scenario.custom_text_web_sms)
+            self.show_preview_button.click()
+            time.sleep(10)
+            self.preview_text = (
+                self.page.get_by_role('dialog', name='Web Attack Preview')
+                .locator('.css-1nqjmf3')
+                .get_by_role('paragraph')
+            )
+            trimmed_preview_text = re.sub(r'\s+', '', self.preview_text.text_content())
+            trimmed_custom_text = re.sub(r'\s+', '', scenario.custom_text_web_sms)
+            # expect(self.preview_text).to_contain_text(scenario.custom_text)
+            assert trimmed_custom_text in trimmed_preview_text
             self.page.keyboard.press('Escape')
         self.save.click()
         self.wait_for_progress_bar_disappears(timeout=30_000)

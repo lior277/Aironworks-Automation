@@ -238,6 +238,38 @@ def test_create_attachment_scenario_with_unsupported_file_extension(
     scenarios_page.select_content_type(scenario)
 
 
+@pytest.mark.parametrize(
+    'user, scenario',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            ScenarioModelFactory.scenario(vector='SMS'),
+        )
+    ],
+)
+@pytest.mark.smoke
+def test_create_sms_scenario(
+    user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
+):
+    scenarios_page.create_scenario(scenario)
+
+
+@pytest.mark.parametrize(
+    'user, scenario',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            ScenarioModelFactory.scenario(vector='Web'),
+        )
+    ],
+)
+@pytest.mark.smoke
+def test_create_web_scenario(
+    user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
+):
+    scenarios_page.create_scenario(scenario)
+
+
 @pytest.mark.smoke
 @pytest.mark.parametrize(
     'user, number_of_scenarios, level, language, sender, real_name, additional_info',
