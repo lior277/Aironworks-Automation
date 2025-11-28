@@ -15,7 +15,7 @@ class AIAgentPage(BasePage):
             '//div[contains(@class, "css-12ia9as")]'
         )
         self.scenario_blocks = self.ai_message_boxes.nth(-1).locator(
-            '//div[contains(@class, "css-14zyegh")]'
+            '//div[contains(@class, "css-1resfla")]'
         )
         self.education_blocks = self.ai_message_boxes.nth(-1).locator(
             '//div[contains(@class, "css-2cfzeo")]'
