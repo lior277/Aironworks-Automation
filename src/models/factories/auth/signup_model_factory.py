@@ -20,11 +20,11 @@ class SignupModelFactory:
         )
 
     @classmethod
-    def random_customer_ui(cls, referral=None):
+    def random_customer_ui(cls, language='English', referral=None):
         return EmailSignupModel(
             email=get_random_email(),
             password=fake.password(special_chars=True) + '@',
-            language='English',
+            language=language,
             first_name=fake.first_name(),
             last_name=fake.last_name(),
             company_name=fake.name(),

@@ -52,7 +52,7 @@ class RequestAiScenarioPage(BasePage):
         lannguage: str,
         sender: str,
         real_name: str,
-        additional_info: str = 'Make sure to generate {{attack_url}} with > after',
+        additional_info: str = 'Make sure to generate {{attack_url}} with a space behind or with nothing behind',
     ):
         self.scenarios_requested_dropdown.select_item_by_text(number_of_scenarios)
         self.attack_level_dropdown.select_item_by_text(level)

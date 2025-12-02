@@ -17,7 +17,12 @@ from src.utils.randomizer import generate_string
             UserModelFactory.aw_admin(),
             SignupModelFactory.random_customer_ui(),
             id='customer_admin_company1',
-        )
+        ),
+        pytest.param(
+            UserModelFactory.aw_admin(),
+            SignupModelFactory.random_customer_ui(language='Japanese'),
+            id='customer_admin_company2',
+        ),
     ],
 )
 @pytest.mark.smoke
