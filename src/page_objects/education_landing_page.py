@@ -27,19 +27,25 @@ class EducationLandingPage:
         self.page.wait_for_load_state('load')
 
     @allure.step('EducationLandingPage: submit email')
-    def submit_email(self, email: str):
+    def submit_email(self, email: str, campaign_type: str = 'Video'):
         expect(self.email_input).to_be_visible()
         self.email_input.fill(email)
 
         expect(self.submit_button).to_be_visible()
         with self.page.expect_request_finished():
             self.submit_button.click()
-        # self.embedded_content.owner.wait_for()
-        expect(self.embedded_content.owner).to_be_visible()
-        # time.sleep(60_000)
-        expect(self.embedded_content.owner).to_have_attribute(
-            'src', re.compile('https://.*')
-        )
+        if campaign_type == 'Video' or campaign_type == 'Slides':
+            # self.embedded_content.owner.wait_for()
+            expect(self.embedded_content.owner).to_be_visible()
+            # time.sleep(60_000)
+            expect(self.embedded_content.owner).to_have_attribute(
+                'src', re.compile('https://.*')
+            )
+        elif campaign_type == 'PDF':
+            expect(self.embedded_content.owner).to_be_visible()
+            expect(self.embedded_content.owner).to_have_attribute(
+                'src', re.compile('/api/upload/url/*')
+            )
 
     @allure.step('EducationLandingPage: confirm quiz')
     def confirm_quiz(self):
