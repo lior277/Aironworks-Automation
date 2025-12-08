@@ -22,33 +22,43 @@ def new_page(playwright_config):
 
 @allure.testcase('31533')
 @pytest.mark.parametrize(
-    'content_id',
+    'content_id, content_type',
     [
         pytest.param(
             AppConfigs.EXAMPLE_EDUCATION_CONTENT,
+            'Video',
             marks=[allure.testcase('31533'), pytest.mark.xdist_group(name='agent1')],
         ),
         pytest.param(
             AppConfigs.EXAMPLE_EDUCATION_CONTENT_SLIDES,
+            'Slides',
             marks=[allure.testcase('31534'), pytest.mark.xdist_group(name='agent1')],
         ),
         pytest.param(
             AppConfigs.EXAMPLE_EDUCATION_CONTENT_PDF,
+            'PDF',
             marks=[allure.testcase('31535'), pytest.mark.xdist_group(name='agent1')],
         ),
         pytest.param(
             AppConfigs.EXAMPLE_EDUCATION_CONTENT_QUIZ,
+            'Quiz',
             marks=[allure.testcase('31536'), pytest.mark.xdist_group(name='agent1')],
         ),
         pytest.param(
             AppConfigs.EXAMPLE_EDUCATION_CONTENT_SURVEY,
+            'Survey',
             marks=[allure.testcase('31537'), pytest.mark.xdist_group(name='agent1')],
         ),
     ],
 )
 @pytest.mark.smoke
 def test_valid_email_entry(
-    api_request_context_customer_admin, employee, mailtrap, new_page, content_id
+    api_request_context_customer_admin,
+    employee,
+    mailtrap,
+    new_page,
+    content_id,
+    content_type,
 ):
     mail = (
         run_education_campaign_on_employee(
@@ -67,10 +77,11 @@ def test_valid_email_entry(
 
     page: EducationLandingPage = EducationLandingPage(new_page, links[0])
     page.open()
-    page.submit_email(employee.email)
+    page.submit_email(employee.email, content_type)
 
     expect(page.page.get_by_text('Ongoing Content')).to_be_visible()
-    expect(page.embedded_content.owner).to_be_visible()
+    if content_type != 'Quiz' and content_type != 'Survey':
+        expect(page.embedded_content.owner).to_be_visible()
     with pytest.raises(Exception):
         json.loads(
             page.embedded_content.locator(':root').evaluate(
