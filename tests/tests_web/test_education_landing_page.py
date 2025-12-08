@@ -21,17 +21,47 @@ def new_page(playwright_config):
 
 
 @allure.testcase('31533')
+@pytest.mark.parametrize(
+    'content_id',
+    [
+        pytest.param(
+            AppConfigs.EXAMPLE_EDUCATION_CONTENT,
+            marks=[allure.testcase('31533'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            AppConfigs.EXAMPLE_EDUCATION_CONTENT_SLIDES,
+            marks=[allure.testcase('31534'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            AppConfigs.EXAMPLE_EDUCATION_CONTENT_PDF,
+            marks=[allure.testcase('31535'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            AppConfigs.EXAMPLE_EDUCATION_CONTENT_QUIZ,
+            marks=[allure.testcase('31536'), pytest.mark.xdist_group(name='agent1')],
+        ),
+        pytest.param(
+            AppConfigs.EXAMPLE_EDUCATION_CONTENT_SURVEY,
+            marks=[allure.testcase('31537'), pytest.mark.xdist_group(name='agent1')],
+        ),
+    ],
+)
 @pytest.mark.smoke
 def test_valid_email_entry(
-    api_request_context_customer_admin, employee, mailtrap, new_page
+    api_request_context_customer_admin, employee, mailtrap, new_page, content_id
 ):
-    mail = run_education_campaign_on_employee(
-        api_request_context_customer_admin, mailtrap, employee
+    mail = (
+        run_education_campaign_on_employee(
+            api_request_context_customer_admin, mailtrap, employee, content_id
+        ),
     )
     assert mail is not None, (
         f'Unable to find email {employee.email} please check the mailtrap inbox {AppConfigs.EMPLOYEE_INBOX_ID}'
     )
-    source = mailtrap.message_source(AppConfigs.EMPLOYEE_INBOX_ID, mail['id']).body()
+    mail_dict = mail[0]
+    source = mailtrap.message_source(
+        AppConfigs.EMPLOYEE_INBOX_ID, mail_dict['id']
+    ).body()
     links = get_text_links(source.decode())
     assert len(links) == 1
 

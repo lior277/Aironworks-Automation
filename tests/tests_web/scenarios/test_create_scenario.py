@@ -251,6 +251,8 @@ def test_create_attachment_scenario_with_unsupported_file_extension(
 def test_create_sms_scenario(
     user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
 ):
+    if AppConfigs.ENV.startswith('production-us'):
+        pytest.skip('Case is not available for production-us env')
     scenarios_page.create_scenario(scenario)
 
 

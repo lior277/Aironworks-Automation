@@ -23,6 +23,10 @@ from src.page_objects.dashboard_page import DashboardPage
 from src.page_objects.education_campaign.education_campaign_details_page import (
     EducationCampaignDetailsPage,
 )
+
+# from src.page_objects.education_campaign.education_campaign_modify_page import (
+#     EducationCampaignModifyPage,
+# )
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
@@ -372,6 +376,23 @@ def view_education_campaign_details_page(
 def first_campaign_details_page(dashboard_page: DashboardPage) -> CampaignDetailsPage:
     campaigns_page = dashboard_page.navigation_bar.navigate_campaigns()
     return campaigns_page.click_first_ongoing_campaign()
+
+
+# @pytest.fixture
+# def fifth_education_campaign_details_page(
+#     dashboard_page: DashboardPage,
+# ) -> EducationCampaignDetailsPage:
+#     education_campaign_page = (
+#         dashboard_page.navigation_bar.navigate_education_campaigns_page()
+#     )
+#     return education_campaign_page.open_fifth_campaign_details()
+
+
+# @pytest.fixture
+# def modify_education_campaign_page(
+#     fifth_education_campaign_details_page: EducationCampaignDetailsPage,
+# ) -> EducationCampaignModifyPage:
+#     return fifth_education_campaign_details_page.navigate_to_modify_campaign_page()
 
 
 @pytest.fixture
