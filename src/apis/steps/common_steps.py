@@ -16,7 +16,10 @@ from src.utils.waiter import wait_for_lro
 
 @allure.step('run education campaign on employee')
 def run_education_campaign_on_employee(
-    request_context: APIRequestContext, mailtrap, employee
+    request_context: APIRequestContext,
+    mailtrap,
+    employee,
+    content_id: str = AppConfigs.EXAMPLE_EDUCATION_CONTENT,
 ):
     education = api.education(request_context)
     result = education.start_campaign(
@@ -26,7 +29,7 @@ def run_education_campaign_on_employee(
             start_date=datetime.now().timestamp(),
             end_date=(datetime.now() + timedelta(days=1)).timestamp(),
             employee_ids=[employee.employee_id],
-            content_ids=[AppConfigs.EXAMPLE_EDUCATION_CONTENT],
+            content_ids=[content_id],
         )
     )
     expect(result).to_be_ok()
