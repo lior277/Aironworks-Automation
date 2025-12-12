@@ -136,7 +136,7 @@ class ScenariosPage(BasePage):
             case TargetType.COMPANY:
                 self.company_attack.click()
         if scenario.target_details.target_company:
-            self.targeted.click()
+            # self.targeted.click()
             self.target_company_dropdown.select_item_by_text(
                 scenario.target_details.target_company
             )
@@ -145,7 +145,7 @@ class ScenariosPage(BasePage):
     def submit_create_scenario_form(
         self, scenario: ScenarioModel, clone_mode: ScenarioCloneMode = None
     ):
-        self.scenario_name.fill(scenario.name)
+        self.scenario_name.fill(scenario.vector + ' ' + scenario.name)
         self.vector_dropdown.select_item_by_text(scenario.vector)
         if scenario.vector == 'Email':
             self.sender_address.fill(scenario.sender_address)
@@ -284,7 +284,9 @@ class ScenariosPage(BasePage):
 
     @allure.step('ScenariosPage: verify cloned {scenario} scenario form')
     def verify_cloned_scenario_form(self, scenario: ScenarioModel):
-        expect(self.scenario_name).to_have_attribute(name='value', value=scenario.name)
+        expect(self.scenario_name).to_have_attribute(
+            name='value', value=scenario.vector + ' ' + scenario.name
+        )
         expect(self.sender_address).to_have_attribute(
             name='value', value=scenario.sender_address
         )

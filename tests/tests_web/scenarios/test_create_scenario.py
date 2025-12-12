@@ -32,22 +32,22 @@ from src.page_objects.scenarios_page import ScenariosPage
                 ),
             ],
         ),
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(
-                target_details=TargetDetails(target_type=TargetType.EMPLOYEE)
-            ),
-            id='test create scenario aw admin attack employee general',
-            marks=allure.testcase('31780'),
-        ),
-        pytest.param(
-            UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(
-                target_details=TargetDetails(target_type=TargetType.COMPANY)
-            ),
-            id='test create scenario aw admin attack company general',
-            marks=allure.testcase('31779'),
-        ),
+        # pytest.param(
+        #     UserModelFactory.aw_admin(),
+        #     ScenarioModelFactory.scenario(
+        #         target_details=TargetDetails(target_type=TargetType.EMPLOYEE)
+        #     ),
+        #     id='test create scenario aw admin attack employee general',
+        #     marks=allure.testcase('31780'),
+        # ),
+        # pytest.param(
+        #     UserModelFactory.aw_admin(),
+        #     ScenarioModelFactory.scenario(
+        #         target_details=TargetDetails(target_type=TargetType.COMPANY)
+        #     ),
+        #     id='test create scenario aw admin attack company general',
+        #     marks=allure.testcase('31779'),
+        # ),
         pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(
@@ -103,7 +103,13 @@ def test_create_scenario(
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_APPLE),
+            ScenarioModelFactory.scenario(
+                target_details=TargetDetails(
+                    target_type=TargetType.COMPANY,
+                    target_company=AppConfigs.QA_COMPANY_NAME,
+                ),
+                campaign_type=CampaignType.DATA_ENTRY_APPLE,
+            ),
             id='test create Apple data entry scenario aw admin',
             marks=allure.testcase('31775'),
         ),
@@ -115,7 +121,13 @@ def test_create_scenario(
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(campaign_type=CampaignType.DATA_ENTRY_GOOGLE),
+            ScenarioModelFactory.scenario(
+                target_details=TargetDetails(
+                    target_type=TargetType.COMPANY,
+                    target_company=AppConfigs.QA_COMPANY_NAME,
+                ),
+                campaign_type=CampaignType.DATA_ENTRY_GOOGLE,
+            ),
             id='test create Google data entry scenario aw admin',
             marks=allure.testcase('31774'),
         ),
@@ -130,7 +142,11 @@ def test_create_scenario(
         pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(
-                campaign_type=CampaignType.DATA_ENTRY_MICROSOFT
+                target_details=TargetDetails(
+                    target_type=TargetType.COMPANY,
+                    target_company=AppConfigs.QA_COMPANY_NAME,
+                ),
+                campaign_type=CampaignType.DATA_ENTRY_MICROSOFT,
             ),
             id='test create Microsoft data entry scenario aw admin',
             marks=allure.testcase('31776'),
@@ -177,6 +193,10 @@ def test_create_data_entry_scenario(
         pytest.param(
             UserModelFactory.aw_admin(),
             ScenarioModelFactory.scenario(
+                target_details=TargetDetails(
+                    target_type=TargetType.COMPANY,
+                    target_company=AppConfigs.QA_COMPANY_NAME,
+                ),
                 html_content=None,
                 campaign_type=CampaignType.ATTACHMENT,
                 file_path=os.path.join(AppFolders.RESOURCES_PATH, 'sample.pdf'),

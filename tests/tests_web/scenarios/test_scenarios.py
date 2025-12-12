@@ -6,6 +6,7 @@ from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
+from src.models.scenario import TargetDetails, TargetType
 from src.models.scenario_model import ScenarioModel
 from src.page_objects.scenarios_page import ScenariosPage
 
@@ -40,7 +41,12 @@ def test_filter_scenario_by_name(user: UserModel, scenarios_page: ScenariosPage)
     [
         pytest.param(
             UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(),
+            ScenarioModelFactory.scenario(
+                target_details=TargetDetails(
+                    target_type=TargetType.COMPANY,
+                    target_company=AppConfigs.QA_COMPANY_NAME,
+                )
+            ),
             id='hide scenario',
             marks=allure.testcase('31497'),
         )
