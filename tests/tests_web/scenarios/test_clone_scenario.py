@@ -8,7 +8,7 @@ from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
 from src.models.factories.scenario_model_factory import ScenarioModelFactory
-from src.models.scenario import ScenarioCloneMode
+from src.models.scenario import ScenarioCloneMode, TargetDetails, TargetType
 from src.models.scenario_model import ScenarioModel
 from src.page_objects.scenarios_page import ScenariosPage
 
@@ -39,7 +39,12 @@ fake = faker.Faker()
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(),
+            ScenarioModelFactory.scenario(
+                target_details=TargetDetails(
+                    target_type=TargetType.EMPLOYEE,
+                    target_company=AppConfigs.QA_COMPANY_NAME,
+                )
+            ),
             ScenarioCloneMode.NEW_BODY,
             id='test clone scenario with editing aw admin',
             marks=allure.testcase('31491'),
@@ -53,7 +58,12 @@ fake = faker.Faker()
         ),
         pytest.param(
             UserModelFactory.aw_admin(),
-            ScenarioModelFactory.scenario(),
+            ScenarioModelFactory.scenario(
+                target_details=TargetDetails(
+                    target_type=TargetType.EMPLOYEE,
+                    target_company=AppConfigs.QA_COMPANY_NAME,
+                )
+            ),
             ScenarioCloneMode.COPY_CONTENT,
             id='test clone scenario via copy content aw admin',
             marks=allure.testcase('31778'),
