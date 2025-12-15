@@ -41,10 +41,7 @@ def test_education_campaign_notification_match_settings(
     expect(config_result).to_be_ok()
     company_config = config_result.json()
     Log.info(company_config)
-    en_config = next(
-        (config for config in company_config['data'] if config.get('language') == 'en'),
-        None,
-    )
+    en_config = company_config
     mail = run_education_campaign_on_employee(
         api_request_context_customer_admin, mailtrap, employee
     )
