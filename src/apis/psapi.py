@@ -11,7 +11,7 @@ class PSApi(Enum):
     EMPLOYEE_LIST_IDS = '/company/employee_list_ids'
     EMPLOYEE_UPDATE = '/company/employee_update'
     EMPLOYEE_DELETE = '/company/employee_delete'
-    COMPANY_LOCALIZED_CONFIG = '/company/localized-configs'
+    COMPANY_LOCALIZED_CONFIG = '/company/localized-configs/en'
     COMPANY_LOCALIZED_CONFIG_LANGUAGE = '/company/localized-configs/{language}'
     COMPANY_EMPLOYEE_COUNT = '/company/employee_count'
 

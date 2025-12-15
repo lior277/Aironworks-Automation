@@ -105,10 +105,7 @@ def test_email_notification_match_setting(
     run_campaign_on_employee(
         api_request_context_customer_admin, api_request_context, mailtrap, employee
     )
-    en_config = next(
-        (config for config in company_config['data'] if config.get('language') == 'en'),
-        None,
-    )
+    en_config = company_config
     Log.info(
         f'waiting for email with title: {en_config["custom_attack_notification_subject"]}'
     )
