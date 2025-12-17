@@ -85,12 +85,16 @@ def api_request_context_addin(
     login_info = login_info_response.json()
     assert 'user' in login_info
     assert 'roles' in login_info['user']
-    print('abc:', login_info['user']['roles'])
     for role in login_info['user']['roles']:
         if role['name'] == 'employee_user':
             role_id = role['id']
             break
-    expect(login_service.pick_role(role_id)).to_be_ok()
+    state = request_context.storage_state()
+    plain_context = playwright.request.new_context(
+        base_url=base_url, storage_state=state
+    )
+    new_login_service = api.login(plain_context)
+    expect(new_login_service.pick_role(role_id)).to_be_ok()
     yield request_context
     request_context.dispose()
 

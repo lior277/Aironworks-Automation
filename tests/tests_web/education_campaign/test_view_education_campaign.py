@@ -4,6 +4,9 @@ import pytest
 from src.configs.config_loader import AppConfigs
 from src.models.auth.user_model import UserModel
 from src.models.factories.auth.user_model_factory import UserModelFactory
+from src.page_objects.education_campaign.education_campaign_details_page import (
+    EducationCampaignDetailsPage,
+)
 from src.page_objects.education_campaign.education_campaign_page import (
     EducationCampaignPage,
 )
@@ -64,7 +67,7 @@ def test_view_education_campaign(
 @pytest.mark.web
 @pytest.mark.smoke
 def test_education_campaign_detail(
-    view_education_campaign_details_page: EducationCampaignPage,
+    view_education_campaign_details_page: EducationCampaignDetailsPage,
     user,
     total,
     field,
@@ -74,3 +77,4 @@ def test_education_campaign_detail(
     if AppConfigs.ENV.startswith('development'):
         pytest.skip('Test is not ready for development env')
     view_education_campaign_details_page.filter_assignments(field, value, record)
+    view_education_campaign_details_page.check_dashboard()

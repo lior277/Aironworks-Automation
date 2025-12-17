@@ -9,6 +9,10 @@ from src.page_objects.education_campaign.const import (
     education_campaign_deleted_text,
 )
 
+# from src.page_objects.education_campaign.education_campaign_modify_page import (
+#     EducationCampaignModifyPage,
+# )
+
 
 class EducationCampaignDetailsPage(BasePage):
     def __init__(self, page: Page):
@@ -20,11 +24,20 @@ class EducationCampaignDetailsPage(BasePage):
         self.delete_cmapaign_option = self.page.get_by_role(
             'menuitem', name='Delete Campaign'
         )
+        self.modify_campaign_option = self.page.get_by_role(
+            'menuitem', name='Modify Campaign'
+        )
         self.title_txt = self.page.get_by_role('heading', level=4).nth(1)
         self.delete_campaign_title = self.page.get_by_role('heading', level=2)
         self.delete_campaign_body = self.page.locator(selector='.MuiDialogContent-root')
         self.confirm_delete_button = self.page.get_by_text('Yes, Delete Campaign')
         self.cancel_button = self.page.get_by_text('Cancel')
+        self.completion_rate = self.page.get_by_role(
+            'heading', level=6, name='Completion Rate'
+        )
+        self.deployment_status = self.page.get_by_role(
+            'heading', level=6, name='Deployment Status'
+        )
         self.assignment_list = Table(
             self.page.locator(
                 '//h6[text()="Assignments List"]//following-sibling::div//div[@role="rowgroup"]/div'
@@ -49,6 +62,13 @@ class EducationCampaignDetailsPage(BasePage):
         self.confirm_delete_button.click()
         self.ensure_alert_message_is_visible(education_campaign_deleted_text)
 
+    # @allure.step('EducationCampaignDetailsPage: navigate to modify campaign page')
+    # def navigate_to_modify_campaign_page(self):
+    #     self.manage_campaign_button.click()
+    #     expect(self.modify_campaign_option).to_be_visible()
+    #     self.modify_campaign_option.click()
+    #     return EducationCampaignModifyPage(self.page)
+
     @allure.step(
         'CampaignDetailsPage: open campaign detailed page for {campaign_id} campaign id'
     )
@@ -66,6 +86,11 @@ class EducationCampaignDetailsPage(BasePage):
         expect(self.assignment_list._Table__locator).to_have_count(
             number_record, timeout=30000
         )
+
+    @allure.step('EducationCampaignDetailsPage: check dashboard')
+    def check_dashboard(self):
+        expect(self.completion_rate).to_be_visible()
+        expect(self.deployment_status).to_be_visible()
 
 
 class AssignmentList:

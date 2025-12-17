@@ -25,7 +25,9 @@ from src.page_objects.scenarios_page import ScenariosPage
 def test_create_sms_scenario(
     user: UserModel, scenario: ScenarioModel, scenarios_page: ScenariosPage
 ):
-    if AppConfigs.ENV.startswith('production-us'):
+    if AppConfigs.ENV.startswith('production-us') or AppConfigs.ENV.startswith(
+        'production-eu'
+    ):
         pytest.skip('Case is not available for production-us env')
     scenarios_page.create_scenario(scenario)
 
