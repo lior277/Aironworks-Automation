@@ -3,6 +3,7 @@ from time import sleep
 import allure
 from playwright.sync_api import Locator, Page, expect
 
+import src.utils.text_convert as text_convert
 from src.models.phish_detect_ui_settings.outlook_localized_config import (
     OutlookConfigData,
 )
@@ -17,6 +18,10 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
     def __init__(self, page: Page):
         super().__init__(page)
 
+        self.language_dropdown = DropDown(
+            link_locator=self.page.get_by_role('combobox', name='Language'),
+            option_list_locator=self.page.locator('[role="option"]'),
+        )
         self.show_preview_button_email_sub_text = self.page.locator(
             "//div[@data-testid='phisshing-assessment-configuration-subTextBlock']/.."
         ).get_by_role('button', name='Show Preview')
@@ -52,6 +57,9 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
 
     @allure.step('PhishDetectAISettingsConfiguration: change settings')
     def change_settings(self, settings: OutlookConfigData):
+        language_text = text_convert.convert_language_code_to_text(settings.language)
+        print('language_text:', language_text)
+        self.language_dropdown.select_item_by_text(language_text)
         if settings.assessment_button:
             self.button_visibility_component.perform_assessment_enabled_button.click()
         else:
