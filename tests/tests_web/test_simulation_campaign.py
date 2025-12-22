@@ -72,6 +72,7 @@ def test_create_simulation_campaign(
         )
     ],
 )
+@pytest.mark.timeout(300)
 @pytest.mark.smoke
 def test_modify_simulation_campaign(
     user: UserModel,

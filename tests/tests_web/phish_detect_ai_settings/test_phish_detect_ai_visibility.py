@@ -25,6 +25,13 @@ def set_outlook_default_setting(request, api_request_context_customer_admin):
         expect(response).to_be_ok()
         actual_settings = OutlookConfigData.from_dict(response.json())
         assert expected_settings == actual_settings
+        jp_expected_settings = OutlookLocalizedConfigFactory.get_default_jp_config()
+        response = phish_detect_ui_service.update_outlook_localized_config(
+            jp_expected_settings, language=jp_expected_settings.language
+        )
+        expect(response).to_be_ok()
+        actual_settings = OutlookConfigData.from_dict(response.json())
+        assert jp_expected_settings == actual_settings
 
     request.addfinalizer(finalizer)
 
@@ -51,6 +58,22 @@ def set_outlook_default_setting(request, api_request_context_customer_admin):
             ),
             id='Test incident_button visibility settings in phish detect ai',
             marks=[allure.testcase('31799'), pytest.mark.xdist_group('agent1')],
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            OutlookLocalizedConfigFactory.get_outlook_config_jp(
+                assessment_button=False, incident_button=True
+            ),
+            id='Test assessment_button visibility settings in phish detect ai',
+            marks=[allure.testcase('31800'), pytest.mark.xdist_group('agent1')],
+        ),
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            OutlookLocalizedConfigFactory.get_outlook_config_jp(
+                assessment_button=True, incident_button=False
+            ),
+            id='Test incident_button visibility settings in phish detect ai',
+            marks=[allure.testcase('31801'), pytest.mark.xdist_group('agent1')],
         ),
     ],
 )
