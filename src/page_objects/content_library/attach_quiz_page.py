@@ -12,6 +12,9 @@ class AttachQuizPage(BasePage):
         self.question_input = page.get_by_role('textbox', name='Untitled Question')
         self.answer_one_input = page.get_by_role('textbox', name='Answer 1')
         self.answer_two_input = page.get_by_role('textbox', name='Answer 2')
+        self.answer_one_right_answer_checkbox = page.get_by_role(
+            'checkbox', name='Right answer'
+        ).nth(0)
         self.add_new_answer_button = page.get_by_text('Add new Answer')
         self.add_a_question_button = page.get_by_text('Add a Question')
         self.apply_button = page.get_by_text('Apply')
@@ -24,7 +27,10 @@ class AttachQuizPage(BasePage):
         else:
             self.question_input.fill(quiz.questions[0].question)
             self.answer_one_input.fill(quiz.questions[0].answers[0].answer)
+            if not self.answer_two_input.is_visible():
+                self.add_new_answer_button.click()
             self.answer_two_input.fill(quiz.questions[0].answers[1].answer)
+            self.answer_one_right_answer_checkbox.check()
             self.apply_button.click()
             self.ensure_alert_message_is_visible(quiz_attached_text)
             self.ensure_alert_message_is_not_visible(quiz_attached_text)
