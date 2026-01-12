@@ -49,7 +49,7 @@ build-tests-image:
         - Dockerfile
   image: docker:latest
   tags:
-    - gitlab-runner-by-tf
+    - saas-linux-small-amd64
   services:
     - docker:dind
   script:
@@ -140,6 +140,8 @@ upload_to_s3:
   cache:
     key: gitlab-pages
     paths: [public]
+  tags:
+    - saas-linux-small-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
