@@ -2,6 +2,9 @@ from playwright.sync_api import Locator, Page
 
 from src.page_objects.base_page import BasePage
 from src.page_objects.data_types.table_element import Table
+from src.page_objects.operations.create_automatic_campaign_page import (
+    CreateAutomaticCampaignPage,
+)
 from src.page_objects.operations.create_operation_page import CreateOperationPage
 from src.page_objects.operations.operation_detail_page import OperationDetailPage
 
@@ -15,6 +18,12 @@ class OperationsListPage(BasePage):
         self.operations_table = Table(
             self.page.locator('.MuiDataGrid-row'), OperationsTableComponent
         )
+        self.education_operations_tab = self.page.get_by_role(
+            'tab', name='Education Operations'
+        )
+        self.create_automatic_campaign_button = self.page.get_by_role(
+            'button', name='Create Automatic Campaign'
+        )
 
     def navigate_to_create_operation_page(self):
         self.create_operation_button.click()
@@ -26,6 +35,13 @@ class OperationsListPage(BasePage):
             raise ValueError('Table is empty')
         row.name.click()
         return OperationDetailPage(self.page)
+
+    def switch_to_education_operations_tab(self):
+        self.education_operations_tab.click()
+
+    def navigate_to_create_automatic_campaign_page(self):
+        self.create_automatic_campaign_button.click()
+        return CreateAutomaticCampaignPage(self.page)
 
 
 class OperationsTableComponent:
