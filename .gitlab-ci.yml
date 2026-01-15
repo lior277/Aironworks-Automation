@@ -204,9 +204,8 @@ post_test_results:
 
 set_pipeline_status:
   stage: deploy
-  needs:
-    - job: run-tests
-      artifacts: true
+  dependencies:
+    - run-tests
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
