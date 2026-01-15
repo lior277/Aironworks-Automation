@@ -41,7 +41,7 @@ build-tests-image:
   services:
     - docker:dind
   script:
-    - echo "Docker tag: $SERVER_TAG"
+    - echo "Docker tag - $SERVER_TAG"
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - docker buildx create --use
     - docker buildx build --platform=linux/amd64,linux/arm64/v8 --push -t "$SERVER_TAG" .
@@ -57,13 +57,13 @@ run-tests:
     - if: $CI_COMMIT_BRANCH == "main"
   tags:
     - saas-linux-large-amd64
-  script: |
-    EXIT=0
-    pipenv run ruff check .
-    pipenv run ruff format --check .
-    pipenv run pytest --dist loadgroup -vv -n $TEST_PARALLELISM -m "not delivered_emails and not prepare_data" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
-    echo "EXIT_CODE=$EXIT" > .exit_code
-    exit $EXIT
+  script:
+    - EXIT=0
+    - pipenv run ruff check .
+    - pipenv run ruff format --check .
+    - pipenv run pytest --dist loadgroup -vv -n $TEST_PARALLELISM -m "not delivered_emails and not prepare_data" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
+    - echo "EXIT_CODE=$EXIT" > .exit_code
+    - exit $EXIT
   allow_failure: true
   environment:
     name: $ENV
@@ -78,24 +78,26 @@ run-tests:
 
 upload_testrail_run:
   stage: deploy
-  needs: [run-tests]
+  needs:
+    - run-tests
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-  script: |
-    if [ ! -z "$TEST_RUN_ID" ]; then
-      TEST_RUN_ID="--run-id $TEST_RUN_ID"
-    fi
-    pipenv run trcli -h https://aironworksqa.testrail.io \
-      --project "AironWorks" \
-      --username info@aironworks.com \
-      --key "$TESTRAIL_API_KEY" \
-      parse_junit --case-matcher "property" \
-      --title "CI on $ENV $(date)" \
-      $TEST_RUN_ID \
-      -f "junit.xml"
+  script:
+    - |
+      if [ ! -z "$TEST_RUN_ID" ]; then
+        TEST_RUN_ID="--run-id $TEST_RUN_ID"
+      fi
+      pipenv run trcli -h https://aironworksqa.testrail.io \
+        --project "AironWorks" \
+        --username info@aironworks.com \
+        --key "$TESTRAIL_API_KEY" \
+        parse_junit --case-matcher "property" \
+        --title "CI on $ENV $(date)" \
+        $TEST_RUN_ID \
+        -f "junit.xml"
 
 allure_job:
   stage: reports
@@ -148,21 +150,20 @@ post_test_results:
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
         CURRENT_CONTENT_PATH: "$ENV/$CI_PIPELINE_ID"
-  script: |
-    source .exit_code
-    exit 0
+  script:
+    - source .exit_code
+    - exit 0
 
 set_pipeline_status:
   stage: deploy
-  needs:
-    - job: run-tests
-      artifacts: true
+  dependencies:
+    - run-tests
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == "main"
-  script: |
-    source .exit_code
-    exit $EXIT_CODE
+  script:
+    - source .exit_code
+    - exit $EXIT_CODE

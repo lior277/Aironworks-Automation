@@ -1,17 +1,12 @@
 FROM python:3.12-bookworm AS builder
 
-ARG MAIN_FOLDER=./tests
-ARG PIP_FILE=${MAIN_FOLDER}/Pipfile
-ARG PIP_FILE_LOCK=${MAIN_FOLDER}/Pipfile.lock
-
 ENV PYTHONUNBUFFERED=1
 ENV PIPENV_VENV_IN_PROJECT=1
 
-WORKDIR ${MAIN_FOLDER}
+WORKDIR /app
 
+COPY Pipfile Pipfile.lock ./
 COPY ./tests ./tests
-COPY Pipfile ${PIP_FILE}
-COPY Pipfile.lock ${PIP_FILE_LOCK}
 
 RUN pip install --upgrade pip && \
     pip install pipenv && \
