@@ -1,19 +1,9 @@
 variables:
-  SERVER_DOCKER_FILE: ./Dockerfile
-  SERVER_TAG: $CI_REGISTRY_IMAGE:main
-  EPHEMERAL_BRANCHES_PATH: preview # subpath to ephemeral branches content for preview
-  TEST_PARALLELISM:
-    value: 4
-    description: 'Amount of tests to run in parallel'
-  ENV:
-    value: staging
-    description: 'Environment name'
-    options:
-      - development
-      - staging
-      - production
-      - production-eu
-      - production-us
+  SERVER_DOCKER_FILE: "./Dockerfile"
+  SERVER_TAG: "$CI_REGISTRY_IMAGE:main"
+  EPHEMERAL_BRANCHES_PATH: "preview"
+  TEST_PARALLELISM: "4"
+  ENV: "staging"
 
 workflow:
   rules:
@@ -22,7 +12,7 @@ workflow:
         - Pipfile.lock
         - Dockerfile
       variables:
-        SERVER_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+        SERVER_TAG: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
     - when: always
 
 stages:
@@ -37,12 +27,10 @@ build-tests-image:
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline" || $CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "trigger"
       when: never
-    # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - Pipfile.lock
         - Dockerfile
-    # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       changes:
         - Pipfile.lock
@@ -53,22 +41,19 @@ build-tests-image:
   services:
     - docker:dind
   script:
-    - >
-      echo "Docker tag: $SERVER_TAG"
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - echo "Docker tag: $SERVER_TAG"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - docker buildx create --use
-    - docker buildx build --build-arg --platform=linux/amd64,linux/arm64/v8 --push -t $SERVER_TAG .
+    - docker buildx build --platform=linux/amd64,linux/arm64/v8 --push -t "$SERVER_TAG" .
 
 run-tests:
   stage: test
   image: $SERVER_TAG
   resource_group: tests-$ENV
   rules:
-    # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
-        ENV: staging
-    # run on main branch
+        ENV: "staging"
     - if: $CI_COMMIT_BRANCH == "main"
   tags:
     - saas-linux-large-amd64
@@ -79,7 +64,7 @@ run-tests:
     pipenv run pytest --dist loadgroup -vv -n $TEST_PARALLELISM -m "not delivered_emails and not prepare_data" --alluredir=allure-results --junitxml=junit.xml || EXIT=$?
     echo "EXIT_CODE=$EXIT" > .exit_code
     exit $EXIT
-  allow_failure: true # in case pipeline fails process run
+  allow_failure: true
   environment:
     name: $ENV
   artifacts:
@@ -98,7 +83,6 @@ upload_testrail_run:
   tags:
     - saas-linux-small-amd64
   rules:
-    # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
   script: |
     if [ ! -z "$TEST_RUN_ID" ]; then
@@ -113,19 +97,17 @@ upload_testrail_run:
       $TEST_RUN_ID \
       -f "junit.xml"
 
-allure_job: &allure_job
+allure_job:
   stage: reports
   rules:
-    # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
   tags:
     - saas-linux-small-amd64
   image: frankescobar/allure-docker-service:2.17.2
   script:
-    - mkdir -p $(pwd)/allure-report
-    - allure generate -c allure-results -o allure-report # from allure-results to allure-report
+    - mkdir -p allure-report
+    - allure generate -c allure-results -o allure-report
   artifacts:
     paths:
       - ./allure-results
@@ -136,35 +118,23 @@ upload_to_s3:
   stage: deploy
   image:
     name: amazon/aws-cli
-    entrypoint: ['']
-  cache:
-    key: gitlab-pages
-    paths: [public]
+    entrypoint: [""]
   tags:
     - saas-linux-small-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
-        CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
-        ENV_NAME: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
-    # run on main branch
+        CURRENT_CONTENT_PATH: "$EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG"
+        ENV_NAME: "$EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG"
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
-        CURRENT_CONTENT_PATH: $ENV/$CI_PIPELINE_ID
-        ENV_NAME: $ENV
+        CURRENT_CONTENT_PATH: "$ENV/$CI_PIPELINE_ID"
+        ENV_NAME: "$ENV"
   script:
-    - aws s3 sync ./allure-report/ s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH --exclude="*.html" --exclude="*.js" --exclude="*.css"
-    - aws s3 sync ./allure-report/ s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH --exclude="*" --include="*.html" --content-type="text/html"
-    - aws s3 sync ./allure-report/ s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH --exclude="*" --include="*.js" --content-type="application/javascript"
-    - aws s3 sync ./allure-report/ s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH --exclude="*" --include="*.css" --content-type="text/css"
-  variables:
-    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-    AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+    - aws s3 sync ./allure-report/ s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH
   environment:
     name: pages/$ENV_NAME
     action: start
-    url: https://test-results.aironworks.com/playwright/$CURRENT_CONTENT_PATH/index.html
 
 post_test_results:
   stage: deploy
@@ -175,51 +145,24 @@ post_test_results:
   tags:
     - saas-linux-small-amd64
   rules:
-    # run on MR:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      variables:
-        CURRENT_CONTENT_PATH: $EPHEMERAL_BRANCHES_PATH/$CI_COMMIT_REF_SLUG
-      when: never # not enabled currently
-    # run on main branch
     - if: $CI_COMMIT_BRANCH == "main"
       variables:
-        CURRENT_CONTENT_PATH: $ENV/$CI_PIPELINE_ID
+        CURRENT_CONTENT_PATH: "$ENV/$CI_PIPELINE_ID"
   script: |
     source .exit_code
-    DEPLOYMENT_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") 
-    if [ $EXIT_CODE -eq 0 ]; then
-      TAG=""    
-      CI_JOB_STATUS_UPPER="success"
-      EMOJI_STATUS=":white_check_mark:"
-    else
-      TAG="<!channel>"
-      CI_JOB_STATUS_UPPER="failure"
-      EMOJI_STATUS=":exclamation:"
-    fi
-    curl -X POST -H 'Content-type: application/json' --data "{
-      \"text\": \"*Project:* $CI_PROJECT_NAME\n*Job:* $CI_JOB_NAME\n*Stage:* $CI_JOB_STAGE\n*User:* $GITLAB_USER_NAME\n*Deployment Date:* $DEPLOYMENT_DATE\n*Environment:* $ENV\n*Status:* $CI_JOB_STATUS_UPPER $EMOJI_STATUS\n*Details:* <https://test-results.aironworks.com/playwright/$CURRENT_CONTENT_PATH/index.html|Test Report>\n*S3:* <s3://aironworks-test-results/playwright/$CURRENT_CONTENT_PATH|Bucket Path>\n$TAG\",
-      \"mrkdwn\": true
-    }" $SLACK_WEBHOOK;
-    echo "CI_PAGES_URL: $CI_PAGES_URL"
+    exit 0
 
 set_pipeline_status:
   stage: deploy
-  dependencies:
-    - run-tests
+  needs:
+    - job: run-tests
+      artifacts: true
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
   rules:
-    # run on MR:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == "main"
   script: |
-    if [ -f .exit_code ]; then
-      source .exit_code
-      echo "Using EXIT_CODE=$EXIT_CODE"
-      exit $EXIT_CODE
-    else
-      echo "ERROR: .exit_code file not found. run-tests probably crashed before creating it."
-      exit 1
-    fi
-
+    source .exit_code
+    exit $EXIT_CODE
