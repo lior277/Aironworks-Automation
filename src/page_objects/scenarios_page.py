@@ -159,7 +159,7 @@ class ScenariosPage(BasePage):
 
     @allure.step('ScenariosPage: submit create {scenario} scenario form')
     def submit_create_scenario_form(
-            self, scenario: ScenarioModel, clone_mode: ScenarioCloneMode = None
+        self, scenario: ScenarioModel, clone_mode: ScenarioCloneMode = None
     ):
         self.scenario_name.fill(scenario.vector + ' ' + scenario.name)
         self.vector_dropdown.select_item_by_text(scenario.vector)
@@ -176,9 +176,7 @@ class ScenariosPage(BasePage):
 
         # ---- Base Attack Domain FIRST (React resets the form) ----
         self.link_domain_dropdown.select_item_by_text(
-            scenario.link_domain,
-            loading_text='Loading...',
-            timeout=15_000,
+            scenario.link_domain, loading_text='Loading...', timeout=15_000
         )
 
         # ---- NOW select Target Company (MUI Autocomplete, must be last) ----
@@ -195,10 +193,10 @@ class ScenariosPage(BasePage):
 
         # ---- Email content ----
         if (
-                scenario.vector == 'Email'
-                and scenario.html_content
-                and not clone_mode
-                or clone_mode == ScenarioCloneMode.NEW_BODY
+            scenario.vector == 'Email'
+            and scenario.html_content
+            and not clone_mode
+            or clone_mode == ScenarioCloneMode.NEW_BODY
         ):
             expect(self.html_content).to_be_empty()
             self.html_content.fill(scenario.html_content + scenario.custom_text)

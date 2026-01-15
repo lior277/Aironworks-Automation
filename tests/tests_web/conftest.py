@@ -77,10 +77,7 @@ def playwright_config(request, launch_browser, browser_type):
     # with sync_playwright() as p:
     args = None
     if browser_type.name == 'chromium':
-        args = [
-            "--disable-dev-shm-usage",
-            "--no-sandbox",
-        ]
+        args = ['--disable-dev-shm-usage', '--no-sandbox']
     browser: Browser = launch_browser(args=args)
     if not os.getenv('BROWSER_NAME'):
         os.environ['BROWSER_NAME'] = browser.browser_type.name
