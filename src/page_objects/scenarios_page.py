@@ -5,7 +5,7 @@ from typing import Literal
 import allure
 from playwright.sync_api import Locator, Page, expect
 
-from src.models.scenario import CampaignType, ScenarioCloneMode, TargetType
+from src.models.scenario import CampaignType, ScenarioCloneMode
 from src.models.scenario_model import ScenarioModel
 from src.page_objects.base_page import BasePage
 from src.page_objects.const import (
