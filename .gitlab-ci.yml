@@ -204,8 +204,9 @@ post_test_results:
 
 set_pipeline_status:
   stage: deploy
-  dependencies:
-    - run-tests
+  needs:
+    - job: run-tests
+      artifacts: true
   image: $SERVER_TAG
   tags:
     - saas-linux-small-amd64
@@ -214,5 +215,12 @@ set_pipeline_status:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == "main"
   script: |
-    source .exit_code
-    exit $EXIT_CODE
+    if [ -f .exit_code ]; then
+      source .exit_code
+      echo "Using EXIT_CODE=$EXIT_CODE"
+      exit $EXIT_CODE
+    else
+      echo "ERROR: .exit_code file not found. run-tests probably crashed before creating it."
+      exit 1
+    fi
+
