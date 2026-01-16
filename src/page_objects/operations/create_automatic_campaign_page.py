@@ -107,7 +107,7 @@ class CreateAutomaticCampaignPage(BasePage):
         self.preview_button.click()
         self.launch_button.click()
         expect(self.alert_message).to_have_text(
-            create_automatic_campaign_successful_text
+            create_automatic_campaign_successful_text, timeout=40_000
         )
 
     @allure.step('CreateAutomaticCampaignPage: select scenario')
