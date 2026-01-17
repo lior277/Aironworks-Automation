@@ -201,7 +201,7 @@ def test_remove_from_safe_list(
         pytest.param(
             UserModelFactory.customer_admin_email_filter(),
             'Aironworks',
-            'pham.duc@aironworks.com',
+            'bar@aironworks.com',
             marks=[allure.testcase('C31836'), pytest.mark.xdist_group(name='agent1')],
         )
     ],
