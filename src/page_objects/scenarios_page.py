@@ -266,7 +266,7 @@ class ScenariosPage(BasePage):
     def find_scenario(self, scenario_name: str):
         self.filter_by_name(scenario_name)
         self.filter_by_language('All')
-        self.wait_for_progress_bar_disappears(timeout=30_000)
+        self.wait_for_progress_bar_disappears(timeout=70_000)
         scenario = (
             self.page.get_by_role('button')
             .filter(has_text=re.compile(scenario_name))

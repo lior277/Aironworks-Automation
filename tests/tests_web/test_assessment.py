@@ -160,7 +160,9 @@ def test_report_outlook(user, outlook_page, mailtrap):
     )
     expect(
         outlook_page.app_frame.get_by_text(
-            'Reporting an incident is a critical cybersecurity practice that helps mitigate risks and prevent further impact.'
+            re.compile(
+                'The email was sent to your SECURITY MATES at the company. HAVE A LOOK!'
+            )
         )
     ).to_be_visible(timeout=60 * 1000)
     mail = mailtrap.wait_for_mail(

@@ -35,7 +35,7 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
             "//div[@data-testid='phishing-assessment-configuration-completionRealReportCustomizationBlock']/.."
         ).get_by_role('button', name='Show Preview')
         self.button_visibility_component = ButtonVisibilityComponent(
-            self.page.locator("//p[text()='Email Extension UI Configuration']/../../..")
+            self.page.locator("//a[text()='UI Configuration']/../../..")
         )
         self.completion_report_custom_text_component = (
             CompletionReportCustomTextComponent(
@@ -139,34 +139,47 @@ class PhishDetectAISettingsConfiguration(PhishDetectAISettings):
 
 class ButtonVisibilityComponent:
     def __init__(self, locator: Locator):
-        self.locator = locator
-        self.perform_assessment_enabled_button = self.locator.locator(
+        self.locator = locator  # kept for compatibility with rest of code
+
+        # ---- Perform Assessment block (UNIQUE by testid) ----
+        perform_container = locator.page.locator(
             '[data-testid="phisshing-assessment-configuration-performAssessmentButton"]'
-        ).get_by_role('button', name='Enabled')
-        self.perform_assessment_disabled_button = self.locator.locator(
-            '[data-testid="phisshing-assessment-configuration-performAssessmentButton"]'
-        ).get_by_role('button', name='Disabled')
-        self.assessment_button_text_input = self.locator.locator(
+        )
+
+        self.perform_assessment_enabled_button = perform_container.get_by_role(
+            'button', name='Enabled'
+        )
+        self.perform_assessment_disabled_button = perform_container.get_by_role(
+            'button', name='Disabled'
+        )
+
+        self.assessment_button_text_input = locator.page.locator(
             '[id="assessment_button_text-label"]'
         )
-        self.assessment_button_description_input = self.locator.locator(
+        self.assessment_button_description_input = locator.page.locator(
             '[id="assessment_button_description"]'
         )
 
-        self.report_incident_enabled_button = self.locator.locator(
+        # ---- Report Incident block (UNIQUE by testid) ----
+        report_container = locator.page.locator(
             '[data-testid="phisshing-assessment-configuration-reportIncidentButton"]'
-        ).get_by_role('button', name='Enabled')
-        self.report_incident_disabled_button = self.locator.locator(
-            '[data-testid="phisshing-assessment-configuration-reportIncidentButton"]'
-        ).get_by_role('button', name='Disabled')
-        self.incident_button_text_input = self.locator.locator(
+        )
+
+        self.report_incident_enabled_button = report_container.get_by_role(
+            'button', name='Enabled'
+        )
+        self.report_incident_disabled_button = report_container.get_by_role(
+            'button', name='Disabled'
+        )
+
+        self.incident_button_text_input = locator.page.locator(
             '[id="incident_button_text-label"]'
         )
-        self.incident_button_description_input = self.locator.locator(
+        self.incident_button_description_input = locator.page.locator(
             '[id="incident_button_description"]'
         )
 
-        self.sub_text_input = self.locator.locator(
+        self.sub_text_input = locator.page.locator(
             '[data-testid="phisshing-assessment-configuration-subTextBlock"] #subtext'
         )
 
