@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Test defects",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*"
+  },
+  {
+    "name": "Product defects",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*"
+  },
+  {
+    "name": "Timeout errors",
+    "matchedStatuses": ["broken", "failed"],
+    "messageRegex": ".*Timeout.*"
+  },
+  {
+    "name": "Element not found",
+    "matchedStatuses": ["broken", "failed"],
+    "messageRegex": ".*Locator.*"
+  }
+]

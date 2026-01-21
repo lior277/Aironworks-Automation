@@ -2,12 +2,7 @@
 
 from typing import Optional
 
-from v2.src.api.models.campaign import (
-    Campaign,
-    CreateCampaignRequest,
-    UpdateCampaignRequest,
-)
-from v2.src.api.routes.campaigns_routes import CampaignsRoutes
+from v2.src.api.api_routes.campaigns_routes import CampaignsRoutes
 from v2.src.core.http.api_session import ApiSession
 
 

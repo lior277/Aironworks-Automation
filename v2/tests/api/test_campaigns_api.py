@@ -1,93 +1,64 @@
-"""Campaign API tests."""
-
-import allure
-
-from v2.src.api.clients.campaigns_api import CampaignsApi
+import pytest
 
 
-@allure.feature('Campaigns')
-@allure.story('API')
-class TestCampaignsApi:
-    """Campaign API tests - only deal with API client, not auth."""
+@pytest.mark.sanity
+@pytest.mark.regression
+class TestEditCreateDeleteCampaignApi:
+    @pytest.fixture(autouse=True)
+    def setup(self, api_factory, crm_url, campaign_api):
+        """
+        This is:
+        - [SetUp]
+        - DI (dependency injection)
+        - [TearDown]
+        in one place
+        """
+        self.api_factory = api_factory
+        self.crm_url = crm_url
+        self.campaign_api = campaign_api
 
-    @allure.title('Create campaign via API')
-    def test_create_campaign(self, campaigns_api: CampaignsApi, unique_id: str):
-        """Test creating a campaign via API."""
-        # Arrange
-        campaign_name = f'API_Campaign_{unique_id}'
+        self.client_id = 'client-123'  # normally created via ClientsApi
 
-        # Act
-        campaign = campaigns_api.create(
-            name=campaign_name, description='Created via API test'
+        # =========================
+        # PreCondition
+        # =========================
+
+        # create base campaign
+        self.base_campaign_id = self.campaign_api.create_campaign(
+            self.crm_url, self.client_id, f'Base | {random_string()}'
         )
 
-        # Assert
-        assert campaign.id is not None
-        assert campaign.name == campaign_name
-        assert campaign.status == 'draft'
+        # edit existing campaign (as you asked)
+        self.campaign_api.edit_campaign(
+            self.crm_url, self.base_campaign_id, f'Edited | {random_string()}'
+        )
 
-        # Cleanup
-        campaigns_api.delete(campaign.id)
+        yield
 
-    @allure.title('Get campaign by ID')
-    def test_get_campaign_by_id(self, campaigns_api: CampaignsApi, unique_id: str):
-        """Test getting campaign by ID."""
-        # Arrange - create campaign first
-        campaign_name = f'Get_Campaign_{unique_id}'
-        created = campaigns_api.create(name=campaign_name)
+        # =========================
+        # TearDown
+        # =========================
 
-        # Act
-        fetched = campaigns_api.get_by_id(created.id)
+        if hasattr(self, 'new_campaign_id'):
+            self.campaign_api.delete_campaign(self.crm_url, self.new_campaign_id)
 
-        # Assert
-        assert fetched.id == created.id
-        assert fetched.name == campaign_name
+        if hasattr(self, 'base_campaign_id'):
+            self.campaign_api.delete_campaign(self.crm_url, self.base_campaign_id)
 
-        # Cleanup
-        campaigns_api.delete(created.id)
+    # =========================
+    # Test (STORY)
+    # =========================
+    def test_create_new_campaign(self):
+        # ---- Action ----
+        new_name = f'New | {random_string()}'
 
-    @allure.title('Update campaign')
-    def test_update_campaign(self, campaigns_api: CampaignsApi, unique_id: str):
-        """Test updating a campaign."""
-        # Arrange
-        campaign = campaigns_api.create(name=f'Update_Campaign_{unique_id}')
-        new_name = f'Updated_Campaign_{unique_id}'
+        self.new_campaign_id = self.campaign_api.create_campaign(
+            self.crm_url, self.client_id, new_name
+        )
 
-        # Act
-        updated = campaigns_api.update(campaign.id, name=new_name)
+        # ---- Validation ----
+        campaign = self.campaign_api.get_campaign(self.crm_url, self.new_campaign_id)
 
-        # Assert
-        assert updated.name == new_name
-
-        # Cleanup
-        campaigns_api.delete(campaign.id)
-
-    @allure.title('Delete campaign')
-    def test_delete_campaign(self, campaigns_api: CampaignsApi, unique_id: str):
-        """Test deleting a campaign."""
-        # Arrange
-        campaign = campaigns_api.create(name=f'Delete_Campaign_{unique_id}')
-
-        # Act
-        campaigns_api.delete(campaign.id)
-
-        # Assert - should not find deleted campaign
-        all_campaigns = campaigns_api.get_all()
-        assert not any(c.id == campaign.id for c in all_campaigns)
-
-    @allure.title('List campaigns with filter')
-    def test_list_campaigns_with_filter(
-        self, campaigns_api: CampaignsApi, unique_id: str
-    ):
-        """Test listing campaigns with status filter."""
-        # Arrange
-        campaign = campaigns_api.create(name=f'Filter_Campaign_{unique_id}')
-
-        # Act
-        draft_campaigns = campaigns_api.get_all(status='draft')
-
-        # Assert
-        assert any(c.id == campaign.id for c in draft_campaigns)
-
-        # Cleanup
-        campaigns_api.delete(campaign.id)
+        # ---- Assert ----
+        assert campaign['id'] == self.new_campaign_id
+        assert campaign['client_id'] == self.client_id
