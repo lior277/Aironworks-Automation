@@ -1,5 +1,7 @@
 """Campaigns page object."""
+
 from playwright.sync_api import Page, expect
+
 from v2.src.ui.pages.base_page import BasePage
 
 
@@ -25,17 +27,18 @@ class CampaignsPage(BasePage):
     # Actions
     # =========================
 
-    def click_create(self) -> "CreateCampaignPage":
+    def click_create(self) -> 'CreateCampaignPage':
         """Click create button, return create page."""
         self.create_button.click()
         from v2.src.ui.pages.create_campaign_page import CreateCampaignPage
+
         return CreateCampaignPage(self.page)
 
     def search(self, query: str) -> None:
         """Search campaigns by name."""
         self.search_input.clear()
         self.search_input.fill(query)
-        self.search_input.press("Enter")
+        self.search_input.press('Enter')
         self.wait_for_loading()
 
     def filter_by_status(self, status: str) -> None:
@@ -43,10 +46,11 @@ class CampaignsPage(BasePage):
         self.status_filter.select_option(status)
         self.wait_for_loading()
 
-    def open_campaign(self, name: str) -> "CampaignDetailsPage":
+    def open_campaign(self, name: str) -> 'CampaignDetailsPage':
         """Click on campaign row to open details."""
         self.get_campaign_row(name).click()
         from v2.src.ui.pages.campaign_details_page import CampaignDetailsPage
+
         return CampaignDetailsPage(self.page)
 
     def delete_campaign(self, name: str) -> None:
@@ -66,8 +70,8 @@ class CampaignsPage(BasePage):
 
     def get_campaign_names(self) -> list[str]:
         """Get all visible campaign names."""
-        rows = self.campaigns_table.locator("tbody tr")
-        return [row.locator("td:first-child").text_content() for row in rows.all()]
+        rows = self.campaigns_table.locator('tbody tr')
+        return [row.locator('td:first-child').text_content() for row in rows.all()]
 
     def get_campaign_status(self, name: str) -> str:
         """Get status of specific campaign."""

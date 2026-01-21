@@ -1,9 +1,10 @@
 """API Client fixtures - clients receive session with auth."""
+
 import pytest
 
 from v2.src.api.clients.campaigns_api import CampaignsApi
-from v2.src.api.clients.users_api import UsersApi
 from v2.src.api.clients.employees_api import EmployeesApi
+from v2.src.api.clients.users_api import UsersApi
 
 
 @pytest.fixture

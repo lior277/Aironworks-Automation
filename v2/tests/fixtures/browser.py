@@ -1,4 +1,5 @@
 """Browser fixtures."""
+
 import os
 import tempfile
 from typing import Generator
@@ -16,7 +17,9 @@ def safe_title(page: Page) -> str:
 
 
 @pytest.fixture
-def context(request, browser: Browser, auth_state) -> Generator[BrowserContext, None, None]:
+def context(
+    request, browser: Browser, auth_state
+) -> Generator[BrowserContext, None, None]:
     """Browser context with shared auth and tracing."""
     if not os.getenv('BROWSER_NAME'):
         os.environ['BROWSER_NAME'] = browser.browser_type.name
@@ -29,7 +32,9 @@ def context(request, browser: Browser, auth_state) -> Generator[BrowserContext, 
     )
     ctx.set_default_timeout(120 * 1000)
     expect.set_options(timeout=20_000)
-    ctx.tracing.start(name=request.node.name, snapshots=True, screenshots=True, sources=True)
+    ctx.tracing.start(
+        name=request.node.name, snapshots=True, screenshots=True, sources=True
+    )
 
     yield ctx
 
@@ -39,7 +44,11 @@ def context(request, browser: Browser, auth_state) -> Generator[BrowserContext, 
         ctx.tracing.stop(path=trace_path)
         allure.attach.file(trace_path, 'trace.zip', 'application/zip')
         for pg in ctx.pages:
-            allure.attach(pg.screenshot(), name=f'{safe_title(pg)}.png', attachment_type=allure.attachment_type.PNG)
+            allure.attach(
+                pg.screenshot(),
+                name=f'{safe_title(pg)}.png',
+                attachment_type=allure.attachment_type.PNG,
+            )
     else:
         ctx.tracing.stop()
 

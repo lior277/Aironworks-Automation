@@ -1,4 +1,5 @@
 """Allure reporting fixtures."""
+
 import json
 import os
 
@@ -12,6 +13,7 @@ from v2.src.core.config import Config
 @allure.title('Populate allure environment')
 def allure_environment(request):
     """Write environment info to Allure report."""
+
     def finalizer():
         allure_dir = request.config.getoption('--alluredir', None)
         if not allure_dir:
