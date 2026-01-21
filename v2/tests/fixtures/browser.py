@@ -32,12 +32,15 @@ def context(
     )
     ctx.set_default_timeout(120 * 1000)
     expect.set_options(timeout=20_000)
+
+    # Start tracing (creates trace.zip on failure)
     ctx.tracing.start(
         name=request.node.name, snapshots=True, screenshots=True, sources=True
     )
 
     yield ctx
 
+    # On failure: save trace + screenshots
     failed = getattr(request.node, 'rep_call', None) and request.node.rep_call.failed
     if failed:
         trace_path = tempfile.mktemp(prefix='trace', suffix='.zip')

@@ -1,0 +1,260 @@
+Received: from OS3P286MB3212.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:20c::9)
+ by OS0P286MB0162.JPNP286.PROD.OUTLOOK.COM with HTTPS; Thu, 14 Mar 2024
+ 04:34:26 +0000
+Received: from OSAPR01CA0375.jpnprd01.prod.outlook.com (2603:1096:604:35::27)
+ by OS3P286MB3212.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:20c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Thu, 14 Mar
+ 2024 04:34:24 +0000
+Received: from OS1PEPF0000D210.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:604:35:cafe::63) by OSAPR01CA0375.outlook.office365.com
+ (2603:1096:604:35::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.18 via Frontend
+ Transport; Thu, 14 Mar 2024 04:34:24 +0000
+Authentication-Results: spf=pass (sender IP is 168.245.53.182)
+ smtp.mailfrom=em9253.waveai.net; dkim=pass (signature was verified)
+ header.d=waveai.net;dmarc=pass action=none
+ header.from=waveai.net;compauth=pass reason=100
+Received-SPF: Pass (protection.outlook.com: domain of em9253.waveai.net
+ designates 168.245.53.182 as permitted sender)
+ receiver=protection.outlook.com; client-ip=168.245.53.182;
+ helo=o1.ptr9342.gmailsecurity.net; pr=C
+Received: from o1.ptr9342.gmailsecurity.net (168.245.53.182) by
+ OS1PEPF0000D210.mail.protection.outlook.com (10.167.240.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7386.12 via Frontend Transport; Thu, 14 Mar 2024 04:34:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=waveai.net;
+	h=content-transfer-encoding:content-type:from:mime-version:subject:to:
+	cc:content-type:from:subject:to;
+	s=s1; bh=HQUm/PIzumbst6CM5nPUfbB/eKLKiZy9qu+8ZII3t30=;
+	b=UEXS3Q5iAAYJj5s4TvZ8CNalqVoSndN+DTUEy5YTHXXkenOkOe33oJ3rbuLVuuPZ2Z5s
+	g9B4Oi3NpvWCWD2nH/4ekMrfyuZm7GtRvB6RKmEsNijp8MlwXyASkIl5GaWcTdZAYViX4c
+	BkUCUF2D6NA8RoX7+g/EYXmwkjS7+Xyg6ojCb4qwJMvZBeZ3FCzMkrfsEbfAe1JofO8QSo
+	A04fvZJwicUDmNz5Vcwn5iws+HvcCQ/+qQxBW71/mCO1dUOygPTn6y9qk1qhESTTHV5SJt
+	4SBSqvb9oRM2ku8MEGmZ7ijCSaSrPiu9uMsZkTJJ2wlYaqiKml43WwHwDxJTiLeQ==
+Received: by recvd-67cf556c4d-zhsfl with SMTP id recvd-67cf556c4d-zhsfl-1-65F27E4D-9
+	2024-03-14 04:34:21.654127698 +0000 UTC m=+1233872.851628129
+Received: from MjE1Njg1ODY (unknown)
+	by geopod-ismtpd-9 (SG) with HTTP
+	id phwVHFkJTHCz1CuWfSbC5w
+	Thu, 14 Mar 2024 04:34:21.428 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=utf-8
+Date: Thu, 14 Mar 2024 04:34:21 +0000 (UTC)
+From: Teams by Microsoft <noreply@waveai.net>
+Message-ID: <phwVHFkJTHCz1CuWfSbC5w@geopod-ismtpd-9>
+Subject:
+ =?UTF-8?B?VGVhbXPjg5/jg7zjg4bjgqPjg7PjgrDjgavmi5vlvoXjgZXjgozjgb7jgZfjgZ8=?=
+X-SG-EID:
+ =?us-ascii?Q?u001=2Ec2nVC=2F9fLrXm3X2Ch=2F5xVI2N2UCTaSc+BHBDop7ZkOtew9y3VT0f4YCsh?=
+ =?us-ascii?Q?OWuhWBMrxykPccN2XV5uyt0XYCoYS5HjySeR7Xu?=
+ =?us-ascii?Q?r+yjcg3rMSIAyfDvJM3obf5IWOw8RJkZNN5rt9g?=
+ =?us-ascii?Q?dpvG49QNwrwgAAS5yg8DHM+zjXOMLfhbeJR4HHb?=
+ =?us-ascii?Q?NXBb4hCOxZec7B08S6SoX8AolLgQIZ6DYceW1rW?=
+ =?us-ascii?Q?deHx6shSUpVh03LlQvl+tKEaqKt5J+5psVEaOF8?=
+ =?us-ascii?Q?1dGQL1m6FIiqHbgnRzAq8BEJBg=3D=3D?=
+X-SG-ID:
+ =?us-ascii?Q?u001=2ESdBcvi+Evd=2FbQef8eZF3BpTL9BgbK5wfSJMJGMsmprC2w1o+nm7QQ2rr8?=
+ =?us-ascii?Q?T4wymmIPqAjA0EGMKn9gq8N1huJyETSz07E5+25?=
+ =?us-ascii?Q?s0u1NR3SgpQSuTG2HQjaMSirFWn57YxZy=2FlXW4G?=
+ =?us-ascii?Q?f3nJs3LdMv7B6uA=3D=3D?=
+To: bar@aironworks.onmicrosoft.com
+X-Entity-ID: u001.WKgAAj+FcXQEUNjm0/Zbqg==
+Return-Path:
+ bounces+21568586-4f85-bar=aironworks.onmicrosoft.com@em9253.waveai.net
+X-MS-Exchange-Organization-ExpirationStartTime: 14 Mar 2024 04:34:24.5128
+ (UTC)
+X-MS-Exchange-Organization-ExpirationStartTimeReason: OriginalSubmit
+X-MS-Exchange-Organization-ExpirationInterval: 1:00:00:00.0000000
+X-MS-Exchange-Organization-ExpirationIntervalReason: OriginalSubmit
+X-MS-Exchange-Organization-Network-Message-Id:
+ 2cfe99c5-ba80-4cd0-c74b-08dc43e006c5
+X-EOPAttributedMessage: 0
+X-EOPTenantAttributedMessage: 9d545d03-ca63-42d4-9de5-f4bcafca0505:0
+X-MS-Exchange-Organization-MessageDirectionality: Incoming
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic:
+ OS1PEPF0000D210:EE_|OS3P286MB3212:EE_|OS0P286MB0162:EE_
+X-MS-Exchange-Organization-AuthSource:
+ OS1PEPF0000D210.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Office365-Filtering-Correlation-Id: 2cfe99c5-ba80-4cd0-c74b-08dc43e006c5
+X-MS-Exchange-Organization-SCL: -1
+X-Microsoft-Antispam: BCL:0;
+X-Forefront-Antispam-Report:
+ CIP:168.245.53.182;CTRY:US;LANG:ja;SCL:-1;SRV:;IPV:CAL;SFV:SKN;H:o1.ptr9342.gmailsecurity.net;PTR:o1.ptr9342.gmailsecurity.net;CAT:NONE;SFS:(13230031)(8110299003);DIR:INB;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2024 04:34:23.6690
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2cfe99c5-ba80-4cd0-c74b-08dc43e006c5
+X-MS-Exchange-CrossTenant-Id: 9d545d03-ca63-42d4-9de5-f4bcafca0505
+X-MS-Exchange-CrossTenant-AuthSource: OS1PEPF0000D210.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3P286MB3212
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:02.5913054
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.7386.010
+X-Microsoft-Antispam-Mailbox-Delivery:
+	ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YzdMQzFhbk9QcTc3c0Y1cTB6a3pVeDdvQk5CalNRUW4rY0lZTlk1ekxNVzk3?=
+ =?utf-8?B?eUNMOS9qVUY1SjFJYTU2QnRkYkcrWkNXWW1JbVp6YnR4cVdZOTVDZnZCbkN5?=
+ =?utf-8?B?SWNPZUd3T3BtNmZ2MldZdksxUFZZNjEwODA0UkFwVExrM3RyUHpMb1BtaU5t?=
+ =?utf-8?B?czI5eXpvRENpNFBWQ2VrLzFrQjF2bkFIUFBBQmJEbVpJbnJxR0thN09pYTk3?=
+ =?utf-8?B?S3h1dEs2ZDJPZnJMaEk2NENEYlZ5QW1oNWNFUWR5dSsyaXBIZlNUaG0wTHEx?=
+ =?utf-8?B?OEZnS1JFYWpmeFpXOE9PZkVpNnhsL1BxeXpjbFNXU3NKa1RhaGxSVlA5OVls?=
+ =?utf-8?B?TURxMElMU0h6b01yS3N3bGtEa05zalkxelpzTHlxaEs0YUppTjZtTnh5b2Jp?=
+ =?utf-8?B?QnRYbUhERDdlQkI4R2RDc1k4ZlJMOGt3cW5tUFhyMjFXSjFDNXV6ZDUvU21a?=
+ =?utf-8?B?L29xSnJjNHdYdUVQeVlwVmJjVVVHbmFwL3plL0dpaGtsSDR5d01IeDFUZjdq?=
+ =?utf-8?B?UUlrYWdPMTBiRXoyWmozWmJEdjlwVXovZGFRaGRZcGxWYmN2OHgzQkgyNHlx?=
+ =?utf-8?B?RE5WWlBUQm13TWRBa2JvS1VZa05lSUo3R0xMMXJZcFRmZUh0NERpd1RmMmVE?=
+ =?utf-8?B?WU91OUFMQVZlZVZINjhBd2NZV0w3STVTSk9hWWx0MWRvZWRmYU5CSmNMNWlv?=
+ =?utf-8?B?Mk5mNFdLdkpCcHlXZTlsRERQUTFtdkVFLzJ2cHcxNDBmVVFtd3JnTGVnMThu?=
+ =?utf-8?B?eUpBVTZJSTBGNXBxZlZNZnVvRzBRbmJETFROODUrK1VwSkpRaTJLeFMrMUph?=
+ =?utf-8?B?YTloTU1LeU1PaHlUdHBkOUp0TkpVS012ZlRZek5PTmcxS0xNc2pVV2xUWFpp?=
+ =?utf-8?B?ZW5maHNXdjVwd1dnVXZNV01HWTE4T3l6OTVmQlY5MXNmT3Eyc0pVcTV2T0FJ?=
+ =?utf-8?B?Qk1rb29RR2hKeHdHQXB6K0ROeWJPWG92bGN3aVRrUXdzNmlKZ0F6NWloTytj?=
+ =?utf-8?B?dVQyMUVzVWpMY0FaMi9PTmZ2SFZEaVVBWnJFT2phTjJ4YS9Vdktjc0VDNG5N?=
+ =?utf-8?B?c3JZT2dOUWQ5UmxuTmJQZ3NMQnZTVVdQVGtpYnI5L2xmMmwwbVAyY3hteFlT?=
+ =?utf-8?B?MFYvUDUwaC9FRGdmTlJpdXZDcEswbXFuWnhuekN5VnpDTEdsS0hxWHpyQjlp?=
+ =?utf-8?B?VTRRMHJuUVNlVGlFM0dsVVhmUDRZdFh4eE9XS2lncFR5b0ZUcEV3MjFCYXNG?=
+ =?utf-8?B?UkZCOEIyWU9lNXcxWDVGc0EvcnZualUzT3o2am9HT0lmNC9oNFFVZlp1K0Jj?=
+ =?utf-8?B?eCtUOVAzRzgvMXhEV0VTQ3ExOUhSZkhCbTNCNGcxUm03UUdpSGN2cUJ1cWZr?=
+ =?utf-8?B?N241Rjg4QVZ0TmNEY3dNOUwvcTdYQUFkckxOQnhQalVlckNYaElPZ214VjRZ?=
+ =?utf-8?B?dVRnSzlPalNpZGRkaE14ajNsZ1NwNWlTOTBSTisxWnpud1paZHVuZ1JJNzhB?=
+ =?utf-8?B?eUVMNS9xYSsyT2NWZ2ZYQmlNWFZRdWhVdzZLV0tyR0VWNmtMbE15WHJteFlB?=
+ =?utf-8?B?MnpHNEcxQmlrSWlLSjR6ZnlUbEE4aEFKRWZNaHdVVDVOQzJOTTZYQ1EzQTNW?=
+ =?utf-8?B?TzJGT0p4ZHJEYmc2OTFIZ3pFcGowZVQ3MmIvMlJBTk1IbVZ0di9INXByeUJD?=
+ =?utf-8?B?MmdXR3hOQ1l5a2xiS1Rsb1pyQ3VtV3hPMDkxbUl6M0d1ZnRQSG5SQU5iRGd3?=
+ =?utf-8?B?MVZMc2Y0VzJKbDFQYUxaVEVwU2VFMUl6VHBpajFJdHRuOEZkYTFwK0xqK3h3?=
+ =?utf-8?B?alBMajNBdUdlUGcyYUVKTjhHSHdjQ1pUNXNLZEsvVmhQbjJod3ZkVHk2SjFG?=
+ =?utf-8?B?TlI3R2psdmFhS1RCVXU2Sk40RldrK1B6TTJ3Z0RSSWc5T0RQSU15SkxmdHRG?=
+ =?utf-8?B?U1JWVjRzQ2c4NllidGtkbkJpdURKVWFiZVh5WDVLVDRHQVVjSlg3RzFFWSts?=
+ =?utf-8?B?QUJ5MmhHRnZGQnZ3WVgvQUhsYTltRllVVUdENjUxL2dHWXBpY3FHV1IvUVdy?=
+ =?utf-8?B?Q21YSnZVVm1kdFhXL01iTlVVcERtN2hULzExNmVONmVnWEQxR09PR2tsTUVJ?=
+ =?utf-8?B?WXpWYXNMaFkrbTFtWGdzNEdhcklYWlNIWHR5MStoRUgzSzBmS2cwS043VEhp?=
+ =?utf-8?B?Z0RzVnhGck0vMGQ2TUFvbXNIQkd0Um05NHBBRmx4aGlvc3Z6QWdvY0lDeWJn?=
+ =?utf-8?B?TGlYYkdqWGdqRi9aQTdTRE5JZ0RWa2hZZk5mbTMzeW8wV25XSWVMc0pmTmZL?=
+ =?utf-8?B?Z3NqZFdVTnNKaW1CUUpHZUF5MjFtRENFVUVpamlqNGdwZEZXQ29kNDljbEd3?=
+ =?utf-8?B?OThUbDhLanYzeXFGdm13RURFSUVjQmFnc2tBVWVGTy8yRTlKVFhjbmNBTU00?=
+ =?utf-8?B?Tm5abzR5bWU3Um11aUVYZmtUSkJpaVF1SXBjRzR2bzhsdVE2Slh2dGkrT3lJ?=
+ =?utf-8?B?S1dHZHZ3bCsrRFY5dURDbzB3SG1XYlJGblZkOGc2Z2lsT3k1RE1rM3Y3L2lL?=
+ =?utf-8?B?Q1JjcW8xejh2cmRlTmh2b1Nwb3VmT0VCRFg2UlhlcGxNbVd0Qm00RkVoRDQ3?=
+ =?utf-8?B?eWhjTmpWMWZVamc0OUxVcExPTTdRV1RQKzdJNERYWXdnRi9oMnQ5S3ltc0J4?=
+ =?utf-8?B?VUlGdzlnYkZocmJaTlhJdExWdUxjVnArZGkrb21SUTh1Mm81bkFKYmtBWXNE?=
+ =?utf-8?B?U1RJWjJrQmNtSTQrSStLcFRuZWI4aXVJbzd3QjE5NzFSN0VGWmdpVmNVWk5i?=
+ =?utf-8?B?Mi96eStndU94Z1g0d1hrWjNGVE8vRzFMbEhoMFMvZ3dFQ1ZHeHp6UTRpYXVt?=
+ =?utf-8?B?MGI4QVdDa1YvUXlXUXVsaURUZ3BYNWQzNTJMWi9xeEo0cnNHWDJ3eTlUNE1u?=
+ =?utf-8?B?Y3pHZUlpOEk5bkhnOVRnQ2hOMHpkRy8rbmdOd05WUnZ1bW1YSGRSV0NUcXJm?=
+ =?utf-8?B?dDdjQ2tSRVUxbDZJVi9JVmp1UGJLTm1aMjIyQlJCdFh2VkNiN3k2QjFSQVpL?=
+ =?utf-8?B?d0NPdlVJclpGdGtnPT0=?=
+MIME-Version: 1.0
+
+<html><head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8">
+<style type=3D"text/css" rel=3D"stylesheet" media=3D"all">
+
+    /* Buttons ------------------------------ */
+    .button {
+      display: inline-block;
+      width: 200px;
+      border-radius: 20px;
+      color: white;
+      font-size: 12px;
+      line-height: 35px;
+      text-align: center;
+      text-decoration: none;
+    }
+    .button--blue {
+      background-color: #077894;
+      text-decoration: none;
+    }
+=20
+  </style>
+</head>
+<body style=3D"font-size: 10pt; font-family: Verdana, sans-serif">
+RANDOM_TEXT
+<p>Outlook Bar=E6=A7=98<br><br>
+
+Teams=E3=83=9F=E3=83=BC=E3=83=86=E3=82=A3=E3=83=B3=E3=82=B0=E3=81=AB=E6=8B=
+=9B=E5=BE=85=E3=81=95=E3=82=8C=E3=81=BE=E3=81=97=E3=81=9F=E3=80=82<br><br>
+Teams=E3=82=A2=E3=82=AB=E3=82=A6=E3=83=B3=E3=83=88=E3=81=AB=E3=83=AD=E3=82=
+=B0=E3=82=A4=E3=83=B3=E3=81=84=E3=81=9F=E3=81=A0=E3=81=8F=E3=81=8B=E3=80=81=
+=E3=83=9F=E3=83=BC=E3=83=86=E3=82=A3=E3=83=B3=E3=82=B0=E3=81=AEID=E3=80=81=
+=E3=82=A2=E3=82=AF=E3=82=BB=E3=82=B9=E3=82=B3=E3=83=BC=E3=83=89=E3=81=BB=E3=
+=81=8B=E5=8F=82=E5=8A=A0=E6=83=85=E5=A0=B1=E3=81=AF=E4=BB=A5=E4=B8=8B=E3=81=
+=AE=E3=83=AA=E3=83=B3=E3=82=AF=E3=81=8B=E3=82=89=E3=81=94=E7=A2=BA=E8=AA=8D=
+=E3=81=84=E3=81=9F=E3=81=A0=E3=81=91=E3=81=BE=E3=81=99=E3=80=82<br><br>
+
+<a href=3D"https://www.waveai.net/meeting/?track=3DzUZdx" class=3D"button b=
+utton--blue">=E5=8F=82=E5=8A=A0=E6=83=85=E5=A0=B1=E3=82=92=E7=A2=BA=E8=AA=
+=8D=E3=81=99=E3=82=8B</a><br><br><br>
+
+ =E3=83=9F =E3=83=BC=E3=83=86=E3=82=A3=E3=83=B3=E3=82=B0=E3=81=AB=E3=81=AF=
+=E4=BB=A5=E4=B8=8B=E3=81=AE=E3=83=AA=E3=83=B3=E3=82=AF=E3=81=8B=E3=82=89=E3=
+=81=94=E5=8F=82=E5=8A=A0=E3=81=84=E3=81=9F=E3=81=A0=E3=81=91=E3=81=BE=E3=81=
+=99=E3=80=82<br><br>
+
+<a href=3D"https://www.waveai.net/meeting/?track=3DzUZdx" class=3D"button b=
+utton--blue" =E3=80=80=3D"">=E3=83=9F=E3=83=BC=E3=83=86=E3=82=A3=E3=83=B3=
+=E3=82=B0=E3=81=AB=E5=8F=82=E5=8A=A0=E3=81=99=E3=82=8B</a><br><br>
+
+ <br>
+=E3=81=93=E3=81=AE=E3=83=A1=E3=83=BC=E3=83=AB=E3=81=AF=E3=80=81=E3=83=9F=E3=
+=83=BC=E3=83=86=E3=82=A3=E3=83=B3=E3=82=B0=E8=A8=AD=E5=AE=9A=E6=99=82=E3=81=
+=AB=E8=87=AA=E5=8B=95=E3=81=A7=E9=80=81=E4=BF=A1=E3=81=95=E3=82=8C=E3=82=8B=
+=E3=83=A1=E3=83=BC=E3=83=AB=E3=81=A7=E3=81=99=E3=80=82<br>
+=E3=81=8A=E5=BF=83=E5=BD=93=E3=81=9F=E3=82=8A=E3=81=8C=E3=81=AA=E3=81=84=E5=
+=A0=B4=E5=90=88=E3=81=AF=E3=80=81=E3=81=8A=E6=89=8B=E6=95=B0=E3=81=A7=E3=81=
+=AF=E3=81=94=E3=81=96=E3=81=84=E3=81=BE=E3=81=99=E3=81=8C=E3=80=81=E3=83=A1=
+=E3=83=BC=E3=83=AB=E3=81=AE=E7=A0=B4=E6=A3=84=E3=82=92=E3=81=8A=E9=A1=98=E3=
+=81=84=E3=81=84=E3=81=9F=E3=81=97=E3=81=BE=E3=81=99=E3=80=82<br><br>
+
+
+</p>
+<table style=3D"width: 500px; font-size: 10pt; font-family:Verdana, sans-se=
+rif;" cellpadding=3D"0" cellspacing=3D"0" border=3D"0">
+<tbody>
+ <tr>
+ =20
+ <td>
+  <table cellpadding=3D"0" cellspacing=3D"0">
+  <tbody>
+    <tr>
+      <td style=3D"border-top:1px solid black; font-size: 9pt; color:#44444=
+4; font-family: Verdana, sans-serif; padding-top: 15px; vertical-align: top=
+; line-height:1.2" valign=3D"top">
+      </td>
+    </tr>
+    <tr>
+      <td style=3D"font-size: 11pt; font-family: Verdana, sans-serif; paddi=
+ng-bottom: 5px; padding-top: 5px; vertical-align: top; color: gray;" valign=
+=3D"top">
+        <span style=3D"font-size: 10pt; font-family: Verdana, sans-serif; c=
+olor: gray">=C2=A9 2024 MIcrosoft and/or its affiliates. All rights reserve=
+d.</span>
+      </td>
+    </tr>
+    <tr>
+      <td style=3D"font-size: 10pt; font-family: Verdana, sans-serif; paddi=
+ng-bottom: 5px; padding-top: 5px; padding-left: 10px; vertical-align: top; =
+color: #0079ac;" valign=3D"top"></td>
+    </tr>
+  </tbody>
+  </table>
+ </tr>=20
+</tbody>
+</table>
+
+
+
+<img src=3D"http://url2777.waveai.net/wf/open?upn=3Du001.PbS8MfWtmQ6seCASnb=
+8e3dVyDk49-2BIMox56serlpKR5xz14vd7-2FlDiRMUGtoz4i05LFXbvDkJ42m1mUxcRYM-2F0r=
+ZnS7500HLkzrutqBAfj-2Fd6vcw8jDi-2BcL3Ri7BA1JLUtGwXJ4Ir3RqrIcjXfgmw-2F8rUlyc=
+qk2LwYuWkfkxE4u4NSWXdw1ukN3JspztGHdAk3xqu4VXswM1o8b7mmpARa0Tw7qn6hJeoFDUXV5=
+wgMojk0bZWiTT9QcJLZSM27NzaeaYyynmG-2BLhxNVPm-2BOeRj4oFfuKjIYGNC8imylGzlxEGz=
+dAslLw7s3-2FEsdW907g" alt=3D"" width=3D"1" height=3D"1" border=3D"0" style=
+=3D"height:1px !important;width:1px !important;border-width:0 !important;ma=
+rgin-top:0 !important;margin-bottom:0 !important;margin-right:0 !important;=
+margin-left:0 !important;padding-top:0 !important;padding-bottom:0 !importa=
+nt;padding-right:0 !important;padding-left:0 !important;"></body>
+</html>
