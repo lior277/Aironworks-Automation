@@ -22,7 +22,7 @@ class ScenarioModelFactory:
             name='QA Test Scenario ' + fake.name(),
             vector=vector,
             sender_address=fake.pystr().lower(),
-            sender_name=fake.first_name(),
+            sender_name=fake.first_name()[:10],
             subject=fake.sentence(),
             url_suffix=fake.pystr().lower(),
             campaign_type=campaign_type,
