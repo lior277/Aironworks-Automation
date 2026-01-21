@@ -19,3 +19,17 @@ class OperationModelFactory:
             operation_name='Test 2 Operation 123#@!',
             campaign_name='Test 2 for Operation 123#@!',
         )
+
+    @staticmethod
+    def get_education_operation() -> OperationModel:
+        return OperationModel(
+            operation_name='Test Education Operation 123#@!',
+            campaign_name='Test Education for Operation 123#@!',
+        )
+
+    @staticmethod
+    def get_education_operation_edit() -> OperationModel:
+        return OperationModel(
+            operation_name='Test Education 2 Operation 123#@!',
+            campaign_name='Test Education 2 for Operation 123#@!',
+        )

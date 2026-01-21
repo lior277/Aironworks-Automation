@@ -5,7 +5,7 @@ from typing import Literal
 import allure
 from playwright.sync_api import Locator, Page, expect
 
-from src.models.scenario import CampaignType, ScenarioCloneMode, TargetType
+from src.models.scenario import CampaignType, ScenarioCloneMode
 from src.models.scenario_model import ScenarioModel
 from src.page_objects.base_page import BasePage
 from src.page_objects.const import (
@@ -130,16 +130,32 @@ class ScenariosPage(BasePage):
 
     @allure.step('ScenariosPage: select target details')
     def select_target_details(self, scenario: ScenarioModel):
-        match scenario.target_details.target_type:
-            case TargetType.EMPLOYEE:
-                self.employee_attack.click()
-            case TargetType.COMPANY:
-                self.company_attack.click()
-        if scenario.target_details.target_company:
-            # self.targeted.click()
-            self.target_company_dropdown.select_item_by_text(
-                scenario.target_details.target_company
-            )
+        if not scenario.target_details or not scenario.target_details.target_company:
+            return
+
+        company = scenario.target_details.target_company
+
+        input_field = self.page.locator('#targetCustomer')
+
+        # Click and clear
+        input_field.click()
+        input_field.fill('')
+
+        # Type company name
+        input_field.type(company, delay=80)
+
+        # Wait for dropdown options to appear
+        option = self.page.locator(f'[role="option"] >> text="{company}"')
+        option.wait_for(state='visible', timeout=10_000)
+
+        # Click it
+        option.click()
+
+        # Verify value really stayed
+        self.page.wait_for_function(
+            f"""() => document.querySelector('#targetCustomer').value === "{company}" """,
+            timeout=10_000,
+        )
 
     @allure.step('ScenariosPage: submit create {scenario} scenario form')
     def submit_create_scenario_form(
@@ -147,6 +163,7 @@ class ScenariosPage(BasePage):
     ):
         self.scenario_name.fill(scenario.vector + ' ' + scenario.name)
         self.vector_dropdown.select_item_by_text(scenario.vector)
+
         if scenario.vector == 'Email':
             self.sender_address.fill(scenario.sender_address)
             self.sender_domain_dropdown.select_item_by_text(
@@ -154,19 +171,27 @@ class ScenariosPage(BasePage):
             )
             self.subject.fill(scenario.subject)
             self.select_content_type(scenario)
+
         self.sender_name.fill(scenario.sender_name)
 
-        if scenario.target_details:
-            self.select_target_details(scenario)
-
+        # ---- Base Attack Domain FIRST (React resets the form) ----
         self.link_domain_dropdown.select_item_by_text(
             scenario.link_domain, loading_text='Loading...', timeout=15_000
         )
+
+        # ---- NOW select Target Company (MUI Autocomplete, must be last) ----
+        if scenario.target_details:
+            self.select_target_details(scenario)
+
         self.url_suffix.fill(scenario.url_suffix)
         self.next.click()
+
+        # ---- Clone mode ----
         if clone_mode:
             self.choose_edit_mode_window.select_clone_mode(clone_mode)
             self.wait_for_progress_bar_disappears()
+
+        # ---- Email content ----
         if (
             scenario.vector == 'Email'
             and scenario.html_content
@@ -182,6 +207,8 @@ class ScenariosPage(BasePage):
             ).content_frame.locator('body')
             expect(self.preview_text).to_contain_text(scenario.custom_text)
             self.page.keyboard.press('Escape')
+
+        # ---- SMS ----
         if scenario.vector == 'SMS' and scenario.html_content:
             expect(self.content).to_be_empty()
             self.content.fill(scenario.html_content + scenario.custom_text_web_sms)
@@ -196,11 +223,10 @@ class ScenariosPage(BasePage):
             trimmed_custom_text = re.sub(r'\s+', '', scenario.custom_text_web_sms)
             trimmed_custom_text = trimmed_custom_text.replace('←', '<-')
             trimmed_preview_text = trimmed_preview_text.replace('←', '<-')
-            print(f'trimmed_preview_text: {trimmed_preview_text}')
-            print(f'trimmed_custom_text: {trimmed_custom_text}')
-            # expect(self.preview_text).to_contain_text(scenario.custom_text)
             assert trimmed_custom_text in trimmed_preview_text
             self.page.keyboard.press('Escape')
+
+        # ---- Web ----
         if scenario.vector == 'Web' and scenario.html_content:
             expect(self.content).to_be_empty()
             self.content.fill(scenario.html_content + scenario.custom_text_web_sms)
@@ -213,9 +239,10 @@ class ScenariosPage(BasePage):
             )
             trimmed_preview_text = re.sub(r'\s+', '', self.preview_text.text_content())
             trimmed_custom_text = re.sub(r'\s+', '', scenario.custom_text_web_sms)
-            # expect(self.preview_text).to_contain_text(scenario.custom_text)
             assert trimmed_custom_text in trimmed_preview_text
             self.page.keyboard.press('Escape')
+
+        # ---- Save ----
         self.save.click()
         self.wait_for_progress_bar_disappears(timeout=30_000)
 
