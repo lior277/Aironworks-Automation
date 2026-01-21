@@ -1,60 +1,39 @@
+"""Main conftest - imports all fixtures."""
+import sys
 import pytest
 
-from v2.src.core.http import ApiSession
-from v2.src.core.config import Config
-
-# Business APIs
-# from v2.src.http.clients.users_api import UsersApi
-# from v2.src.http.clients.campaigns_api import CampaignsApi
-
-
-# =========================
-# Global config validation
-# =========================
-
-@pytest.fixture(scope="session", autouse=True)
-def validate_env():
-    assert Config.BASE_URL, "BASE_URL is not set"
-    assert Config.SERVICE_SECRET, "SERVICE_SECRET is not set"
-    yield
+pytest_plugins = [
+    "v2.tests.fixtures.auth",
+    "v2.tests.fixtures.browser",
+    "v2.tests.fixtures.data",
+    "v2.tests.fixtures.email",
+    "v2.tests.fixtures.allure",
+    "v2.tests.fixtures.pages.dashboard",
+    "v2.tests.fixtures.pages.campaigns",
+    "v2.tests.fixtures.pages.employees",
+    "v2.tests.fixtures.pages.education",
+    "v2.tests.fixtures.pages.settings",
+]
 
 
-# =========================
-# Api Session (Service Auth)
-# =========================
-
-@pytest.fixture(scope="session")
-def api_session():
-    api = ApiSession(base_url=Config.BASE_URL)
-
-    # Login once per session using service secret
-    api.login_as_service()
-
-    return api
+def is_debug():
+    return sys.monitoring.get_tool(sys.monitoring.DEBUGGER_ID) is not None
 
 
-# =========================
-# Business API clients
-# =========================
+def pytest_collection_modifyitems(session, config, items):
+    if not is_debug():
+        for item in items:
+            if item.get_closest_marker('timeout') is None:
+                item.add_marker(pytest.mark.timeout(3 * 60))
 
-@pytest.fixture
-def bonus_api(api_session):
-    return BonusPageApi(api_session)
-
-
-# @pytest.fixture
-# def users_api(api_session):
-#     return UsersApi(api_session)
-
-# @pytest.fixture
-# def campaigns_api(api_session):
-#     return CampaignsApi(api_session)
+    for item in items:
+        for marker in item.iter_markers(name='allure_link'):
+            test_id = 'C' + marker.args[0].split('/')[-1]
+            item.user_properties.append(('test_id', test_id))
 
 
-# =========================
-# Base URL fixture
-# =========================
-
-@pytest.fixture(scope="session")
-def base_url():
-    return Config.BASE_URL
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    rep = outcome.get_result()
+    setattr(item, f"rep_{rep.when}", rep)

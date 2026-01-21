@@ -1,39 +1,158 @@
+"""Campaign UI tests."""
 import pytest
+import allure
 
-class TestCreateCampaign:
+from v2.src.ui.pages.campaigns_page import CampaignsPage
+from v2.src.api.clients.campaigns_api import CampaignsApi
 
-    @pytest.fixture(autouse=True)
-    def _setup(self, api_client, auth_token):
-        self.api = api_client
-        self.token = auth_token
 
-        # ---- PRECONDITION ----
-        # Create customer / account
-        self.account_name = random_name()
-        self.account_id = self.api.create_account(self.token, self.account_name)
+@allure.feature("Campaigns")
+@allure.story("UI")
+class TestCampaignsUi:
+    """Campaign UI tests - only deal with page objects, not auth."""
 
-        yield
+    @allure.title("Create campaign via UI")
+    def test_create_campaign(
+            self,
+            campaigns_page: CampaignsPage,
+            campaigns_api: CampaignsApi,  # For cleanup
+            unique_id: str
+    ):
+        """Test creating a campaign via UI."""
+        # Arrange
+        campaign_name = f"UI_Campaign_{unique_id}"
 
-        # ---- CLEANUP ----
-        # Delete created campaign if test created one
-        if hasattr(self, "campaign_id"):
-            self.api.delete_campaign(self.token, self.campaign_id)
+        # Act
+        create_page = campaigns_page.click_create()
+        create_page.fill_name(campaign_name)
+        create_page.fill_description("Created via UI test")
+        create_page.click_save()
 
-        # Always delete account
-        if hasattr(self, "account_id"):
-            self.api.delete_account(self.token, self.account_id)
+        # Assert
+        campaigns_page.should_have_campaign(campaign_name)
+        campaigns_page.should_have_status(campaign_name, "draft")
 
-    def test_create_campaign_success(self):
-        # ---- ACTION ----
-        self.campaign_id = self.api.create_campaign(
-            token=self.token,
-            account_id=self.account_id,
-            name="Phish | Email | Internal | EN | IT Security Notice"
+        # Cleanup via API (faster)
+        campaigns = campaigns_api.get_all()
+        campaign = next(c for c in campaigns if c.name == campaign_name)
+        campaigns_api.delete(campaign.id)
+
+    @allure.title("Search campaigns")
+    def test_search_campaigns(
+            self,
+            campaigns_page: CampaignsPage,
+            campaigns_api: CampaignsApi,
+            unique_id: str
+    ):
+        """Test searching campaigns."""
+        # Arrange - create via API (faster)
+        campaign_name = f"Search_Campaign_{unique_id}"
+        campaign = campaigns_api.create(name=campaign_name)
+        campaigns_page.page.reload()  # Refresh to see new campaign
+
+        # Act
+        campaigns_page.search(campaign_name)
+
+        # Assert
+        campaigns_page.should_have_campaign(campaign_name)
+
+        # Cleanup
+        campaigns_api.delete(campaign.id)
+
+    @allure.title("Delete campaign via UI")
+    def test_delete_campaign(
+            self,
+            campaigns_page: CampaignsPage,
+            campaigns_api: CampaignsApi,
+            unique_id: str
+    ):
+        """Test deleting a campaign via UI."""
+        # Arrange - create via API
+        campaign_name = f"Delete_UI_Campaign_{unique_id}"
+        campaigns_api.create(name=campaign_name)
+        campaigns_page.page.reload()
+
+        # Act
+        campaigns_page.delete_campaign(campaign_name)
+
+        # Assert
+        campaigns_page.should_not_have_campaign(campaign_name)
+
+    @allure.title("Filter campaigns by status")
+    def test_filter_by_status(
+            self,
+            campaigns_page: CampaignsPage,
+            campaigns_api: CampaignsApi,
+            unique_id: str
+    ):
+        """Test filtering campaigns by status."""
+        # Arrange
+        campaign_name = f"Filter_UI_Campaign_{unique_id}"
+        campaign = campaigns_api.create(name=campaign_name)
+        campaigns_page.page.reload()
+
+        # Act
+        campaigns_page.filter_by_status("draft")
+
+        # Assert
+        campaigns_page.should_have_campaign(campaign_name)
+
+        # Cleanup
+        campaigns_api.delete(campaign.id)
+
+
+@allure.feature("Campaigns")
+@allure.story("E2E")
+class TestCampaignsE2E:
+    """End-to-end tests - UI + API verification."""
+
+    @allure.title("Create campaign in UI, verify via API")
+    def test_create_ui_verify_api(
+            self,
+            campaigns_page: CampaignsPage,
+            campaigns_api: CampaignsApi,
+            unique_id: str
+    ):
+        """Create in UI, verify data via API."""
+        # Arrange
+        campaign_name = f"E2E_Campaign_{unique_id}"
+
+        # Act - UI
+        create_page = campaigns_page.click_create()
+        create_page.fill_name(campaign_name)
+        create_page.fill_description("E2E test campaign")
+        create_page.click_save()
+
+        # Assert - API
+        campaigns = campaigns_api.get_all()
+        campaign = next((c for c in campaigns if c.name == campaign_name), None)
+
+        assert campaign is not None, f"Campaign '{campaign_name}' not found via API"
+        assert campaign.description == "E2E test campaign"
+
+        # Cleanup
+        campaigns_api.delete(campaign.id)
+
+    @allure.title("Create campaign via API, verify in UI")
+    def test_create_api_verify_ui(
+            self,
+            campaigns_page: CampaignsPage,
+            campaigns_api: CampaignsApi,
+            unique_id: str
+    ):
+        """Create via API, verify shows in UI."""
+        # Arrange + Act - API
+        campaign_name = f"API_to_UI_Campaign_{unique_id}"
+        campaign = campaigns_api.create(
+            name=campaign_name,
+            description="Created via API"
         )
 
-        # ---- ASSERT ----
-        campaign = self.api.get_campaign(self.token, self.campaign_id)
+        # Assert - UI
+        campaigns_page.page.reload()
+        campaigns_page.search(campaign_name)
+        campaigns_page.should_have_campaign(campaign_name)
+        campaigns_page.should_have_status(campaign_name, "draft")
 
-        assert campaign["id"] == self.campaign_id
-        assert campaign["status"] == "draft"
-        assert campaign["account_id"] == self.account_id
+        # Cleanup
+        campaigns_api.delete(campaign.id)
