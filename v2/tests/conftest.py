@@ -5,6 +5,8 @@ import sys
 import pytest
 
 pytest_plugins = [
+    'v2.tests.fixtures.api',  # ← Missing!
+    'v2.tests.fixtures.api_clients',
     'v2.tests.fixtures.auth',
     'v2.tests.fixtures.browser',
     'v2.tests.fixtures.data',
@@ -12,9 +14,6 @@ pytest_plugins = [
     'v2.tests.fixtures.allure',
     'v2.tests.fixtures.pages.dashboard',
     'v2.tests.fixtures.pages.campaigns',
-    'v2.tests.fixtures.pages.employees',
-    'v2.tests.fixtures.pages.education',
-    'v2.tests.fixtures.pages.settings',
 ]
 
 

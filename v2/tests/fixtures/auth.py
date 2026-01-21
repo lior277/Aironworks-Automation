@@ -20,7 +20,7 @@ def auth_state(playwright: Playwright, tmp_path_factory) -> str:
         if not auth_file.exists():
             request_context = playwright.request.new_context(
                 base_url=Config.BASE_URL,
-                extra_http_headers={'Authorization': f'Bearer {Config.MASTER_TOKEN}'},
+                extra_http_headers={'Authorization': f'Bearer {Config.API_KEY}'},
             )
             resp = request_context.post('/api/auth/service-login')
             assert resp.ok, f'Service login failed: {resp.status}'
