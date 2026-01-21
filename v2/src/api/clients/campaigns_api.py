@@ -1,8 +1,14 @@
 """Campaigns API client."""
+
 from typing import Optional
-from v2.src.core.http.api_session import ApiSession
+
+from v2.src.api.models.campaign import (
+    Campaign,
+    CreateCampaignRequest,
+    UpdateCampaignRequest,
+)
 from v2.src.api.routes.campaigns_routes import CampaignsRoutes
-from v2.src.api.models.campaign import Campaign, CreateCampaignRequest, UpdateCampaignRequest
+from v2.src.core.http.api_session import ApiSession
 
 
 class CampaignsApi:
@@ -19,10 +25,10 @@ class CampaignsApi:
 
     def get_all(self, status: Optional[str] = None) -> list[Campaign]:
         """Get all campaigns, optionally filtered by status."""
-        params = {"status": status} if status else {}
+        params = {'status': status} if status else {}
         response = self.session.get(self.routes.LIST, params=params)
         response.raise_for_status()
-        return [Campaign(**c) for c in response.json()["items"]]
+        return [Campaign(**c) for c in response.json()['items']]
 
     def get_by_id(self, campaign_id: str) -> Campaign:
         """Get campaign by ID."""
@@ -30,7 +36,7 @@ class CampaignsApi:
         response.raise_for_status()
         return Campaign(**response.json())
 
-    def create(self, name: str, description: str = "", **kwargs) -> Campaign:
+    def create(self, name: str, description: str = '', **kwargs) -> Campaign:
         """Create new campaign."""
         data = CreateCampaignRequest(name=name, description=description, **kwargs)
         response = self.session.post(self.routes.CREATE, json=data.to_dict())
@@ -40,7 +46,9 @@ class CampaignsApi:
     def update(self, campaign_id: str, **kwargs) -> Campaign:
         """Update existing campaign."""
         data = UpdateCampaignRequest(**kwargs)
-        response = self.session.put(self.routes.detail(campaign_id), json=data.to_dict())
+        response = self.session.put(
+            self.routes.detail(campaign_id), json=data.to_dict()
+        )
         response.raise_for_status()
         return Campaign(**response.json())
 

@@ -1,18 +1,20 @@
 """Main conftest - imports all fixtures."""
+
 import sys
+
 import pytest
 
 pytest_plugins = [
-    "v2.tests.fixtures.auth",
-    "v2.tests.fixtures.browser",
-    "v2.tests.fixtures.data",
-    "v2.tests.fixtures.email",
-    "v2.tests.fixtures.allure",
-    "v2.tests.fixtures.pages.dashboard",
-    "v2.tests.fixtures.pages.campaigns",
-    "v2.tests.fixtures.pages.employees",
-    "v2.tests.fixtures.pages.education",
-    "v2.tests.fixtures.pages.settings",
+    'v2.tests.fixtures.auth',
+    'v2.tests.fixtures.browser',
+    'v2.tests.fixtures.data',
+    'v2.tests.fixtures.email',
+    'v2.tests.fixtures.allure',
+    'v2.tests.fixtures.pages.dashboard',
+    'v2.tests.fixtures.pages.campaigns',
+    'v2.tests.fixtures.pages.employees',
+    'v2.tests.fixtures.pages.education',
+    'v2.tests.fixtures.pages.settings',
 ]
 
 
@@ -36,4 +38,4 @@ def pytest_collection_modifyitems(session, config, items):
 def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
-    setattr(item, f"rep_{rep.when}", rep)
+    setattr(item, f'rep_{rep.when}', rep)
