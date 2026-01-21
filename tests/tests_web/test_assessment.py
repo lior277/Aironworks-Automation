@@ -100,43 +100,43 @@ def test_assessment_outlook(user, outlook_page, mailtrap):
     outlook_page.provide_feedback()
 
 
-# @pytest.mark.parametrize(
-#     'user',
-#     [
-#         pytest.param(
-#             UserModelFactory.customer_admin(),
-#             marks=pytest.mark.xdist_group(name='agent1'),
-#         )
-#     ],
-# )
-# @allure.testcase('5846')
-# @pytest.mark.smoke
-# def test_assessment_outlook_shared(user, outlook_page_shared, mailtrap):
-#     # goto specific messagex
-#     outlook_page_shared.open_addin()
-#     outlook_page_shared.check_addin_loaded()
-#     outlook_page_shared.perform_assessment()
-#     expect(
-#         outlook_page_shared.app_frame.get_by_text('Thank you for reporting the email!')
-#     ).to_be_visible(timeout=60 * 1000)
-#     expect(
-#         outlook_page_shared.app_frame.get_by_text(
-#             'Performing email risk assessment is an important cybersecurity practice'
-#         )
-#     ).to_be_visible(timeout=60 * 1000)
-#     mail = mailtrap.wait_for_mail(
-#         AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
-#         find_email(
-#             '68fa80bce3-28fbb0@inbox.mailtrap.io',
-#             'Security level Low. Suspicious Email Report (Attachment included)',
-#         ),
-#         timeout=240,
-#     )
-#     assert mail is not None, (
-#         f'Unable to find email 68fa80bce3-28fbb0@inbox.mailtrap.io please check the mailtrap inbox {AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID}'
-#     )
-#     assert 'Suspicious Email Report' in mail['subject']
-#     outlook_page_shared.provide_feedback()
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            marks=pytest.mark.xdist_group(name='agent1'),
+        )
+    ],
+)
+@allure.testcase('5846')
+@pytest.mark.smoke
+def test_assessment_outlook_shared(user, outlook_page_shared, mailtrap):
+    # goto specific messagex
+    outlook_page_shared.open_addin()
+    outlook_page_shared.check_addin_loaded()
+    outlook_page_shared.perform_assessment()
+    expect(
+        outlook_page_shared.app_frame.get_by_text('Thank you for reporting the email!')
+    ).to_be_visible(timeout=60 * 1000)
+    expect(
+        outlook_page_shared.app_frame.get_by_text(
+            'Performing email risk assessment is an important cybersecurity practice'
+        )
+    ).to_be_visible(timeout=60 * 1000)
+    mail = mailtrap.wait_for_mail(
+        AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+        find_email(
+            '68fa80bce3-28fbb0@inbox.mailtrap.io',
+            'Security level Low. Suspicious Email Report (Attachment included)',
+        ),
+        timeout=240,
+    )
+    assert mail is not None, (
+        f'Unable to find email 68fa80bce3-28fbb0@inbox.mailtrap.io please check the mailtrap inbox {AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID}'
+    )
+    assert 'Suspicious Email Report' in mail['subject']
+    outlook_page_shared.provide_feedback()
 
 
 @pytest.mark.parametrize(
@@ -179,39 +179,39 @@ def test_report_outlook(user, outlook_page, mailtrap):
     assert 'Incident Report' in mail['subject']
 
 
-# @pytest.mark.parametrize(
-#     'user',
-#     [
-#         pytest.param(
-#             UserModelFactory.customer_admin(),
-#             marks=pytest.mark.xdist_group(name='agent1'),
-#         )
-#     ],
-# )
-# @allure.testcase('5847')
-# @pytest.mark.smoke
-# def test_report_outlook_shared(user, outlook_page_shared, mailtrap):
-#     # goto specific message
-#     outlook_page_shared.open_addin()
-#     outlook_page_shared.check_addin_loaded()
-#     outlook_page_shared.report_incident()
-#     expect(
-#         outlook_page_shared.app_frame.get_by_text('Report have been sent')
-#     ).to_be_visible(timeout=60 * 1000)
-#     expect(
-#         outlook_page_shared.app_frame.get_by_text(
-#             'Reporting an incident is a critical cybersecurity practice that helps mitigate risks and prevent further impact.'
-#         )
-#     ).to_be_visible(timeout=60 * 1000)
-#     mail = mailtrap.wait_for_mail(
-#         AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
-#         find_email(
-#             '68fa80bce3-28fbb0@inbox.mailtrap.io',
-#             'Incident Report (Attachment Included)',
-#         ),
-#         timeout=240,
-#     )
-#     assert mail is not None, (
-#         f'Unable to find email 68fa80bce3-28fbb0@inbox.mailtrap.io please check the mailtrap inbox {AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID}'
-#     )
-#     assert 'Incident Report' in mail['subject']
+@pytest.mark.parametrize(
+    'user',
+    [
+        pytest.param(
+            UserModelFactory.customer_admin(),
+            marks=pytest.mark.xdist_group(name='agent1'),
+        )
+    ],
+)
+@allure.testcase('5847')
+@pytest.mark.smoke
+def test_report_outlook_shared(user, outlook_page_shared, mailtrap):
+    # goto specific message
+    outlook_page_shared.open_addin()
+    outlook_page_shared.check_addin_loaded()
+    outlook_page_shared.report_incident()
+    expect(
+        outlook_page_shared.app_frame.get_by_text('Report have been sent')
+    ).to_be_visible(timeout=60 * 1000)
+    expect(
+        outlook_page_shared.app_frame.get_by_text(
+            'Reporting an incident is a critical cybersecurity practice that helps mitigate risks and prevent further impact.'
+        )
+    ).to_be_visible(timeout=60 * 1000)
+    mail = mailtrap.wait_for_mail(
+        AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID,
+        find_email(
+            '68fa80bce3-28fbb0@inbox.mailtrap.io',
+            'Incident Report (Attachment Included)',
+        ),
+        timeout=240,
+    )
+    assert mail is not None, (
+        f'Unable to find email 68fa80bce3-28fbb0@inbox.mailtrap.io please check the mailtrap inbox {AppConfigs.MAILTRAP_ASSESSMENT_INBOX_ID}'
+    )
+    assert 'Incident Report' in mail['subject']

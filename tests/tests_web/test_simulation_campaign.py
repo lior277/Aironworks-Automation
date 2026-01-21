@@ -248,7 +248,7 @@ def test_campaign_export(campaign_details_page: CampaignDetailsPage, user):
     with open(file, 'r', encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
         rows: list = [row for row in reader]
-    assert len(rows) == 6
+    assert len(rows) == 7
     flag = False
     print('page_entity: ', page_entity)
     for i in range(len(rows)):
