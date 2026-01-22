@@ -2,14 +2,16 @@
 
 import os
 import tempfile
-from typing import Generator
+import uuid
 
 import allure
 import pytest
 from playwright.sync_api import Browser, BrowserContext, Page, expect
 
+from v2.src.core.config import Config
 
-def safe_title(page: Page) -> str:
+
+def _safe_title(page: Page) -> str:
     try:
         return page.title()
     except Exception:
@@ -17,30 +19,22 @@ def safe_title(page: Page) -> str:
 
 
 @pytest.fixture
-def context(
-    request, browser: Browser, auth_state
-) -> Generator[BrowserContext, None, None]:
-    """Browser context with shared auth and tracing."""
+def context(request, browser: Browser, auth_state) -> BrowserContext:
+    """Browser context with auth and tracing."""
     if not os.getenv('BROWSER_NAME'):
         os.environ['BROWSER_NAME'] = browser.browser_type.name
         os.environ['BROWSER_VERSION'] = browser.version
 
     ctx = browser.new_context(
-        storage_state=auth_state,
-        viewport={'width': 1440, 'height': 900},
-        permissions=['clipboard-read', 'clipboard-write'],
+        storage_state=auth_state, viewport={'width': 1440, 'height': 900}
     )
-    ctx.set_default_timeout(120 * 1000)
+    ctx.set_default_timeout(Config.DEFAULT_TIMEOUT * 1000)
     expect.set_options(timeout=20_000)
 
-    # Start tracing (creates trace.zip on failure)
-    ctx.tracing.start(
-        name=request.node.name, snapshots=True, screenshots=True, sources=True
-    )
+    ctx.tracing.start(name=request.node.name, snapshots=True, screenshots=True)
 
     yield ctx
 
-    # On failure: save trace + screenshots
     failed = getattr(request.node, 'rep_call', None) and request.node.rep_call.failed
     if failed:
         trace_path = tempfile.mktemp(prefix='trace', suffix='.zip')
@@ -49,7 +43,7 @@ def context(
         for pg in ctx.pages:
             allure.attach(
                 pg.screenshot(),
-                name=f'{safe_title(pg)}.png',
+                name=f'{_safe_title(pg)}.png',
                 attachment_type=allure.attachment_type.PNG,
             )
     else:
@@ -59,6 +53,12 @@ def context(
 
 
 @pytest.fixture
-def page(context: BrowserContext) -> Generator[Page, None, None]:
+def page(context: BrowserContext) -> Page:
     """Fresh page per test."""
     yield context.new_page()
+
+
+@pytest.fixture
+def unique_id() -> str:
+    """Unique ID for test data."""
+    return uuid.uuid4().hex[:8]

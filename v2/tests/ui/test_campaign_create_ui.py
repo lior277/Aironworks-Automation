@@ -2,8 +2,8 @@
 
 import allure
 
-from v2.src.api.clients.campaigns_api import CampaignsApi
-from v2.src.ui.pages.campaigns_page import CampaignsPage
+from v2.src.pages import CampaignsPage
+from v2.src.pages.api_pages.campaigns_api import CampaignsApi
 
 
 @allure.feature('Campaigns')

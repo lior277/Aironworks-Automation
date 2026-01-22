@@ -1,14 +1,8 @@
 class ApiRoutes:
+    """Auth API routes."""
 
-    # ---- Static ----
-    post_create_campaign = "/http/users/campaigns"
-    post_create_mgm_login = "/http/mgm/auth/login"
-
-    # ---- Dynamic ----
-    @staticmethod
-    def get_timeline_details(user_id: int):
-        return f"/http/users/{user_id}/trading-platform/timeline"
-
-    @staticmethod
-    def get_user_by_id(user_id: int):
-        return f"/http/users/{user_id}"
+    LOGIN = '/api/auth/login'
+    INFO = '/api/auth/info'
+    PICK_ROLE = '/api/auth/pick_role'
+    REFRESH_TOKEN = '/api/auth/refresh_token'
+    LOGOUT = '/api/auth/logout'
