@@ -1,8 +1,8 @@
 import pytest
 
-from page_objects.campaigns_page import CampaignsPage
+from v2.src.pages.api_pages.campaigns_api import CampaignsApi
 
 
 @pytest.fixture
-def campaigns_page(page) -> CampaignsPage:
-    return CampaignsPage(page)
+def campaigns_api(api_session):
+    return CampaignsApi(api_session)

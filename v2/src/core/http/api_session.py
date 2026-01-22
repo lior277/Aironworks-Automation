@@ -1,253 +1,124 @@
-"""API session built on Playwright request context."""
-
-from __future__ import annotations
-
 import json
+import logging
 from typing import Any
 
 import allure
-from playwright.sync_api import APIRequestContext, APIResponse, Playwright
+from playwright.sync_api import APIRequestContext, APIResponse
 
+from v2.src.api.api_routes.auth_routes import AuthRoutes
 from v2.src.core.config import Config
-from v2.src.core.exceptions import ApiRequestException, RequestContext
-from v2.src.core.http.retry import RetryPolicy
+from v2.src.core.http.retry import retry
 
-JsonBody = dict | list | None
-Multipart = dict[str, Any] | None
+LOGGER = logging.getLogger(__name__)
+
+
+class ApiRequestError(RuntimeError):
+    pass
 
 
 class ApiSession:
-    """
-    Thin wrapper around Playwright APIRequestContext.
+    def __init__(self, playwright, storage_state: str):
+        self._playwright = playwright
+        self._storage_state = storage_state
+        self._context: APIRequestContext = self._new_context()
 
-    Features:
-    - retries (timeouts/network/5xx)
-    - multipart support
-    - rich exceptions
-    - Allure request/response attachments
-    """
+    # ------------------------
+    # Context management
+    # ------------------------
 
-    def __init__(
-        self,
-        playwright: Playwright,
-        storage_state_path: str,
-        base_url: str | None = None,
-        retry_policy: RetryPolicy | None = None,
-    ):
-        self.base_url = (base_url or Config.BASE_URL).rstrip('/')
-
-        self._ctx: APIRequestContext = playwright.request.new_context(
-            base_url=self.base_url, storage_state=storage_state_path
+    def _new_context(self) -> APIRequestContext:
+        return self._playwright.request.new_context(
+            base_url=Config.BASE_URL, storage_state=self._storage_state
         )
 
-        self._retry = retry_policy or RetryPolicy(
-            retries=Config.API_RETRIES,
-            delay=Config.API_RETRY_DELAY_SEC,
-            retry_on_status=Config.API_RETRY_ON_STATUS,
-        )
+    def close(self):
+        self._context.dispose()
 
-    # ------------- Public methods -------------
+    # ------------------------
+    # Public API
+    # ------------------------
 
-    def get(
-        self, url: str, *, params: dict | None = None, timeout_ms: int | None = None
-    ) -> APIResponse:
-        return self._request('GET', url, params=params, timeout_ms=timeout_ms)
+    def get(self, url: str, **kwargs) -> APIResponse:
+        return self._request('GET', url, **kwargs)
 
-    def post(
-        self,
-        url: str,
-        *,
-        json_body: JsonBody = None,
-        multipart: Multipart = None,
-        params: dict | None = None,
-        timeout_ms: int | None = None,
-    ) -> APIResponse:
-        return self._request(
-            'POST',
-            url,
-            json_body=json_body,
-            multipart=multipart,
-            params=params,
-            timeout_ms=timeout_ms,
-        )
+    def post(self, url: str, **kwargs) -> APIResponse:
+        return self._request('POST', url, **kwargs)
 
-    def patch(
-        self,
-        url: str,
-        *,
-        json_body: JsonBody = None,
-        multipart: Multipart = None,
-        params: dict | None = None,
-        timeout_ms: int | None = None,
-    ) -> APIResponse:
-        return self._request(
-            'PATCH',
-            url,
-            json_body=json_body,
-            multipart=multipart,
-            params=params,
-            timeout_ms=timeout_ms,
-        )
+    def patch(self, url: str, **kwargs) -> APIResponse:
+        return self._request('PATCH', url, **kwargs)
 
-    def delete(
-        self, url: str, *, params: dict | None = None, timeout_ms: int | None = None
-    ) -> APIResponse:
-        return self._request('DELETE', url, params=params, timeout_ms=timeout_ms)
+    def delete(self, url: str, **kwargs) -> APIResponse:
+        return self._request('DELETE', url, **kwargs)
 
-    def close(self) -> None:
-        self._ctx.dispose()
+    # ------------------------
+    # Core request logic
+    # ------------------------
 
-    # ------------- Core request logic -------------
+    @retry(times=2, exceptions=(ApiRequestError,))
+    def _request(self, method: str, url: str, **kwargs) -> APIResponse:
+        with allure.step(f'{method} {url}'):
+            self._attach_request(method, url, **kwargs)
 
-    def _request(
-        self,
-        method: str,
-        url: str,
-        *,
-        json_body: JsonBody = None,
-        multipart: Multipart = None,
-        params: dict | None = None,
-        timeout_ms: int | None = None,
-    ) -> APIResponse:
-        def do_call() -> APIResponse:
-            return self._request_once(
-                method,
-                url,
-                json_body=json_body,
-                multipart=multipart,
-                params=params,
-                timeout_ms=timeout_ms,
-            )
+            response = self._context.fetch(method=method, url=url, **kwargs)
 
-        response = self._retry.run(do_call)
+            # Handle auth expiration
+            if response.status == 401:
+                allure.attach(
+                    response.text(),
+                    name='401_response.txt',
+                    attachment_type=allure.attachment_type.TEXT,
+                )
+                self._refresh_token()
+                response = self._context.fetch(method=method, url=url, **kwargs)
 
-        # Only 401 triggers auth refresh/retry (optional hook)
-        if response.status == 401:
-            self._refresh_auth()
-            response = self._retry.run(do_call)
+            self._attach_response(response)
 
-        return response
+            if response.status >= 400:
+                raise ApiRequestError(
+                    f'{method} {url} failed: {response.status}\n{response.text()}'
+                )
 
-    def _request_once(
-        self,
-        method: str,
-        url: str,
-        *,
-        json_body: JsonBody,
-        multipart: Multipart,
-        params: dict | None,
-        timeout_ms: int | None,
-    ) -> APIResponse:
-        request_kwargs = {'method': method, 'url': url, 'params': params}
+            return response
 
-        if timeout_ms is not None:
-            request_kwargs['timeout'] = timeout_ms
+    # ------------------------
+    # Token refresh
+    # ------------------------
 
-        # Playwright accepts either `json=` or `multipart=`
-        if multipart is not None and json_body is not None:
-            raise ValueError('Use either json_body or multipart, not both.')
+    def _refresh_token(self) -> None:
+        with allure.step('Refresh API token'):
+            resp = self._context.post(AuthRoutes.REFRESH_TOKEN)
+            if not resp.ok:
+                raise ApiRequestError(
+                    f'Token refresh failed: {resp.status} {resp.text()}'
+                )
 
-        if json_body is not None:
-            request_kwargs['json'] = json_body
+            # Recreate context to reload cookies
+            self._context.dispose()
+            self._context = self._new_context()
 
-        if multipart is not None:
-            request_kwargs['multipart'] = multipart
+    # ------------------------
+    # Allure helpers
+    # ------------------------
 
-        self._allure_attach_request(
-            method, url, json_body=json_body, multipart=multipart, params=params
-        )
-
-        response = self._ctx.fetch(**request_kwargs)
-
-        self._allure_attach_response(response)
-
-        if not response.ok:
-            ctx = RequestContext(
-                method=method,
-                url=self._absolute_url(url),
-                body=json_body if json_body is not None else multipart,
-                status_code=response.status,
-                response_text=response.text(),
-                response_headers=dict(response.headers),
-            )
-            raise ApiRequestException(ctx)
-
-        return response
-
-    def _refresh_auth(self) -> None:
-        """
-        Optional: implement refresh token flow if your backend supports it.
-        If you don't have a refresh endpoint, leave it empty.
-        """
-        return
-
-    # ------------- Helpers -------------
-
-    def _absolute_url(self, url: str) -> str:
-        if url.startswith('http'):
-            return url
-        return f'{self.base_url}{url}'
-
-    def _allure_attach_request(
-        self,
-        method: str,
-        url: str,
-        *,
-        json_body: JsonBody,
-        multipart: Multipart,
-        params: dict | None,
-    ) -> None:
-        payload = {
-            'method': method,
-            'url': self._absolute_url(url),
-            'params': params,
-            'json': json_body,
-            'multipart_keys': list(multipart.keys())
-            if isinstance(multipart, dict)
-            else None,
-        }
+    def _attach_request(self, method: str, url: str, **kwargs: Any) -> None:
+        payload = {'method': method, 'url': url, 'kwargs': kwargs}
         allure.attach(
-            json.dumps(payload, indent=2, ensure_ascii=False, default=str),
-            name='api.request',
+            json.dumps(payload, indent=2, default=str),
+            name='request.json',
             attachment_type=allure.attachment_type.JSON,
         )
 
-    def _allure_attach_response(self, response: APIResponse) -> None:
-        meta = {'status': response.status, 'headers': dict(response.headers)}
-        allure.attach(
-            json.dumps(meta, indent=2, ensure_ascii=False, default=str),
-            name='api.response.meta',
-            attachment_type=allure.attachment_type.JSON,
-        )
-
-        text = ''
+    def _attach_response(self, response: APIResponse) -> None:
         try:
-            text = response.text()
-        except Exception:
-            return
-
-        if not text:
-            return
-
-        # Attach HTML / JSON / text
-        if text.lstrip().startswith('<'):
+            content = response.json()
             allure.attach(
-                text,
-                name='api.response.html',
-                attachment_type=allure.attachment_type.HTML,
-            )
-            return
-
-        try:
-            obj = response.json()
-            allure.attach(
-                json.dumps(obj, indent=2, ensure_ascii=False, default=str),
-                name='api.response.json',
+                json.dumps(content, indent=2),
+                name='response.json',
                 attachment_type=allure.attachment_type.JSON,
             )
         except Exception:
             allure.attach(
-                text,
-                name='api.response.text',
+                response.text(),
+                name='response.txt',
                 attachment_type=allure.attachment_type.TEXT,
             )
