@@ -1,17 +1,34 @@
-"""Main conftest."""
-
 import pytest
+from playwright.sync_api import sync_playwright
+
+from v2.src.core.config import Config
+from v2.src.core.http.api_session import ApiSession
 
 pytest_plugins = [
-    'v2.tests.fixtures.auth',
-    'v2.tests.fixtures.browser',
-    'v2.tests.fixtures.pages',  # ← Single import for all pages
-    'v2.tests.fixtures.allure',
+    'tests.fixtures.allure',
+    'tests.fixtures.auth',
+    'tests.fixtures.browser',
+    'tests.fixtures.fixtures_ui',
+    'tests.fixtures.fixtures_api',
 ]
 
 
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    outcome = yield
-    rep = outcome.get_result()
-    setattr(item, f'rep_{rep.when}', rep)
+@pytest.fixture(scope='session')
+def playwright():
+    with sync_playwright() as p:
+        yield p
+
+
+@pytest.fixture(scope='session')
+def browser(playwright):
+    browser = playwright.chromium.launch(headless=Config.HEADLESS)
+    yield browser
+    browser.close()
+
+
+# -------- API SESSION (uses api_storage_state from auth.py) --------
+
+
+@pytest.fixture
+def api_session(playwright, api_storage_state):
+    return ApiSession(playwright, api_storage_state)

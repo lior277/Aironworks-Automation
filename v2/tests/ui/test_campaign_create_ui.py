@@ -2,7 +2,7 @@
 
 import allure
 
-from v2.src.pages import CampaignsPage
+from page_objects.campaigns_page import CampaignsPage
 from v2.src.pages.api_pages.campaigns_api import CampaignsApi
 
 

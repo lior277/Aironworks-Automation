@@ -64,7 +64,7 @@ class MailTrap:
         if page:
             params.update({'page': page})
         response = self.request_context.get(
-            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages',
+            f'/api_access/accounts/{self._account_id}/inboxes/{inbox_id}/messages',
             params=params,
         )
         expect(response).to_be_ok()
@@ -73,21 +73,21 @@ class MailTrap:
     def inbox_attributes(self, inbox_id):
         params = {}
         response = self.request_context.get(
-            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}', params=params
+            f'/api_access/accounts/{self._account_id}/inboxes/{inbox_id}', params=params
         )
         expect(response).to_be_ok()
         return response
 
     def raw_message(self, inbox_id, message_id):
         response = self.request_context.get(
-            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.raw'
+            f'/api_access/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.raw'
         )
         expect(response).to_be_ok()
         return response
 
     def message_source(self, inbox_id, message_id):
         response = self.request_context.get(
-            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.htmlsource'
+            f'/api_access/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}/body.htmlsource'
         )
         expect(response).to_be_ok()
         return response
@@ -96,21 +96,21 @@ class MailTrap:
         self, message_id, inbox_id: str = AppConfigs.PERF_EMPLOYEE_INBOX_ID
     ):
         response = self.request_context.delete(
-            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}'
+            f'/api_access/accounts/{self._account_id}/inboxes/{inbox_id}/messages/{message_id}'
         )
         expect(response).to_be_ok()
         return response
 
     def clean_inbox(self, inbox_id):
         response = self.request_context.patch(
-            f'/api/accounts/{self._account_id}/inboxes/{inbox_id}/clean'
+            f'/api_access/accounts/{self._account_id}/inboxes/{inbox_id}/clean'
         )
         expect(response).to_be_ok()
 
     def clean_inboxes(self, list_mail_traps: list[MailTrapModel]):
         for mail in list_mail_traps:
             response = self.request_context.patch(
-                f'/api/accounts/{self._account_id}/inboxes/{mail.id}/clean'
+                f'/api_access/accounts/{self._account_id}/inboxes/{mail.id}/clean'
             )
             expect(response).to_be_ok()
 

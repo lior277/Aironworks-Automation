@@ -1,25 +1,21 @@
-"""Campaigns API client."""
-
-from playwright.sync_api import APIResponse
-
-from v2.src.api.routes.campaigns_routes import CampaignsRoutes
-from v2.src.pages.api_pages.base_api import BaseApi
+import allure
 
 
-class CampaignsApi(BaseApi):
-    """Campaigns API operations."""
+class CampaignsApi:
+    def __init__(self, api_session):
+        self.api = api_session
 
-    def get_all(self, params: dict = None) -> APIResponse:
-        return self._get(CampaignsRoutes.LIST, params=params)
+    @allure.step('Create campaign: {name}')
+    def create_campaign(self, client_id: str, name: str) -> str:
+        resp = self.api.post(
+            '/api/campaigns', json={'client_id': client_id, 'name': name}
+        )
+        return resp.json()['id']
 
-    def get_by_id(self, campaign_id: str) -> APIResponse:
-        return self._get(CampaignsRoutes.by_id(campaign_id))
+    @allure.step('Delete campaign: {campaign_id}')
+    def delete_campaign(self, campaign_id: str):
+        self.api.delete(f'/api/campaigns/{campaign_id}')
 
-    def create(self, data: dict) -> APIResponse:
-        return self._post(CampaignsRoutes.LIST, data=data)
-
-    def update(self, campaign_id: str, data: dict) -> APIResponse:
-        return self._patch(CampaignsRoutes.by_id(campaign_id), data=data)
-
-    def delete(self, campaign_id: str) -> APIResponse:
-        return self._delete(CampaignsRoutes.by_id(campaign_id))
+    @allure.step('Get campaign: {campaign_id}')
+    def get_campaign(self, campaign_id: str):
+        return self.api.get(f'/api/campaigns/{campaign_id}').json()
