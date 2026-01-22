@@ -1,13 +1,22 @@
+"""Configuration from environment variables."""
+
 import os
+
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv())
 
 
 class Config:
-    BASE_URL = os.getenv('BASE_URL', 'https://your-aironworks-url')
-    API_BASE_URL = os.getenv('API_BASE_URL', BASE_URL)
+    ENV = os.getenv('ENV', 'staging')
 
-    DEFAULT_TIMEOUT = int(os.getenv('DEFAULT_TIMEOUT', '20'))
+    BASE_URL = os.getenv('BASE_URL', 'https://staging.app.aironworks.com')
 
-    USER_EMAIL = os.getenv('TEST_USER_EMAIL', 'test@company.com')
-    USER_PASSWORD = os.getenv('TEST_USER_PASSWORD', 'Password123!')
+    DEFAULT_TIMEOUT = int(os.getenv('DEFAULT_TIMEOUT', '30'))
 
-    API_KEY = os.getenv('API_KEY')
+    # Auth credentials
+    USER_EMAIL = os.getenv('USER_EMAIL', '')
+    USER_PASSWORD = os.getenv('USER_PASSWORD', '')
+
+    # Optional: specific role to pick (empty = first role)
+    USER_ROLE_ID = os.getenv('USER_ROLE_ID', '')
