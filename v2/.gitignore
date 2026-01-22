@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Playwright
+playwright/.cache/
+*.webm
+
+# Allure
+allure-results/
+allure-report/
+
+# Traces / artifacts
+*.zip
+*.png
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

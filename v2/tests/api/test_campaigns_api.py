@@ -3,62 +3,43 @@ import pytest
 
 @pytest.mark.sanity
 @pytest.mark.regression
-class TestEditCreateDeleteCampaignApi:
+class TestCreateCampaignApi:
     @pytest.fixture(autouse=True)
-    def setup(self, api_factory, crm_url, campaign_api):
-        """
-        This is:
-        - [SetUp]
-        - DI (dependency injection)
-        - [TearDown]
-        in one place
-        """
-        self.api_factory = api_factory
-        self.crm_url = crm_url
-        self.campaign_api = campaign_api
+    def setup(self, campaigns_api, unique_id):
+        self.campaigns_api = campaigns_api
+        self.unique_id = unique_id
 
-        self.client_id = 'client-123'  # normally created via ClientsApi
+        self.client_id = 'client-123'
 
-        # =========================
-        # PreCondition
-        # =========================
-
-        # create base campaign
-        self.base_campaign_id = self.campaign_api.create_campaign(
-            self.crm_url, self.client_id, f'Base | {random_string()}'
+        # ---------- Precondition ----------
+        self.base_campaign_id = self.campaigns_api.create_campaign(
+            client_id=self.client_id, name=f'Base | {self.unique_id}'
         )
 
-        # edit existing campaign (as you asked)
-        self.campaign_api.edit_campaign(
-            self.crm_url, self.base_campaign_id, f'Edited | {random_string()}'
+        self.campaigns_api.edit_campaign(
+            campaign_id=self.base_campaign_id, name=f'Edited | {self.unique_id}'
         )
 
         yield
 
-        # =========================
-        # TearDown
-        # =========================
-
+        # ---------- Teardown ----------
         if hasattr(self, 'new_campaign_id'):
-            self.campaign_api.delete_campaign(self.crm_url, self.new_campaign_id)
+            self.campaigns_api.delete_campaign(self.new_campaign_id)
 
         if hasattr(self, 'base_campaign_id'):
-            self.campaign_api.delete_campaign(self.crm_url, self.base_campaign_id)
+            self.campaigns_api.delete_campaign(self.base_campaign_id)
 
-    # =========================
-    # Test (STORY)
-    # =========================
     def test_create_new_campaign(self):
-        # ---- Action ----
-        new_name = f'New | {random_string()}'
+        # ---------- Action ----------
+        new_name = f'New | {self.unique_id}'
 
-        self.new_campaign_id = self.campaign_api.create_campaign(
-            self.crm_url, self.client_id, new_name
+        self.new_campaign_id = self.campaigns_api.create_campaign(
+            client_id=self.client_id, name=new_name
         )
 
-        # ---- Validation ----
-        campaign = self.campaign_api.get_campaign(self.crm_url, self.new_campaign_id)
+        # ---------- Validation ----------
+        campaign = self.campaigns_api.get_campaign(self.new_campaign_id)
 
-        # ---- Assert ----
+        # ---------- Assert ----------
         assert campaign['id'] == self.new_campaign_id
         assert campaign['client_id'] == self.client_id

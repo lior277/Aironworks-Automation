@@ -1,5 +1,8 @@
-class ApiRoutes:
-    """Auth API routes."""
+"""Auth API routes."""
+
+
+class AuthRoutes:
+    """Auth endpoints."""
 
     LOGIN = '/api/auth/login'
     INFO = '/api/auth/info'

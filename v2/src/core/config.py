@@ -20,3 +20,7 @@ class Config:
 
     # Optional: specific role to pick (empty = first role)
     USER_ROLE_ID = os.getenv('USER_ROLE_ID', '')
+
+    API_RETRIES = 2
+    API_RETRY_DELAY_SEC = 1.0
+    API_RETRY_ON_STATUS = (500, 502, 503, 504)
