@@ -28,10 +28,9 @@ class LoginPage:
     def login(self, email: str, password: str) -> None:
         self.email.fill(email)
         self.password.fill(password)
-        self.submit.click()
+        self.submit.click(timeout=10_000)
 
-        # Best-effort: ensure navigation or a known post-login element.
-        # Replace with a real selector from your app.
+        # TODO: Replace with a real post-login element from your app
         expect(self.page).to_have_url(lambda url: '/dashboard' in url or '/home' in url)
 
     @allure.step('Login default user')

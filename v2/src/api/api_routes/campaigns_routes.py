@@ -2,8 +2,12 @@
 
 
 class CampaignsRoutes:
-    LIST = '/api/campaigns'
+    BASE = '/api/campaigns'
 
-    @staticmethod
-    def by_id(campaign_id: str) -> str:
-        return f'/api/campaigns/{campaign_id}'
+    @classmethod
+    def list(cls) -> str:
+        return cls.BASE
+
+    @classmethod
+    def by_id(cls, campaign_id: str) -> str:
+        return f'{cls.BASE}/{campaign_id}'
