@@ -2,7 +2,7 @@
 
 import pytest
 
-from page_objects.campaigns_page import CampaignsPage
+from v2.src.pages.ui_pages.campaigns_page import CampaignsPage
 
 
 @pytest.fixture

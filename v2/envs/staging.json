@@ -1,0 +1,11 @@
+{
+  "base_url": "https://staging.app.aironworks.com",
+  "admin_base_url": "https://staging.app.aironworks.com/admin",
+  "customer_email": "staging-customer@aironworks.com",
+  "customer_password": "staging-password-here",
+  "customer_role_id": "root_user-6332",
+  "mailtrap_api_token": "your-staging-token-here",
+  "mailtrap_account_id": 2345678,
+  "mailtrap_assessment_inbox_id": 2222222,
+  "mailtrap_assessment_inbox_mail": "staging-assessment@inbox.mailtrap.io"
+}

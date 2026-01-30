@@ -1,26 +1,36 @@
-"""
-Authentication models.
-"""
+from __future__ import annotations
 
-from dataclasses import dataclass
-
-
-@dataclass
-class LoginData:
-    """Request payload for service login."""
-
-    service_secret: str
+from dataclasses import asdict, dataclass
+from typing import Any
 
 
-@dataclass
-class LoginResponse:
-    """Response from service login."""
+class _DictMixin:
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)  # type: ignore[return-value]
 
-    access_token: str
 
-    @classmethod
-    def from_dict(cls, data: dict) -> 'LoginResponse':
-        token = data.get('access_token')
-        if not token:
-            raise ValueError('Login response missing access_token')
-        return cls(access_token=token)
+@dataclass(frozen=True)
+class LoginRequest(_DictMixin):
+    email: str
+    password: str
+    remember: bool = True
+    otp: str = ''
+    admin: bool = False
+
+
+@dataclass(frozen=True)
+class PickRoleRequest(_DictMixin):
+    role_id: str
+
+
+@dataclass(frozen=True)
+class UserInfo:
+    raw: dict[str, Any]
+
+    def get_first_role_id(self) -> str:
+        roles = self.raw.get('user', {}).get('roles') or self.raw.get('roles', [])
+        for role in roles:
+            role_id = role.get('id') or role.get('role_id')
+            if role_id:
+                return str(role_id)
+        raise ValueError(f'No roles found in: {self.raw}')

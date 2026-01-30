@@ -1,0 +1,16 @@
+{
+  "base_url": "https://app.aironworks.com",
+  "admin_base_url": "https://app.aironworks.com/admin",
+  "default_timeout_sec": 45,
+  "expect_timeout_ms": 30000,
+  "customer_email": "production-customer@aironworks.com",
+  "customer_password": "production-password-here",
+  "customer_role_id": "root_user-9999",
+  "mailtrap_api_token": "your-production-token-here",
+  "mailtrap_account_id": 3456789,
+  "mailtrap_timeout_sec": 90,
+  "mailtrap_poll_interval_sec": 2.0,
+  "mailtrap_max_pages": 10,
+  "mailtrap_assessment_inbox_id": 3333333,
+  "mailtrap_assessment_inbox_mail": "production-assessment@inbox.mailtrap.io"
+}

@@ -1,0 +1,11 @@
+{
+  "base_url": "https://dev.app.aironworks.com",
+  "admin_base_url": "https://dev.app.aironworks.com/admin",
+  "customer_email": "dev-customer@aironworks.com",
+  "customer_password": "dev-password-here",
+  "customer_role_id": "root_user-1234",
+  "mailtrap_api_token": "your-dev-token-here",
+  "mailtrap_account_id": 1234567,
+  "mailtrap_assessment_inbox_id": 1111111,
+  "mailtrap_assessment_inbox_mail": "dev-assessment@inbox.mailtrap.io"
+}

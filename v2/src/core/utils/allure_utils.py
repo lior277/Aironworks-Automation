@@ -1,10 +1,11 @@
+# v2/src/core/utils/allure_utils.py
 """Allure reporting utilities."""
 
 import json
 import os
-import shutil
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -31,7 +32,7 @@ class GitLabExecutor:
     """GitLab CI executor info for Allure."""
 
     @classmethod
-    def from_env(cls) -> dict | None:
+    def from_env(cls) -> dict[str, str] | None:
         """Create from GitLab CI environment variables."""
         if not os.environ.get('CI_PIPELINE_IID'):
             return None
@@ -49,8 +50,7 @@ class GitLabExecutor:
     @classmethod
     def write(cls, allure_dir: str) -> None:
         """Write executor.json if in GitLab CI."""
-        executor = cls.from_env()
-        if executor:
+        if executor := cls.from_env():
             executor_file = Path(allure_dir) / 'executor.json'
             executor_file.write_text(json.dumps(executor, indent=2))
 
@@ -62,7 +62,10 @@ class AllureReporter:
         self.allure_dir = allure_dir
 
     def setup(
-        self, env: str, base_url: str, categories_file: Path | None = None
+        self,
+        env: str,
+        base_url: str,
+        categories: list[dict[str, Any]] | None = None,  # ✅ FIXED
     ) -> None:
         """Setup Allure environment, executor, and categories."""
         if not self.allure_dir:
@@ -80,5 +83,6 @@ class AllureReporter:
         GitLabExecutor.write(self.allure_dir)
 
         # Categories
-        if categories_file and categories_file.exists():
-            shutil.copy(categories_file, Path(self.allure_dir) / 'categories.json')
+        if categories:
+            categories_file = Path(self.allure_dir) / 'categories.json'
+            categories_file.write_text(json.dumps(categories, indent=2))

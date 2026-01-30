@@ -1,13 +1,6 @@
-"""Campaigns API routes."""
+# v2/src/api/api_routes/campaign_routes.py
+class CampaignRoutes:
+    """API routes for campaign operations"""
 
-
-class CampaignsRoutes:
-    BASE = '/api/campaigns'
-
-    @classmethod
-    def list(cls) -> str:
-        return cls.BASE
-
-    @classmethod
-    def by_id(cls, campaign_id: str) -> str:
-        return f'{cls.BASE}/{campaign_id}'
+    CREATE_CAMPAIGN = '/api/admin/campaign'
+    GET_CAMPAIGN = '/api/admin/campaign'  # Add other routes as needed

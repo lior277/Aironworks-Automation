@@ -1,0 +1,13 @@
+{
+  "headless": true,
+  "browser": "chromium",
+  "default_timeout_sec": 30,
+  "expect_timeout_ms": 20000,
+  "api_retries": 2,
+  "api_retry_delay_sec": 0.4,
+  "mailtrap_base_url": "https://mailtrap.io",
+  "mailtrap_api_prefix": "/api",
+  "mailtrap_timeout_sec": 60,
+  "mailtrap_poll_interval_sec": 1.0,
+  "mailtrap_max_pages": 5
+}
